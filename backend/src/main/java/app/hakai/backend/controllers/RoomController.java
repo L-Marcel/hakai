@@ -2,6 +2,7 @@ package app.hakai.backend.controllers;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import app.hakai.backend.transients.Room;
 @Controller
 @RequestMapping("/rooms")
 public class RoomController {
+    @Autowired
     private RoomService roomService;
 
     @PostMapping("/create")
