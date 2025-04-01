@@ -2,6 +2,7 @@ package app.hakai.backend.models;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,4 +16,7 @@ public class Question {
     @Id
     @GeneratedValue
     private UUID uuid;
+
+    @Column
+    private UUID game;
 };

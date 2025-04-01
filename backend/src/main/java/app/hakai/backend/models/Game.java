@@ -1,6 +1,6 @@
 package app.hakai.backend.models;
 
-import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
@@ -20,5 +20,5 @@ public class Game {
     private UUID uuid;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private LinkedList<Question> questions = new LinkedList<Question>();
+    private List<Question> questions;
 };
