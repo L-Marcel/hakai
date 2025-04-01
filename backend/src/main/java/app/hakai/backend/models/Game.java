@@ -12,15 +12,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Game {
-    @Getter
-    @Setter
     @Id
     @GeneratedValue
     private UUID uuid;
 
-    @Getter
-    @Setter
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private LinkedList<Question> questions = new LinkedList<Question>();
 };

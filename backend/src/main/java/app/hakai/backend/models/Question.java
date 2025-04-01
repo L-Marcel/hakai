@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Question {
-    @Getter
-    @Setter
     @Id
     @GeneratedValue
     private UUID uuid;
