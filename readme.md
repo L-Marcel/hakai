@@ -4,7 +4,9 @@ Para manter o projeto por inteiro rodando, será necessário manter os três ser
 
 # Instruções para devs (geral)
 
-Deixo como recomendação a utilização do [VSCode](https://code.visualstudio.com/) para todo o projeto.
+Deixo como recomendação a utilização do [VSCode](https://code.visualstudio.com/) para todo o projeto. Também estarei utilizando o [pgAdmin4](https://www.pgadmin.org/download/) para visualizar e gerenciar o banco de dados.
+
+Recomendo deixar todas as _queries_ dentro da pasta `queries` do projeto, assim todos nós conseguiremos utilizar.
 
 Fique atento ao momento de gerar os _commits_, faça isso com frequência. Atenção, segue abaixo as _tags_ padrões de nomeação de _commits_:
 
@@ -16,7 +18,8 @@ Fique atento ao momento de gerar os _commits_, faça isso com frequência. Aten�
 - `[style]` -> Formatação de código;
 - `[refactor]` -> Refatoração de código, melhorias que não alteram a funcionalidade;
 - `[test]` -> Testes de qualquer tipo;
-- `[init]` -> Código inicial do projeto, normalmente gerado por alguma ferramenta.
+- `[init]` -> Código inicial do projeto, normalmente gerado por alguma ferramenta;
+- `[chore]` -> Vamos definir aqui como tudo que não se encaixar nas definições anteriores.  
 
 Meu conselho é inverter a lógica. Geralmente, pensamos no nome na hora de realizar o _commit_ (eu faço assim). Agora, vamos pensar no nome antes (não por completo, apenas a tag).
 
