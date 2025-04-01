@@ -8,6 +8,7 @@ Deixo como recomendação a utilização do [VSCode](https://code.visualstudio.c
 
 Fique atento ao momento de gerar os _commits_, faça isso com frequência. Atenção, segue abaixo as _tags_ padrões de nomeação de _commits_:
 
+## Commits
 - `[feat]` -> Implementação parcial ou completa de uma determinada funcionalidade;
 - `[merge]` -> União de duas _branchs_;
 - `[fix]` -> Correção de um erro antigo;
@@ -17,7 +18,7 @@ Fique atento ao momento de gerar os _commits_, faça isso com frequência. Aten�
 - `[test]` -> Testes de qualquer tipo;
 - `[init]` -> Código inicial do projeto, normalmente gerado por alguma ferramenta.
 
-Meu conselho é inverter a lógica. Geralmente, pensamos no nome na hora de realizar o _commit_ (eu faço assim). Agora, vamos pensar no nome antes (não por completo, apenas a tag). 
+Meu conselho é inverter a lógica. Geralmente, pensamos no nome na hora de realizar o _commit_ (eu faço assim). Agora, vamos pensar no nome antes (não por completo, apenas a tag).
 
 ### Exemplo
 
@@ -38,6 +39,14 @@ Agora todos sabemos que a funcionalidade foi implementada.
 ### Justificativa
 
 É chato manter esse padrão, mas assim conseguimos manter o histórico do código organizado, bem definido e separado.
+
+## Branchs
+
+Crie uma _branch_ sempre que for inicializar uma nova funcionalidade. O nome dela tem que ser sugestivo, de modo que possamos identificar a funcionalidade. Assim que terminar, abra um `Pull Request` para a _branch main_ e aguarde avaliação.
+
+### Exemplo
+
+Estou indo implementar a criação de canais. Logo criarei a _branch_ `criação-canais`.
 
 # Instruções para devs (backend)
 
