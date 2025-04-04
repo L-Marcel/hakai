@@ -9,20 +9,22 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
     private String email;
     @Column(nullable = false)
     private String senha;
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "name", nullable = false)
+    private String nome;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Game> games;
