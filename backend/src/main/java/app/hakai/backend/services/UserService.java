@@ -10,12 +10,17 @@ import app.hakai.backend.repositories.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
-    private User getUser(String email) {
-        userRepository.findById(email);
-    }
+    /*
+     * private User getUser(String email) {
+     * userRepository.findById(email);
+     * }
+     */
 
     private void autenticate(String email, String senha) {
 
+    }
+
+    public void registrarUsuario(User usuarioDTO) {
+        userRepository.save(usuarioDTO);
     }
 }
