@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "@styles/global.scss";
 import Login from "@pages/Login";
 import Register from "@pages/Register";
@@ -11,6 +11,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/:id" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
   );
