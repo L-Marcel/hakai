@@ -1,11 +1,13 @@
+@import "@styles/variables.scss";
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: $gray-200;
+  background-color: $gray-800;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +17,12 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: $purple-500;
   text-decoration: inherit;
 }
+
 a:hover {
-  color: #535bf2;
+  color: $purple-600;
 }
 
 body {
@@ -46,23 +49,26 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: $purple-500;
 }
-button:focus,
-button:focus-visible {
+
+button:focus, button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: $gray-800;
+    background-color: $white;
   }
+
   a:hover {
-    color: #747bff;
+    color: $purple-400;
   }
+  
   button {
-    background-color: #f9f9f9;
+    background-color: $gray-100;
   }
 }

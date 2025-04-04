@@ -1,20 +1,9 @@
-
-$cor-azul-claro: #AEDFF7; // 🩵 Azul Claro
-$cor-azul: #1E90FF; // 💙 Azul
-$cor-roxo: #9370DB; // 💜 Roxo
-$cor-laranja: #FFA500; // 🧡 Laranja
-$cor-preto: #000000; // 🖤 Preto
-$cor-cinza-claro: #A9A9A9; // 🩶 Cinza Claro / Metálico
-$input-bg: #f5f5f5;
-$border-radius: 10px;
-
-
 .container {
     width: 100%;
     max-width: 400px;
     margin: 100px auto;
     padding: 2rem;
-    background-color: white;
+    background-color: $white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: $border-radius;
     display: flex;
@@ -25,7 +14,7 @@ $border-radius: 10px;
 .title {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    color: $cor-laranja;
+    color: $orange-500;
 }
 
 .form {
@@ -37,20 +26,20 @@ $border-radius: 10px;
 
 .input {
     padding: 0.8rem;
-    background-color: $input-bg;
-    border: 1px solid #ccc;
+    background-color: $gray-200;
+    border: 1px solid $gray-300;
     border-radius: $border-radius;
     font-size: 1rem;
 
     &:focus {
-        border-color: $cor-laranja;
+        border-color: $orange-500;
         outline: none;
     }
 }
 
 .button {
     padding: 0.8rem;
-    background-color: $cor-laranja;
+    background-color: $orange-500;
     color: white;
     border: none;
     border-radius: $border-radius;
@@ -59,6 +48,6 @@ $border-radius: 10px;
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: darken($cor-laranja, 10%);
+        background-color: $orange-600;
     }
 }

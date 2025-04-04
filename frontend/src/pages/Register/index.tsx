@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./Login.module.scss";
+import styles from "@pages/Login/index.module.scss";
 
 export default function Register() {
   const [formData, setFormData] = useState({
