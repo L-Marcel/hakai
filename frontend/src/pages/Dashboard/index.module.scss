@@ -1,0 +1,29 @@
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  width: calc(100% - 2rem);
+  padding: 1rem;
+}
+
+.dashboard {
+  width: calc(100% - 4rem);
+  height: calc(100% - 4rem);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  background-color: $gray-300;
+  overflow-y: scroll;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: 1.5rem;
+  }
+}

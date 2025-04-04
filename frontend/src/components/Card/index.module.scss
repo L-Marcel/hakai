@@ -1,0 +1,57 @@
+.card {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: $gray-200;
+  border-radius: $border-radius;
+
+  &:hover {
+    background-color: $gray-100;
+  }
+}
+
+.content {
+  h1 {
+    color: $orange-500;
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 1rem;
+    border-radius: 100%;
+    border-width: 0px;
+    border-style: solid;
+    background-color: $gray-300;
+    color: $orange-500;
+
+    &:hover:not(:disabled) {
+      color: $orange-700;
+    }
+
+    &:last-of-type {
+      padding-left: calc(1rem + 4px);
+      background-color: $orange-200;
+
+      &:hover:not(:disabled) {
+        background: $orange-300;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.75;
+    }
+
+    svg {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+}
