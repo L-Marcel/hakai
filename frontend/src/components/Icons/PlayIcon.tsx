@@ -16,5 +16,5 @@ export default function PlayIcon(props: SVGProps<SVGSVGElement>) {
         clipRule="evenodd"
       ></path>
     </svg>
-  )
+  );
 }
