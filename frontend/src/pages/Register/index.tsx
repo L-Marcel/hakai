@@ -28,34 +28,36 @@ export default function Register() {
     }
   };
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>Registro</h2>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="nome"
-          placeholder="Nome"
-          className={styles.input}
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className={styles.input}
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          name="senha"
-          placeholder="Senha"
-          className={styles.input}
-          onChange={handleChange}
-        />
-        <button type="submit" className={styles.button}>
-          Registrar
-        </button>
-      </form>
-    </div>
+    <main className={styles.main}>
+      <section className={styles.section}>
+        <h2 className={styles.title}>Registro</h2>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="nome"
+            placeholder="Nome"
+            className={styles.input}
+            onChange={handleChange}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            className={styles.input}
+            onChange={handleChange}
+          />
+          <input
+            type="password"
+            name="senha"
+            placeholder="Senha"
+            className={styles.input}
+            onChange={handleChange}
+          />
+          <button type="submit" className={styles.button}>
+            Registrar
+          </button>
+        </form>
+      </section>
+    </main>
   );
 }

@@ -10,6 +10,7 @@ export default defineConfig({
       "@pages": path.join(__dirname, "src", "pages"),
       "@components": path.join(__dirname, "src", "components"),
       "@assets": path.join(__dirname, "src", "assets"),
+      "@icons": path.join(__dirname, "src", "components", "icons"),
     },
   },
   css: {
@@ -17,8 +18,8 @@ export default defineConfig({
       scss: {
         api: "legacy",
         silenceDeprecations: ["legacy-js-api", "import"],
-        additionalData: '@import "@styles/variables.scss";\n'
-      }
-    }
-  }
+        additionalData: '@import "@styles/variables.scss";\n',
+      },
+    },
+  },
 });
