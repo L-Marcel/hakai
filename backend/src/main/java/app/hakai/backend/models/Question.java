@@ -19,4 +19,10 @@ public class Question {
 
     @Column
     private UUID game;
+
+    @Column
+    private String question;
+
+    @Column
+    private String answer;
 };

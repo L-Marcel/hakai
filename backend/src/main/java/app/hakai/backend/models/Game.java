@@ -28,5 +28,5 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "user_email", nullable = false)
-    private User user;
+    private User owner;
 };
