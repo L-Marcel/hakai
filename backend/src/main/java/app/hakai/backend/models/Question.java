@@ -20,9 +20,9 @@ public class Question {
     @Column
     private UUID game;
 
-    @Column
+    @Column(nullable = false, length = 500)
     private String question;
 
-    @Column
+    @Column(nullable = false)
     private String answer;
 };

@@ -11,5 +11,5 @@ import lombok.Setter;
 public class QuestionVariant {
     private int difficulty = 0;
     private List<String> options;
-    private Question originalQuestion;
+    private Question original;
 }

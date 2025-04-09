@@ -26,6 +26,6 @@ public class User {
     @Column(name = "name", nullable = false)
     private String nome;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Game> games;
 }
