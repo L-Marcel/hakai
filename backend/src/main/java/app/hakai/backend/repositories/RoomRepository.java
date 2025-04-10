@@ -14,7 +14,18 @@ public class RoomRepository {
     @Setter
     private LinkedList<Room> rooms = new LinkedList<Room>();
 
-    public void addRoom(Room room) {
+    public void add(Room room) {
         rooms.add(room);
+    };
+
+    public boolean existsByCode(String code) {
+        for(int i = 0; i < rooms.size(); i++) {
+            Room room = this.rooms.get(i);
+            if(room.getCode().equals(code)) {
+                return true;
+            };
+        };
+
+        return false;
     };
 };
