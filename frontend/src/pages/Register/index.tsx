@@ -30,7 +30,7 @@ export default function Register() {
   return (
     <main className={styles.main}>
       <section className={styles.section}>
-        <h2 className={styles.title}>Registro</h2>
+        <h2 className={styles.title}>Registre-se</h2>
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
@@ -56,7 +56,7 @@ export default function Register() {
           <button type="submit" className={styles.button}>
             Registrar
           </button>
-        </form>
+        </form> <p>Já tem conta? <a href="/login">Log in</a></p>
       </section>
     </main>
   );
