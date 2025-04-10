@@ -3,8 +3,6 @@ package app.hakai.backend.models;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.annotations.ManyToAny;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +25,6 @@ public class Game {
     private List<Question> questions;
 
     @ManyToOne
-    @JoinColumn(name = "user_email", nullable = false)
-    private User user;
+    @JoinColumn(name = "email", nullable = false)
+    private User owner;
 };

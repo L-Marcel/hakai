@@ -19,4 +19,10 @@ public class Question {
 
     @Column
     private UUID game;
+
+    @Column(nullable = false, length = 500)
+    private String question;
+
+    @Column(nullable = false)
+    private String answer;
 };
