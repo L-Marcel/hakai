@@ -30,7 +30,13 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        alert(`Login realizado com sucesso!`);
+        const mensagem = data.mensagem;
+        const token = data.token;
+        localStorage.setItem("token", token);
+
+        alert(`Login realizado com sucesso!\n${mensagem}`);
+
+
       } else {
         alert("Email ou senha inválidos.");
       }
