@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 
@@ -20,8 +21,8 @@ public class GameController {
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Optional<Game>> get(@PathVariable UUID uuid) {
-        Optional<Game> game = service.getGame(uuid);
+    public ResponseEntity<Game> get(@PathVariable UUID uuid) throws GameNotFound{
+        Game game = service.getGame(uuid).orElseThrow(() -> new GameNotFound(uuid.toString()));
 
         return ResponseEntity.ok().body(game);
     }
