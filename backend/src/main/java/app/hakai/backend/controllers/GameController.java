@@ -23,12 +23,12 @@ public class GameController {
     public ResponseEntity<Game> get(@PathVariable String uuid) throws GameNotFound{
         try {
             UUID validUuid = UUID.fromString(uuid);  
-            Game game = service.getGame(validUuid).orElseThrow(() -> new GameNotFound(validUuid.toString()));
+            Game game = service.getGame(validUuid).orElseThrow(() -> new GameNotFound());
             
             return ResponseEntity.ok().body(game);
         } 
         catch (IllegalArgumentException e) {
-            throw new GameNotFound(uuid);
+            throw new GameNotFound();
         }
     }
 }

@@ -18,11 +18,10 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(GameNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleGameNotFound (GameNotFound ex, HttpServletRequest request) {
+    public ResponseEntity<Object> handleGameNotFound (GameNotFound ex) {
         Map<String, Object> error = new LinkedHashMap<>();
         
         error.put("status", HttpStatus.NOT_FOUND.value());
-        error.put("error", HttpStatus.NOT_FOUND.getReasonPhrase());
         error.put("message", ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
