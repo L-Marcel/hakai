@@ -19,7 +19,7 @@ public class RoomService {
     };
 
     public synchronized Room createRoom(Game game) throws GameNotFound {
-        if(game == null) throw new GameNotFound();
+        if(game == null) throw new GameNotFound(null);
 
         Room room = new Room();
 

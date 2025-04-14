@@ -1,6 +1,5 @@
 package app.hakai.backend.controllers;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,15 @@ public class GameController {
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Game> get(@PathVariable UUID uuid) throws GameNotFound{
-        Game game = service.getGame(uuid).orElseThrow(() -> new GameNotFound(uuid.toString()));
-
-        return ResponseEntity.ok().body(game);
+    public ResponseEntity<Game> get(@PathVariable String uuid) throws GameNotFound{
+        try {
+            UUID validUuid = UUID.fromString(uuid);  
+            Game game = service.getGame(validUuid).orElseThrow(() -> new GameNotFound(validUuid.toString()));
+            
+            return ResponseEntity.ok().body(game);
+        } 
+        catch (IllegalArgumentException e) {
+            throw new GameNotFound(uuid);
+        }
     }
 }
