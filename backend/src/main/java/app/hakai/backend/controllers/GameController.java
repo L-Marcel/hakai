@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 
@@ -20,15 +19,9 @@ public class GameController {
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Game> get(@PathVariable String uuid) throws GameNotFound{
-        try {
-            UUID validUuid = UUID.fromString(uuid);  
-            Game game = service.getGame(validUuid).orElseThrow(() -> new GameNotFound());
+    public ResponseEntity<Game> get(@PathVariable(required = false) UUID uuid){
+        Game game = service.getGame(uuid);
             
-            return ResponseEntity.ok().body(game);
-        } 
-        catch (IllegalArgumentException e) {
-            throw new GameNotFound();
-        }
+        return ResponseEntity.ok().body(game);
     }
 }

@@ -1,30 +1,27 @@
 package app.hakai.backend.advice;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
-import app.hakai.backend.errors.GameNotFound;
-import jakarta.servlet.http.HttpServletRequest;
+import app.hakai.backend.errors.HttpError;
 
 
 @ControllerAdvice
 public class ExceptionAdvice {
 
-    @ExceptionHandler(GameNotFound.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleGameNotFound (GameNotFound ex) {
-        Map<String, Object> error = new LinkedHashMap<>();
-        
-        error.put("status", HttpStatus.NOT_FOUND.value());
-        error.put("message", ex.getMessage());
+    @ExceptionHandler(HttpError.class)
+    public ResponseEntity<Object> handleGameNotFound (HttpError error) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getError());
+    }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Object> handleNotFound() {
+        HttpError error = new HttpError("Route not found", HttpStatus.NOT_FOUND);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.getError());
     }
 
 }
