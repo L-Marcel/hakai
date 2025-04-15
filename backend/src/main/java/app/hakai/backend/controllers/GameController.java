@@ -1,6 +1,5 @@
 package app.hakai.backend.controllers;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,9 @@ public class GameController {
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Optional<Game>> get(@PathVariable UUID uuid) {
-        Optional<Game> game = service.getGame(uuid);
-
+    public ResponseEntity<Game> get(@PathVariable(required = false) UUID uuid){
+        Game game = service.getGame(uuid);
+            
         return ResponseEntity.ok().body(game);
     }
 }
