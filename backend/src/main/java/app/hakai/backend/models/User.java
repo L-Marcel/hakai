@@ -1,8 +1,6 @@
 package app.hakai.backend.models;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,14 +16,15 @@ import lombok.Setter;
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
     private String email;
+
     @Column(nullable = false)
-    private String senha;
-    @Column(name = "name", nullable = false)
-    private String nome;
+    private String password;
+
+    @Column(nullable = false)
+    private String name;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Game> games;
-}
+};

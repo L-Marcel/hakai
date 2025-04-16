@@ -12,16 +12,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
-
-    SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
-    private final long EXPIRATION_TIME = 86400000; // 1 dia em milissegundos
+    private final long EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 1 dia em milissegundos
+    private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String generateToken(String email) {
-        return Jwts.builder()
-                .setSubject(email) // Quem é o dono do token
-                .setIssuedAt(new java.util.Date()) // Data que o token foi criado
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Quando ele expira
-                .signWith(key, SignatureAlgorithm.HS512).compact();
-    }
-}
+        Date currentDate = new Date();
+        Date expirationDate = new Date(
+            currentDate.getTime() + EXPIRATION_TIME
+        );
+
+        return Jwts
+            .builder()
+            .setSubject(email) // Quem é o dono do token
+            .setIssuedAt(currentDate) // Quando ele foi criado
+            .setExpiration(expirationDate) // Quando ele expira
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
+    };
+};

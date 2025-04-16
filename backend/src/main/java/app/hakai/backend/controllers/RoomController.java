@@ -3,6 +3,7 @@ package app.hakai.backend.controllers;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +26,13 @@ public class RoomController {
     private GameService gameService;
 
     @PostMapping("/create")
-    public ResponseEntity<Room> create(@RequestBody Game game) {
-        // game = gameService.getGame(game.getUuid());
+    public ResponseEntity<Room> create(
+        @RequestBody Game game
+    ) {
+        game = gameService.getGame(game.getUuid());
         Room createdRoom = roomService.createRoom(game);
-        return ResponseEntity.ok().body(createdRoom);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(createdRoom);
     };
 };
