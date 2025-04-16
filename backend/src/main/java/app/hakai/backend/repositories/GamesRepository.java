@@ -1,11 +1,11 @@
 package app.hakai.backend.repositories;
 
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import app.hakai.backend.models.User;
+import app.hakai.backend.models.Game;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-
-}
+public interface GamesRepository extends JpaRepository<Game, UUID> {};

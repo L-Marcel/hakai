@@ -5,13 +5,9 @@ import java.util.LinkedList;
 import org.springframework.stereotype.Repository;
 
 import app.hakai.backend.transients.Room;
-import lombok.Getter;
-import lombok.Setter;
 
 @Repository
-public class RoomRepository {
-    @Getter
-    @Setter
+public class RoomsRepository {
     private LinkedList<Room> rooms = new LinkedList<Room>();
 
     public void add(Room room) {

@@ -10,21 +10,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
+@Entity
+@Table(name = "games")
 public class Game {
     @Id
     @GeneratedValue
     private UUID uuid;
 
+    @ManyToOne
+    @JoinColumn(name = "owner", nullable = false)
+    private User owner;
+
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
-
-    @ManyToOne
-    @JoinColumn(name = "email", nullable = false)
-    private User owner;
 };

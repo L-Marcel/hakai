@@ -9,21 +9,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class SecurityConfig {
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults()) // Habilita o CORS com base na sua CorsConfig
-                .csrf(csrf -> csrf.disable()) // Desativa CSRF (opcionalmente)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permite todas as requisições
-                );
-
-        return http.build();
-    }
-}
+        return http
+            .cors(Customizer.withDefaults()) // Habilita o CORS
+            .csrf(csrf -> csrf.disable()) // Desativa CSRF
+            .authorizeHttpRequests(
+                auth -> auth.anyRequest().permitAll() // Permite todas as requisições
+            ).build();
+    };
+};

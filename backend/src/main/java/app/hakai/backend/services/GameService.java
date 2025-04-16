@@ -7,18 +7,17 @@ import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
-import app.hakai.backend.repositories.GameRepository;
+import app.hakai.backend.repositories.GamesRepository;
 
 @Service
 public class GameService {
     @Autowired
-    private GameRepository repository;
+    private GamesRepository repository;
 
-    public Game getGame(UUID uuid) throws GameNotFound{
-        if (uuid == null) {
-            throw new GameNotFound();
-        }
-        return repository.findById(uuid).orElseThrow(() -> new GameNotFound());
-    }
-    
-}
+    public Game getGame(UUID uuid) throws GameNotFound {
+        if(uuid == null) throw new GameNotFound();
+        return repository.findById(uuid).orElseThrow(
+            () -> new GameNotFound()
+        );
+    };
+};

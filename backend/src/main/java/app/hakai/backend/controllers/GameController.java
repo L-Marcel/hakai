@@ -13,15 +13,16 @@ import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class GameController {
     @Autowired
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Game> get(@PathVariable(required = false) UUID uuid){
+    public ResponseEntity<Game> get(
+        @PathVariable(required = false) UUID uuid
+    ){
         Game game = service.getGame(uuid);
-            
         return ResponseEntity.ok().body(game);
-    }
-}
+    };
+};

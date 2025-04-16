@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
-import app.hakai.backend.repositories.RoomRepository;
+import app.hakai.backend.repositories.RoomsRepository;
 import app.hakai.backend.transients.Room;
 
 @Service
 public class RoomService {
     @Autowired
-    private RoomRepository repository;
+    private RoomsRepository repository;
 
     private String generateCode(int size) {
         return RandomStringUtils.secure().next(size);
