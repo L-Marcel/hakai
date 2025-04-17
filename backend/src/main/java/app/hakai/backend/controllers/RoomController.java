@@ -1,7 +1,5 @@
 package app.hakai.backend.controllers;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 import app.hakai.backend.services.RoomService;
