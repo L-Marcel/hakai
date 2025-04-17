@@ -26,7 +26,7 @@ public class ChatbotTest {
         
         Awaitility
             .await()
-            .atMost(40, TimeUnit.SECONDS)
+            .atMost(60, TimeUnit.SECONDS)
             .untilAsserted(
                 () -> Mockito.verify(callback).accept(
                     Optional.of("Funciona!")

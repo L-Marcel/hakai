@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,11 +16,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class AIChatbot implements Chatbot {
-    private static final String API_KEY = "";
     private static final String API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
+
+    @Autowired
+    private KeySource keySource;
 
     public AIChatbot() {
         this.httpClient = HttpClient.newHttpClient();
@@ -28,7 +31,6 @@ public class AIChatbot implements Chatbot {
 
     @Override
     public void request(String prompt, ChatbotCallback callback) {
-        System.out.println("ABCDE1");
         try {
             Map<String, Object> requestBody = Map.of(
                 "model", "deepseek/deepseek-r1:free",
@@ -45,7 +47,7 @@ public class AIChatbot implements Chatbot {
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + API_KEY)
+                .header("Authorization", "Bearer " + this.keySource.getKey())
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
@@ -56,7 +58,6 @@ public class AIChatbot implements Chatbot {
                     try {
                         JsonNode root = objectMapper.readTree(responseBody);
                         String responseText = root.path("choices").get(0).path("message").path("content").asText();
-                        System.out.println(responseText);
                         callback.accept(Optional.of(responseText));
                     } catch (Exception e) {
                         System.out.println("Erro ao processar a resposta: " + e.getMessage());
