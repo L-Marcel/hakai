@@ -1,6 +1,5 @@
 package app.hakai.backend.config;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

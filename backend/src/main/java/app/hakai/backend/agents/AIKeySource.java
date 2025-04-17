@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AIKeyController {
+public class AIKeySource implements KeySource {
     private final String[] keys = {};
-    private int currentKey = 0;
+    private int currentKey = -1;
 
     public String getKey() {
         return keys[currentKey];
@@ -15,9 +15,5 @@ public class AIKeyController {
 
     public void changeCurrentKey() {
         currentKey = (currentKey + 1) % keys.length;
-    };
-
-    public String[] getEnvironmentKeys() {
-        return keys;
     };
 };
