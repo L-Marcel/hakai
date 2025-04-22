@@ -1,18 +1,22 @@
 import { useState } from "react";
 import styles from "@pages/Login/index.module.scss";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
-    senha: "",
-    nome: "",
+    password: "",
+    name: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     const response = await fetch("http://localhost:8080/users", {
       method: "POST",
@@ -21,12 +25,15 @@ export default function Register() {
       },
       body: JSON.stringify(formData),
     });
-    if (response.ok) {
-      alert("Usuário registrado com sucesso!");
+
+    if(response.ok) {
+      navigate("/login");
     } else {
-      alert("Erro ao registrar usuário.");
-    }
+      const data = await response.json();
+      setError(data.message);
+    };
   };
+
   return (
     <main className={styles.main}>
       <section className={styles.section}>
@@ -34,7 +41,7 @@ export default function Register() {
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
-            name="nome"
+            name="name"
             placeholder="Nome"
             className={styles.input}
             onChange={handleChange}
@@ -48,15 +55,17 @@ export default function Register() {
           />
           <input
             type="password"
-            name="senha"
+            name="password"
             placeholder="Senha"
             className={styles.input}
             onChange={handleChange}
           />
+          {error && <p>{error}</p>}
           <button type="submit" className={styles.button}>
             Registrar
           </button>
-        </form> <p>Já tem conta? <a href="/login">Log in</a></p>
+        </form> 
+        <p>Já tem conta? <a href="/login">Log in</a></p>
       </section>
     </main>
   );

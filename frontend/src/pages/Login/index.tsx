@@ -1,49 +1,40 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
-import Register from "@pages/Register";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
-    senha: ""
+    password: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
 
-    const formParams = new URLSearchParams();
-    formParams.append("email", formData.email);
-    formParams.append("senha", formData.senha);
+    const response = await fetch("http://localhost:8080/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
 
-    try {
-      const response = await fetch("http://localhost:8080/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: formParams.toString()
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const mensagem = data.mensagem;
-        const token = data.token;
-        localStorage.setItem("token", token);
-
-        alert(`Login realizado com sucesso!\n${mensagem}`);
-
-
-      } else {
-        alert("Email ou senha inválidos.");
-      }
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      alert("Erro ao tentar fazer login.");
-    }
+   
+    if(response.ok) {
+      const token = await response.text();
+      localStorage.setItem("token", token);
+      navigate("/");
+    } else {
+      const data = await response.json();
+      setError(data.message);
+    };
   };
 
   return (
@@ -60,17 +51,15 @@ export default function Login() {
           />
           <input
             type="password"
-            name="senha"
+            name="password"
             placeholder="Senha"
             className={styles.input}
             onChange={handleChange}
           />
-
+          {error && <p>{error}</p>}
           <button type="submit" className={styles.button}>Entrar</button>
-
-
-
-        </form>    <p>Não tem login? <a href="/register">Registre-se</a></p>
+        </form>    
+        <p>Não tem login? <a href="/register">Registre-se</a></p>
       </section>
     </main>
   );
