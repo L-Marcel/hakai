@@ -3,6 +3,7 @@ import "@styles/global.scss";
 import Login from "@pages/Login";
 import Register from "@pages/Register";
 import Dashboard from "@pages/Dashboard";
+import Private from "@components/Private";
 
 function App() {
   return (
@@ -10,7 +11,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/:id" element={<Dashboard />} />
+        <Route path="/" element={<Private>
+          <Dashboard />
+        </Private>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </>
