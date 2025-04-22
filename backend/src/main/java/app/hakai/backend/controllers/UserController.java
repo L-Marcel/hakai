@@ -6,9 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.dtos.LoginRequestBody;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.UserService;
 
@@ -19,11 +19,13 @@ public class UserController {
     private UserService service;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-        @RequestParam String email, 
-        @RequestParam String password
+    public ResponseEntity<String> login(
+        @RequestBody LoginRequestBody body
     ) {
-        String token = service.login(email, password);
+        String token = service.login(
+            body.getEmail(), 
+            body.getPassword()
+        );
 
         return ResponseEntity
             .status(HttpStatus.ACCEPTED)
@@ -31,7 +33,7 @@ public class UserController {
     };
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         service.register(user);
         return ResponseEntity
             .status(HttpStatus.CREATED)
