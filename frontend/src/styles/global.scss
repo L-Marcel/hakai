@@ -1,7 +1,7 @@
 @import "@styles/variables.scss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: $inter;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
@@ -16,6 +16,8 @@
 * {
   margin: 0;
   padding: 0;
+  outline: none;
+  box-shadow: none;
 }
 
 body {
@@ -41,5 +43,27 @@ a {
 
   &:disabled:hover {
     cursor: not-allowed;
+  }
+}
+
+a {
+  color: $orange-500;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+p, a, button {
+  font-family: $roboto;
+}
+
+button, input {
+  &:hover, &:focus {
+    &:not(:disabled) {
+      box-shadow: $ring-background, $ring-orange-500;
+    }
   }
 }
