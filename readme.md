@@ -1,8 +1,16 @@
-# Aviso
-
-Para manter o projeto por inteiro rodando, será necessário manter os três servidores rodando (banco de dados, _backend_ e _frontend_).
+# Sumário
+- [Instruções para devs (geral)](#instruções-para-devs-geral)
+    - [Commits](#commits)
+        - [Exemplo](#exemplo)
+        - [Justificativa](#justificativa)
+    - [Branchs](#branchs)
+        - [Exemplo](#exemplo-1)
+- [Instruções para devs (frontend)](#instruções-para-devs-frontend)
+- [Instruções para devs (backend)](#instruções-para-devs-backend)
 
 # Instruções para devs (geral)
+
+Para manter o projeto por inteiro rodando, será necessário manter os três servidores rodando (banco de dados, _backend_ e _frontend_).
 
 Deixo como recomendação a utilização do [VSCode](https://code.visualstudio.com/) para todo o projeto. Também estarei utilizando o [pgAdmin4](https://www.pgadmin.org/download/) para visualizar e gerenciar o banco de dados.
 
@@ -57,8 +65,13 @@ Certifique-se de ter o [Java](https://www.oracle.com/br/java/technologies/downlo
 
 Também certifique-se de ter o [Docker](https://docs.docker.com/desktop/setup/install/windows-install/). Pode ser meio complicado, deixo esse [manual](https://efficient-sloth-d85.notion.site/Instalando-Docker-e-Docker-Compose-7953729d22554795b50033c4c19eae70) como recomendação.
 
+Para executar a aplicação `Java`, estou utilizando o pacote de extensões [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack). Com ele, basta abrir o arquivo `backend/src/main/java/app/hakai/backend/BackendApplication.java` e você verá um botão de _play_ no canto superior esquerdo.
 
-Para executar a aplicação `Java`, estou utilizando o pacote de extensões [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack). Com ela, basta abrir o arquivo `backend/src/main/java/app/hakai/backend/BackendApplication.java` e você verá um botão de _play_ no canto superior esquerdo.
+Vale destacar que você precisará criar um arquivo `backend/src/main/resources/secret.properties`, responsável por armazenar nossas chaves secretas do [Open Router](https://openrouter.ai/). As chaves são separadas por vírgula e são utilizadas de forma distribuída. Segue um exemplo deste arquivo:
+
+```properties
+ai.keys=<CHAVE 1>,<CHAVE 2>
+```
 
 Para inicializar o banco de dados `Postgres` através do `Docker`, execute:
 
@@ -66,6 +79,8 @@ Para inicializar o banco de dados `Postgres` através do `Docker`, execute:
 cd backend
 docker-compose up -d
 ```
+
+Se der erro e você tiver instalado o `Docker` corretamente, provavelmente se esqueceu de inicializar o `Docker Desktop`.
 
 # Instruções para devs (frontend)
 
