@@ -1,9 +1,13 @@
 .card {
   padding: 1rem;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   background-color: $gray-200;
   border-radius: $border-radius;
+  gap: 1rem;
 
   &:hover {
     background-color: $gray-100;
@@ -11,8 +15,17 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+
   h1 {
     color: $orange-500;
+    font-weight: 600;
+  }
+
+  p {
+    font-style: italic;
+    font-weight: 300;
   }
 }
 
@@ -21,21 +34,27 @@
   gap: 1rem;
 
   button {
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    padding: 1rem;
-    border-radius: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    gap: 0.5rem;
+    height: 3rem;
+    padding: 0.75rem;
     border-width: 0px;
     border-style: solid;
     background-color: $gray-300;
     color: $orange-500;
+    border-radius: 100%;
 
     &:hover:not(:disabled) {
       color: $orange-700;
     }
 
     &:last-of-type {
-      padding-left: calc(1rem + 4px);
+      padding-left: calc(0.75rem + 4px);
       background-color: $orange-200;
 
       &:hover:not(:disabled) {
@@ -48,10 +67,16 @@
     }
 
     svg {
+      aspect-ratio: 1 / 1;
       display: flex;
       height: 100%;
       width: 100%;
       aspect-ratio: 1 / 1;
+    }
+
+    &:last-of-type {
+      border-radius: $border-radius;
+      padding: 0.75rem 1rem 0.75rem 0.75rem;
     }
   }
 }

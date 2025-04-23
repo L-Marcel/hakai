@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "@pages/Login/index.module.scss";
 import { useNavigate } from "react-router-dom";
+import background from "@assets/undraw_hiking.svg";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -36,10 +37,15 @@ export default function Register() {
 
   return (
     <main className={styles.main}>
+      <img className={styles.background} src={background} alt=""/>
       <section className={styles.section}>
-        <h2 className={styles.title}>Registre-se</h2>
+        <div className={styles.title}>
+          <h1>HAKAI</h1>
+          <p>Aprendendo de maneiras diferentes</p>
+        </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
+            autoComplete="off"
             type="text"
             name="name"
             placeholder="Nome"
@@ -47,6 +53,7 @@ export default function Register() {
             onChange={handleChange}
           />
           <input
+            autoComplete="off"
             type="email"
             name="email"
             placeholder="Email"
@@ -54,18 +61,19 @@ export default function Register() {
             onChange={handleChange}
           />
           <input
+            autoComplete="off"
             type="password"
             name="password"
             placeholder="Senha"
             className={styles.input}
             onChange={handleChange}
           />
-          {error && <p>{error}</p>}
+          {error && <p className={styles.error}>{error}</p>}
           <button type="submit" className={styles.button}>
             Registrar
           </button>
         </form> 
-        <p>Já tem conta? <a href="/login">Log in</a></p>
+        <p>Já tem conta? <a href="/login">Entre</a>.</p>
       </section>
     </main>
   );

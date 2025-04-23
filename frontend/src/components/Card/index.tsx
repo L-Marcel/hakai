@@ -19,6 +19,7 @@ export default function Card() {
         </button>
         <button>
           <PlayIcon />
+          Iniciar
         </button>
       </div>
     </li>

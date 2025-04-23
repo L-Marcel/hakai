@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
+import background from "@assets/undraw_hiking.svg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -39,10 +40,15 @@ export default function Login() {
 
   return (
     <main className={styles.main}>
+      <img className={styles.background} src={background} alt=""/>
       <section className={styles.section}>
-        <h2 className={styles.title}>Login</h2>
+        <div className={styles.title}>
+          <h1>HAKAI</h1>
+          <p>Aprendendo de maneiras diferentes</p>
+        </div>
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
+            autoComplete="off"
             type="email"
             name="email"
             placeholder="Email"
@@ -50,16 +56,17 @@ export default function Login() {
             onChange={handleChange}
           />
           <input
+            autoComplete="off"
             type="password"
             name="password"
             placeholder="Senha"
             className={styles.input}
             onChange={handleChange}
           />
-          {error && <p>{error}</p>}
+          {error && <p className={styles.error}>{error}</p>}
           <button type="submit" className={styles.button}>Entrar</button>
-        </form>    
-        <p>Não tem login? <a href="/register">Registre-se</a></p>
+        </form>
+        <p>Não tem login? <a href="/register">Registre-se</a>.</p>
       </section>
     </main>
   );
