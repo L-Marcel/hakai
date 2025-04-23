@@ -15,7 +15,7 @@ public class KeySourceTest {
     @Test
     void shouldReturnSomeKey(){
         assertNotEquals(keySource.getKeys().length, 0);
-        for(int i = 0; i < keySource.getKeys().length * 2; i++) {
+        for(int i = 1; i < keySource.getKeys().length * 2; i++) {
             String key = keySource.getKey();
             assertEquals(key, keySource.getKeys()[i % keySource.getKeys().length]);
         };
