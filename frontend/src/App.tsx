@@ -1,20 +1,26 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "@styles/global.scss";
-import Login from "@pages/Login";
-import Register from "@pages/Register";
-import Dashboard from "@pages/Dashboard";
+import MainPage from "@pages/Main";
+import RegisterPage from "@pages/Register";
+import GamesPage from "@pages/Games";
 import Private from "@components/Private";
+import JoinPage from "@pages/Join";
+import RoomPage from "@pages/Room";
+import RoomPanelPage from "@pages/RoomPanel";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Private>
-          <Dashboard />
-        </Private>} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route index element={<MainPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="join" element={<JoinPage />}/>
+        <Route element={<Private />}>
+          <Route path="games" element={<GamesPage />} />
+          <Route path="room/panel/:code" element={<RoomPanelPage />}/>
+        </Route>
+        <Route path="room/:code" element={<RoomPage />}/>
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </>
   );

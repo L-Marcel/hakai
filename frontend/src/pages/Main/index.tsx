@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import background from "@assets/undraw_hiking.svg";
 
-export default function Login() {
+export default function MainPage() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({

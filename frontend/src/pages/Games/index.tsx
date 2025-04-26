@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import Card from "@components/Card";
 
-export default function Dashboard() {
+export default function GamesPage() {
   // const token = localStorage.getItem("token");
 
   return (
