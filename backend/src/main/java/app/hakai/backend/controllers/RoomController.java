@@ -1,12 +1,8 @@
 package app.hakai.backend.controllers;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import app.hakai.backend.dtos.CreateRoomResponse;
+import app.hakai.backend.dtos.JoinRoomResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 import app.hakai.backend.services.RoomService;
@@ -33,25 +31,27 @@ public class RoomController {
     private SimpMessagingTemplate simp;
 
     @PostMapping("/create")
-    public ResponseEntity<Room> create(
+    public ResponseEntity<CreateRoomResponse> create(
         @RequestBody Game game
     ) {
         game = gameService.getGame(game.getUuid());
         Room createdRoom = roomService.createRoom(game);
+        CreateRoomResponse response = new CreateRoomResponse(createdRoom);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(createdRoom);
+            .body(response);
     };
 
     @PostMapping("/{code}")
-    public ResponseEntity<Participant> join(
+    public ResponseEntity<JoinRoomResponse> join(
         @PathVariable String code,
         Participant participant
     ) {
         roomService.joinRoom(code, participant);
         simp.convertAndSend("/" + code + "/users/entered");
+        JoinRoomResponse response = new JoinRoomResponse(participant);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(participant);
+            .body(response);
     };
 };
