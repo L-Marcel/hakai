@@ -1,13 +1,13 @@
 package app.hakai.backend.services;
 
 import java.util.LinkedList;
-import java.util.UUID;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
+import app.hakai.backend.errors.GameRoomAlreadyExists;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.RoomNotFound;
 import app.hakai.backend.models.Game;
@@ -55,6 +55,8 @@ public class RoomService {
 
     public synchronized Room createRoom(Game game) throws GameNotFound {
         if(game == null) throw new GameNotFound();
+        else if(repository.existsByGame(game.getUuid())) 
+            throw new GameRoomAlreadyExists();
 
         String code = this.generateCode(6);
         while(repository.existsByCode(code)) 
