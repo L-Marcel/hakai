@@ -3,7 +3,7 @@ package app.hakai.backend.services;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,9 @@ public class RoomService {
     private RoomsRepository repository;
 
     private String generateCode(int size) {
-        return RandomStringUtils.secure().next(size);
+        return Integer.toString(
+            RandomUtils.secure().hashCode()
+        ).substring(0, size);
     };
 
     private Room findRoomByCode(String code) throws RoomNotFound {
