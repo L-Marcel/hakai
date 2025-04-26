@@ -42,7 +42,7 @@ public class RoomController {
             .body(response);
     };
 
-    @PostMapping("/{code}")
+    @PostMapping("/{code}/join")
     public ResponseEntity<JoinRoomResponse> join(
         @PathVariable String code,
         Participant participant
