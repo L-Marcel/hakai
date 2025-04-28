@@ -1,7 +1,16 @@
+import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import Card from "@components/Card";
 
-export default function GamesPage() {
+export default function DashboardPage() {
+  return (
+    <AuthGuard>
+      <Page/>
+    </AuthGuard>
+  );
+};
+
+function Page() {
   // const token = localStorage.getItem("token");
 
   return (
@@ -19,4 +28,4 @@ export default function GamesPage() {
       </section>
     </main>
   );
-}
+};

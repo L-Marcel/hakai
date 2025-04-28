@@ -1,41 +1,34 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
-import { useNavigate } from "react-router-dom";
 import background from "@assets/undraw_hiking.svg";
+import useAuth, { LoginData } from "../../stores/useAuth";
+import AuthGuard from "@components/Guards/AuthGuard";
 
 export default function MainPage() {
-  const navigate = useNavigate();
+  return (
+    <AuthGuard onlyUnauthenticated>
+      <Page/>
+    </AuthGuard>
+  );
+};
+
+function Page() {
+  const login = useAuth((state) => state.login);
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
+  const [data, setData] = useState<LoginData>({
     email: "",
     password: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const onSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-
-    const response = await fetch("http://localhost:8080/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    });
-
-   
-    if(response.ok) {
-      const token = await response.text();
-      localStorage.setItem("token", token);
-      navigate("/");
-    } else {
-      const data = await response.json();
-      setError(data.message);
-    };
+    const response = await login(data);
+    if(!response.ok) setError(response.error.message);
   };
 
   return (
@@ -46,14 +39,14 @@ export default function MainPage() {
           <h1>HAKAI</h1>
           <p>Aprendendo de maneiras diferentes</p>
         </div>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={onSubmit}>
           <input
             autoComplete="off"
             type="email"
             name="email"
             placeholder="Email"
             className={styles.input}
-            onChange={handleChange}
+            onChange={onChange}
           />
           <input
             autoComplete="off"
@@ -61,7 +54,7 @@ export default function MainPage() {
             name="password"
             placeholder="Senha"
             className={styles.input}
-            onChange={handleChange}
+            onChange={onChange}
           />
           {error && <p className={styles.error}>{error}</p>}
           <button type="submit" className={styles.button}>Entrar</button>

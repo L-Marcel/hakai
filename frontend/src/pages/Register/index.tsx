@@ -2,8 +2,17 @@ import { useState } from "react";
 import styles from "@pages/Main/index.module.scss";
 import { useNavigate } from "react-router-dom";
 import background from "@assets/undraw_hiking.svg";
+import AuthGuard from "@components/Guards/AuthGuard";
 
 export default function RegisterPage() {
+  return (
+    <AuthGuard onlyUnauthenticated>
+      <Page/>
+    </AuthGuard>
+  );
+};
+
+function Page() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
