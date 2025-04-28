@@ -2,23 +2,18 @@ import PlayIcon from "@components/Icons/PlayIcon";
 import styles from "./index.module.scss";
 import { EditIcon } from "@components/Icons/EditIcon";
 import { EraserIcon } from "@components/Icons/EraserIcon";
+import useRoom from "../../stores/useRoom";
+import { useNavigate } from "react-router-dom";
 
 export default function Card() {
-  const createRoom = async() => {
-    const response = await fetch("http://localhost:8080/rooms/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "uuid": "4ad9e19e-8f9b-4b93-a7a1-17ea469bd455"
-      })
-    });
+  const createRoom = useRoom((state) => state.create);
+  const navigate = useNavigate();
 
+  const onStart = async() => {
+    const response = await createRoom("4ad9e19e-8f9b-4b93-a7a1-17ea469bd455");
+    // [TODO] Vai ter que criar um guard depois para redirecionar se já tiver sala de jogo
     if(response.ok) {
-      console.log(await response.json());
-    } else {
-      console.log(response.status);
+      navigate("/room/panel/" + response.value);
     };
   };
 
@@ -35,7 +30,7 @@ export default function Card() {
         <button disabled>
           <EditIcon />
         </button>
-        <button onClick={createRoom}>
+        <button onClick={onStart}>
           <PlayIcon />
           Iniciar
         </button>
