@@ -63,6 +63,9 @@ importers:
       vite:
         specifier: ^6.2.0
         version: 6.2.4(@types/node@22.14.0)(sass@1.86.1)
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/react@19.0.12)(react@19.1.0)
 
 packages:
 
@@ -1009,9 +1012,6 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  sass-alias@2.0.1:
-    resolution: {integrity: sha512-KsVcyzpqzwdtSTQy+C2QhV5sivhAL836Dmv/kkIcYgnLYJ85scgMU5SF6LpsIOoaE911CtGfkuvhLdnqmhSXqQ==}
-
   sass@1.86.1:
     resolution: {integrity: sha512-Yaok4XELL1L9Im/ZUClKu//D2OP1rOljKj0Gf34a+GzLbMveOzL7CfqYo+JUa5Xt1nhTCW+OcKp/FtR7/iqj1w==}
     engines: {node: '>=14.0.0'}
@@ -1135,6 +1135,24 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zustand@5.0.3:
+    resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -1777,7 +1795,6 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       react-router-dom: 7.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      sass-alias: 2.0.1
 
   fsevents@2.3.3:
     optional: true
@@ -1970,8 +1987,6 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  sass-alias@2.0.1: {}
-
   sass@1.86.1:
     dependencies:
       chokidar: 4.0.3
@@ -2049,3 +2064,8 @@ snapshots:
   word-wrap@1.2.5: {}
 
   yocto-queue@0.1.0: {}
+
+  zustand@5.0.3(@types/react@19.0.12)(react@19.1.0):
+    optionalDependencies:
+      '@types/react': 19.0.12
+      react: 19.1.0

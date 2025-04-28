@@ -1,20 +1,21 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import "@styles/global.scss";
-import Login from "@pages/Login";
-import Register from "@pages/Register";
-import Dashboard from "@pages/Dashboard";
-import Private from "@components/Private";
+import MainPage from "@pages/Main";
+import RegisterPage from "@pages/Register";
+import DashboardPage from "@pages/Dashboard";
+import RoomPage from "@pages/Room";
+import RoomPanelPage from "@pages/RoomPanel";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Private>
-          <Dashboard />
-        </Private>} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/dashboard" element={<DashboardPage />}/>
+        <Route path="/room/panel/:code" element={<RoomPanelPage />}/>
+        <Route path="/home" element={<MainPage />}/>
+        <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/room/:code" element={<RoomPage />} />
+        <Route path="*" element={<Navigate to="/home"/>} />
       </Routes>
     </>
   );
