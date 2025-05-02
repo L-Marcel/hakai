@@ -19,6 +19,7 @@ type RoomStore = {
   connect: (room: Room) => Promise<void>;
   create: (game: UUID) => Promise<Result<string>>;
   join: (code: string) => Promise<Result>;
+  check: (code?: string) => Promise<Result>;
 };
 
 const useRoom = create<RoomStore>((set, get) => ({
@@ -66,6 +67,27 @@ const useRoom = create<RoomStore>((set, get) => ({
     return {
       ok: true,
     };
+  },
+  check: async (code?: string) => {
+    const response = await fetch("http://localhost:8080/rooms/" + code, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      return {
+        ok: true,
+        value: code,
+      };
+    } else {
+      const error = await response.json();
+      return {
+        ok: false,
+        error,
+      };
+    }
   },
 }));
 

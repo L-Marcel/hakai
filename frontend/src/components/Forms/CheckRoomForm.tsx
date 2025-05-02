@@ -4,9 +4,11 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
 import useRoom from "../../stores/useRoom";
+import { useNavigate } from "react-router-dom";
 
 export default function JoinForm() {
-  const join = useRoom((state) => state.join);
+  const navigation = useNavigate();
+  const check = useRoom((state) => state.check);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
 
@@ -19,8 +21,9 @@ export default function JoinForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await join(code);
-    if (!response.ok) setError(response.error.message);
+    const response = await check(code);
+    if (response.ok) navigation("/room/" + code);
+    else setError(response.error.message);
   };
 
   return (

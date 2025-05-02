@@ -1,10 +1,13 @@
 import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
+import RoomGuard from "@components/Guards/RoomGuard";
 
 export default function RoomPanelPage() {
   return (
     <AuthGuard>
-      <Page />
+      <RoomGuard>
+        <Page />
+      </RoomGuard>
     </AuthGuard>
   );
 }

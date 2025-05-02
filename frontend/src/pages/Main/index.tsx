@@ -1,7 +1,7 @@
 import styles from "./index.module.scss";
 import background from "@assets/undraw_hiking.svg";
 import AuthGuard from "@components/Guards/AuthGuard";
-import JoinForm from "@components/Forms/JoinForm";
+import CheckRoomForm from "@components/Forms/CheckRoomForm";
 import LoginForm from "@components/Forms/LoginForm";
 
 export default function MainPage() {
@@ -21,7 +21,7 @@ function Page() {
           <h1>HAKAI</h1>
           <p>Aprendendo de maneiras diferentes</p>
         </div>
-        <JoinForm />
+        <CheckRoomForm />
         <hr />
         <LoginForm />
         <p>
