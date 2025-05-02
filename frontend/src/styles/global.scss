@@ -50,18 +50,23 @@ a {
   color: $orange-500;
   text-decoration: none;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 }
 
-p, a, button {
+p,
+a,
+button {
   font-family: $roboto;
 }
 
-button, input {
-  &:hover, &:focus {
+button,
+input {
+  &:hover,
+  &:focus {
     &:not(:disabled) {
       box-shadow: $ring-background, $ring-orange-500;
     }

@@ -5,7 +5,7 @@ export default function RoomPage() {
 
   return (
     <main className={styles.main}>
-        <h1>RoomPage</h1>
+      <h1>RoomPage</h1>
     </main>
   );
-};
+}

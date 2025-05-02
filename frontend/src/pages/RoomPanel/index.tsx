@@ -4,17 +4,17 @@ import styles from "./index.module.scss";
 export default function RoomPanelPage() {
   return (
     <AuthGuard>
-      <Page/>
+      <Page />
     </AuthGuard>
   );
-};
+}
 
 function Page() {
   // const token = localStorage.getItem("token");
 
   return (
     <main className={styles.main}>
-        <h1>RoomPanelPage</h1>
+      <h1>RoomPanelPage</h1>
     </main>
   );
-};
+}

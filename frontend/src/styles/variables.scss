@@ -8,4 +8,6 @@ $shadow-orange-500: 0px 0px 15px -3px $orange-500;
 $shadow-lg-orange-500: 0px 0px 15px 0px $orange-500;
 
 $ring-background: 0px 0px 0px 2px $white;
-$ring-orange-500: 0px 0px 0px 4px $orange-500, $shadow-lg-orange-500;
+$ring-orange-500:
+  0px 0px 0px 4px $orange-500,
+  $shadow-lg-orange-500;

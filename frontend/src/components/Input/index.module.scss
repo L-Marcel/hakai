@@ -1,0 +1,33 @@
+.wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  position: relative;
+  border: none;
+  padding: 0.8rem;
+  background-color: $gray-100;
+  border-radius: $border-radius;
+  font-size: 1rem;
+
+  &:focus {
+    border-color: $orange-500;
+    outline: none;
+  }
+}
+
+.passwordInput {
+  padding-right: 4rem;
+}
+
+.passwordButton {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
