@@ -49,7 +49,7 @@ public class RoomController {
     ){
         roomService.getRoom(code);
         return ResponseEntity
-            .status(HttpStatus.FOUND)
+            .status(HttpStatus.NO_CONTENT)
             .body("Sala encontrada!");
     };
 
