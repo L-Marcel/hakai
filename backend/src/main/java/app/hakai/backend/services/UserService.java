@@ -21,15 +21,15 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void register(User user) {
-        if(repository.findById(user.getEmail()).isPresent()) 
+    public void register(String email, String password, String name) {
+        if(repository.findByEmail(email).isPresent()) 
             throw new EmailAlreadyInUse();
-        user.setPassword(encoder.encode(user.getPassword()));
+        User user = new User(email, encoder.encode(password), name);
         repository.save(user);
     };
 
     public String login(String email, String password) throws UserNotFound {
-        User user = repository.findById(email).orElseThrow(
+        User user = repository.findByEmail(email).orElseThrow(
             () -> new UserNotFound()
         );
 
