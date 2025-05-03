@@ -36,6 +36,6 @@ public class UserService {
         if(!encoder.matches(password, user.getPassword()))
             throw new UserNotFound();
         
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getUuid());
     };
 };

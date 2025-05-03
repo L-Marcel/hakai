@@ -40,8 +40,8 @@ public class RoomService {
             boolean nicknameAlreadyInUse = nickname.equals(candidateNickname);
             boolean idAlreadyInUse = participant.getUuid().equals(candidate.getUuid());
             boolean userAlreadyInUse = false;
-            User user = participant.getUser();
-            User candidateUser = candidate.getUser();
+            User user = participant.getUser().get();
+            User candidateUser = candidate.getUser().get();
             if(user != null && candidateUser != null) {
                 userAlreadyInUse = user.getEmail().equals(candidateUser.getEmail());
             };
@@ -74,10 +74,9 @@ public class RoomService {
     };
 
     public synchronized void joinRoom(
-        String code, 
+        Room room, 
         Participant participant
     ) throws RoomNotFound, ParticipantAlreadyInRoom {
-        Room room = this.getRoom(code);
         boolean alreadyInRoom = this.isParticipantAlreadyInRoom(room, participant);
         if(alreadyInRoom) throw new ParticipantAlreadyInRoom();
         room.getParticipants().add(participant);

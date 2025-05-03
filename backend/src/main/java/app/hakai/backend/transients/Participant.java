@@ -1,5 +1,6 @@
 package app.hakai.backend.transients;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import app.hakai.backend.models.User;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class Participant {
     private UUID uuid = UUID.randomUUID();
-    private User user;
+    private Optional<User> user;
     private String nickname;
     private int currentDifficult = 0;
     private int correctAnswers = 0;

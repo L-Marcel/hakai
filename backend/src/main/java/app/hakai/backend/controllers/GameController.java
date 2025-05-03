@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.dtos.GameResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 
@@ -19,10 +20,11 @@ public class GameController {
     private GameService service;
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<Game> get(
+    public ResponseEntity<GameResponse> get(
         @PathVariable(required = false) UUID uuid
     ){
         Game game = service.getGame(uuid);
-        return ResponseEntity.ok().body(game);
+        GameResponse response = new GameResponse(game);
+        return ResponseEntity.ok().body(response);
     };
 };
