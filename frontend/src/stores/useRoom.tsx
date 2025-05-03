@@ -1,28 +1,29 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
-import { User } from "./useAuth";
+import { Client } from "@stomp/stompjs";
 
 export type Participant = {
   uuid: UUID;
+  user?: UUID;
   nickname: string;
   score: number;
-  user?: User;
 };
 
 export type Room = {
   code: string;
-  owner: string;
+  owner: UUID;
   participants: Participant[];
-  socket?: WebSocket;
+  ready: boolean;
 };
 
 type RoomStore = {
+  client?: Client;
   room?: Room;
   participant?: Participant;
   check: (code?: string) => Promise<Result>;
-  connect: (room: Room) => Promise<void>;
+  connect: (code?: string, participant?: UUID) => Promise<void>;
   create: (game: UUID) => Promise<Result<string>>;
-  join: (nickname: string, user?: User) => Promise<Result>;
+  join: (nickname: string, code?: string) => Promise<Result>;
 };
 
 const useRoom = create<RoomStore>((set, get) => ({
@@ -48,12 +49,45 @@ const useRoom = create<RoomStore>((set, get) => ({
       };
     }
   },
-  connect: async (room: Room) => {
-    room.socket = new WebSocket("http://localhost:8080/websocket");
-    room.socket.onopen = () => {
-      console.log("Connected!");
-    };
-    set({ room });
+  connect: async (code?: string, participant?: UUID) => {
+    const client: Client = new Client({
+      brokerURL: "ws://localhost:8080/websocket",
+      reconnectDelay: 5000,
+      onConnect: () => {
+        client.subscribe(
+          "/channel/events/rooms/" + code + "/participants/entered", 
+          (message) => {
+            const room: Room = JSON.parse(message.body);
+            set({ room });
+          }
+        );
+
+        if(participant) {
+          const subscription = client.subscribe(
+            "/channel/events/rooms/" + code + "/" + participant + "/entered", 
+            (message) => {
+              const room: Room = JSON.parse(message.body);
+              set({ room });
+              subscription.unsubscribe();
+            },
+          );
+
+          client.publish({
+            destination: "/channel/triggers/rooms/" + code + "/" + participant,
+          });
+        };
+      },
+      onDisconnect: () => {
+        set({ 
+          client: undefined,
+          room: undefined,
+          participant: undefined
+        });
+      }
+    });
+
+    client.activate();
+    set({ client });
   },
   create: async (game: UUID) => {
     const response = await fetch("http://localhost:8080/rooms/create", {
@@ -61,21 +95,15 @@ const useRoom = create<RoomStore>((set, get) => ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ uuid: game }),
+      body: JSON.stringify({ game }),
     });
 
     if (response.ok) {
-      const { code, owner } = await response.json();
-      const room: Room = {
-        code,
-        owner,
-        participants: [],
-      };
-
-      await get().connect(room);
+      const room: Room = await response.json();
+      await get().connect(room.code);
       return {
         ok: true,
-        value: code,
+        value: room.code,
       };
     } else {
       const error = await response.json();
@@ -85,32 +113,23 @@ const useRoom = create<RoomStore>((set, get) => ({
       };
     }
   },
-  join: async (nickname: string, user?: User) => {
-    const code = get().room?.code;
+  join: async (nickname: string, code?: string) => {
     const response = await fetch("http://localhost:8080/rooms/" + code + "/join", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nickname,
-        user
+        nickname
       }),
     });
 
     if (response.ok) {
-      const { uuid, nickname, score, room } = await response.json();
-      const participant: Participant = {
-        uuid,
-        nickname,
-        score,
-        user
-      };
-
-      await get().connect(room);
+      const participant: Participant = await response.json();
+      await get().connect(code, participant.uuid);
+      set({ participant });
       return {
-        ok: true,
-        value: participant,
+        ok: true
       };
     } else {
       const error = await response.json();

@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -6,14 +7,19 @@ export type LoginData = {
   password: string;
 };
 
+export type RegisterUserData = LoginData & {
+  name: string;
+};
+
 export type User = {
-  email: string;
+  uuid: UUID;
   name: string;
 };
 
 type AuthStore = {
   token?: string;
   user?: User;
+  register: (data: RegisterUserData) => Promise<Result>;
   fetch: () => Promise<Result>;
   login: (data: LoginData) => Promise<Result>;
   logout: () => void;
@@ -24,14 +30,36 @@ const useAuth = create<AuthStore>()(
     (set, get) => ({
       token: undefined,
       user: undefined,
+      register: async (data: RegisterUserData) => {
+        const response = await fetch("http://localhost:8080/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        
+        if (response.ok) {
+          return {
+            ok: true
+          };
+        } else {
+          const error = await response.json();
+          return {
+            ok: false,
+            error,
+          };
+        }
+      },
       fetch: async () => {
         // [TODO] Fazer a requisição aqui quando tiver a rota...
         // eslint-disable-next-line no-constant-condition
         if (true) {
           const user = {
-            email: "admin@admin",
+            uuid: "ac87ba139-8903-4934-8f5d-baf74e291600" as UUID,
             name: "Administrador",
           };
+
           set({ user });
           return {
             ok: true,
