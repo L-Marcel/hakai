@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import app.hakai.backend.dtos.RoomResponse;
-import app.hakai.backend.dtos.JoinRoomResponse;
 import app.hakai.backend.dtos.ParticipantResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
