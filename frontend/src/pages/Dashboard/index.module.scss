@@ -9,6 +9,32 @@
 .header {
   width: calc(100% - 2rem);
   padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 1;
+
+  > div {
+    display: flex;
+    gap: 1rem;
+  }
+
+  form {
+    min-width: 172px;
+    max-width: 200px;
+    position: relative;
+
+    p {
+      position: absolute;
+      bottom: -2.2rem;
+      left: -12px;
+      background-color: $gray-200;
+      padding: 6px 12px;
+      border-bottom-left-radius: $border-radius;
+      border-bottom-right-radius: $border-radius;
+      z-index: -1;
+    }
+  }
 }
 
 .dashboard {

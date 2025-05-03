@@ -27,7 +27,7 @@ public class RoomService {
         ).substring(0, size);
     };
 
-    private Room findRoomByCode(String code) throws RoomNotFound {
+    public synchronized Room getRoom(String code) throws RoomNotFound {
         return repository.findByCode(code).orElseThrow(
             () -> new RoomNotFound()
         );
@@ -73,11 +73,11 @@ public class RoomService {
         return room;
     };
 
-    public void joinRoom(
+    public synchronized void joinRoom(
         String code, 
         Participant participant
     ) throws RoomNotFound, ParticipantAlreadyInRoom {
-        Room room = this.findRoomByCode(code);
+        Room room = this.getRoom(code);
         boolean alreadyInRoom = this.isParticipantAlreadyInRoom(room, participant);
         if(alreadyInRoom) throw new ParticipantAlreadyInRoom();
         room.getParticipants().add(participant);

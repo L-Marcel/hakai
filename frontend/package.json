@@ -7,13 +7,14 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "format": "prettier ./*.js ./*.ts ./src/*.tsx ./src/**/*.module.scss ./src/**/*.scss ./src/**/*.tsx --write",
+    "format": "prettier \"**/*.{js,ts,tsx,scss}\" --write",
     "preview": "vite preview"
   },
   "dependencies": {
     "frontend": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.1"
   },
   "devDependencies": {

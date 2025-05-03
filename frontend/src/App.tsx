@@ -10,12 +10,12 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/dashboard" element={<DashboardPage />}/>
-        <Route path="/room/panel/:code" element={<RoomPanelPage />}/>
-        <Route path="/home" element={<MainPage />}/>
-        <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/room/panel/:code" element={<RoomPanelPage />} />
+        <Route path="/home" element={<MainPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/room/:code" element={<RoomPage />} />
-        <Route path="*" element={<Navigate to="/home"/>} />
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </>
   );
