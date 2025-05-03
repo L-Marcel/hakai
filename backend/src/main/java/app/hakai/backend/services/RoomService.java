@@ -1,6 +1,7 @@
 package app.hakai.backend.services;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,10 @@ public class RoomService {
             boolean nicknameAlreadyInUse = nickname.equals(candidateNickname);
             boolean idAlreadyInUse = participant.getUuid().equals(candidate.getUuid());
             boolean userAlreadyInUse = false;
-            User user = participant.getUser().get();
-            User candidateUser = candidate.getUser().get();
-            if(user != null && candidateUser != null) {
-                userAlreadyInUse = user.getEmail().equals(candidateUser.getEmail());
+            Optional<User> user = participant.getUser();
+            Optional<User> candidateUser = candidate.getUser();
+            if(user.isPresent() && candidateUser.isPresent()) {
+                userAlreadyInUse = user.get().getEmail().equals(candidateUser.get().getEmail());
             };
 
             if(nicknameAlreadyInUse || idAlreadyInUse || userAlreadyInUse) 

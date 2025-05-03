@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.LoginRequestBody;
-import app.hakai.backend.models.User;
+import app.hakai.backend.dtos.RegisterRequestBody;
 import app.hakai.backend.services.UserService;
 
 @RestController
@@ -33,8 +33,15 @@ public class UserController {
     };
 
     @PostMapping
-    public ResponseEntity<String> register(@RequestBody User user) {
-        service.register(user);
+    public ResponseEntity<String> register(
+        @RequestBody RegisterRequestBody body
+    ) {
+        service.register(
+            body.getEmail(),
+            body.getPassword(),
+            body.getName()
+        );
+        
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body("Usuário registrado com sucesso!");

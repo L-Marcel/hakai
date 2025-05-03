@@ -6,7 +6,7 @@ import styles from "./index.module.scss";
 import useRoom from "../../stores/useRoom";
 import { useNavigate } from "react-router-dom";
 
-export default function JoinForm() {
+export default function CheckRoomForm() {
   const navigation = useNavigate();
   const check = useRoom((state) => state.check);
   const [error, setError] = useState("");

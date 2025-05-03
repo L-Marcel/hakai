@@ -17,4 +17,14 @@ public class Participant {
     private int correctAnswers = 0;
     private int wrongAnswers = 0;
     private int score = 0;
+
+    public Participant(String nickname) {
+        this.nickname = nickname;
+        this.user = Optional.empty();
+    };
+
+    public Participant(String nickname, User user) {
+        this.nickname = nickname;
+        this.user = Optional.of(user);
+    };
 };
