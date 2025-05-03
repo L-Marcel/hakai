@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import app.hakai.backend.dtos.CreateRoomResponse;
+import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.dtos.JoinRoomResponse;
+import app.hakai.backend.dtos.ParticipantResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.services.GameService;
 import app.hakai.backend.services.RoomService;
@@ -32,12 +33,12 @@ public class RoomController {
     private SimpMessagingTemplate simp;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateRoomResponse> create(
+    public ResponseEntity<RoomResponse> create(
         @RequestBody Game game
     ) {
         game = gameService.getGame(game.getUuid());
         Room createdRoom = roomService.createRoom(game);
-        CreateRoomResponse response = new CreateRoomResponse(createdRoom);
+        RoomResponse response = new RoomResponse(createdRoom);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response);
@@ -54,13 +55,14 @@ public class RoomController {
     };
 
     @PostMapping("/{code}/join")
-    public ResponseEntity<JoinRoomResponse> join(
+    public ResponseEntity<ParticipantResponse> join(
         @PathVariable String code,
-        Participant participant
+        @RequestBody Participant participant
     ) {
-        roomService.joinRoom(code, participant);
-        simp.convertAndSend("/" + code + "/users/entered");
-        JoinRoomResponse response = new JoinRoomResponse(participant);
+        Room room = roomService.getRoom(code);
+        roomService.joinRoom(room, participant);
+        simp.convertAndSend("/" + code + "/users/entered", new RoomResponse(room));
+        ParticipantResponse response = new ParticipantResponse(participant);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response);

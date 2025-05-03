@@ -1,10 +1,12 @@
 package app.hakai.backend.models;
 
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,6 +19,10 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue
+    private UUID uuid;
+
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
