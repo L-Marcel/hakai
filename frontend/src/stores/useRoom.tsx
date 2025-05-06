@@ -2,6 +2,14 @@ import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 
+export type QuestionVariant = {
+  uuid: UUID,
+  level: number;
+  context: string[];
+  question: string;
+  options: string[];
+};
+
 export type Participant = {
   uuid: UUID;
   user?: UUID;
