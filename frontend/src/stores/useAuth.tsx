@@ -31,7 +31,7 @@ const useAuth = create<AuthStore>()(
       token: undefined,
       user: undefined,
       register: async (data: RegisterUserData) => {
-        const response = await fetch("http://localhost:8080/users", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const useAuth = create<AuthStore>()(
         }
       },
       login: async (data: LoginData) => {
-        const response = await fetch("http://localhost:8080/users/login", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

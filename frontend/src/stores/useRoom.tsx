@@ -49,7 +49,7 @@ type RoomStore = {
 const useRoom = create<RoomStore>((set, get) => ({
   participants: [],
   check: async (code?: string) => {
-    const response = await fetch("http://localhost:8080/rooms/" + code, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const useRoom = create<RoomStore>((set, get) => ({
     set({ client });
   },
   create: async (game: UUID) => {
-    const response = await fetch("http://localhost:8080/rooms/create", {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/rooms/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const useRoom = create<RoomStore>((set, get) => ({
   },
   join: async (nickname: string, code?: string) => {
     const response = await fetch(
-      "http://localhost:8080/rooms/" + code + "/join",
+      `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}/join`,
       {
         method: "POST",
         headers: {

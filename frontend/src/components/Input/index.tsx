@@ -23,7 +23,12 @@ export default function Input({ className, type, ...props }: Props) {
 
   return (
     <div className={styles.wrapper}>
-      <input data-selectable className={finalClassName} type={finalType} {...props} />
+      <input
+        data-selectable
+        className={finalClassName}
+        type={finalType}
+        {...props}
+      />
       {isPassword && (
         <Button
           type="button"
