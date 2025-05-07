@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 
 export type QuestionVariant = {
-  uuid: UUID,
+  uuid: UUID;
   level: number;
   context: string[];
   question: string;
@@ -63,35 +63,35 @@ const useRoom = create<RoomStore>((set, get) => ({
       reconnectDelay: 5000,
       onConnect: () => {
         client.subscribe(
-          "/channel/events/rooms/" + code + "/participants/entered", 
+          "/channel/events/rooms/" + code + "/participants/entered",
           (message) => {
             const room: Room = JSON.parse(message.body);
             set({ room });
           }
         );
 
-        if(participant) {
+        if (participant) {
           const subscription = client.subscribe(
-            "/channel/events/rooms/" + code + "/" + participant + "/entered", 
+            "/channel/events/rooms/" + code + "/" + participant + "/entered",
             (message) => {
               const room: Room = JSON.parse(message.body);
               set({ room });
               subscription.unsubscribe();
-            },
+            }
           );
 
           client.publish({
             destination: "/channel/triggers/rooms/" + code + "/" + participant,
           });
-        };
+        }
       },
       onDisconnect: () => {
-        set({ 
+        set({
           client: undefined,
           room: undefined,
-          participant: undefined
+          participant: undefined,
         });
-      }
+      },
     });
 
     client.activate();
@@ -122,22 +122,25 @@ const useRoom = create<RoomStore>((set, get) => ({
     }
   },
   join: async (nickname: string, code?: string) => {
-    const response = await fetch("http://localhost:8080/rooms/" + code + "/join", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nickname
-      }),
-    });
+    const response = await fetch(
+      "http://localhost:8080/rooms/" + code + "/join",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname,
+        }),
+      }
+    );
 
     if (response.ok) {
       const participant: Participant = await response.json();
       await get().connect(code, participant.uuid);
       set({ participant });
       return {
-        ok: true
+        ok: true,
       };
     } else {
       const error = await response.json();

@@ -2,59 +2,52 @@ import { Participant } from "../../stores/useRoom";
 import styles from "./index.module.scss";
 
 interface Props {
-    ranked?: boolean;
-    participants: Participant[];
-};
+  ranked?: boolean;
+  participants: Participant[];
+}
 
 type RankedParticipant = Participant & {
-    rank: number;
+  rank: number;
 };
 
 export default function ParticipantsMansoryGrid({
-    participants,
-    ranked = false
+  participants,
+  ranked = false,
 }: Props) {
-    return (
-        <ul className={styles.masonry}>
-            {participants
-                .sort((a, b) => a.nickname.localeCompare(b.nickname))
-                .sort((a, b) => b.score - a.score)
-                .reduce((acc, curr, index) => {
-                    const last = acc[acc.length - 1];
-                    const rank = index === 0
-                      ? 1
-                      : curr.score === last.score
-                        ? last.rank
-                        : index + 1;
-                
-                    acc.push({ ...curr, rank });
-                    return acc;
-                }, [] as RankedParticipant[])
-                .map(({ nickname, uuid, score, rank }) => {
-                    if(ranked) {
-                        return (
-                            <li id="ranked" key={uuid}>
-                                <h2 
-                                    role={rank.toString()} 
-                                    className={styles.rank}
-                                >
-                                    {rank}°
-                                </h2>
-                                <div>
-                                    <h3 className={styles.nickname}>{nickname}</h3>
-                                    <p>{score} pontos</p>
-                                </div>
-                            </li>
-                        );
-                    };
-                    
-                    return (
-                        <li key={uuid}>
-                            <h3 className={styles.nickname}>{nickname}</h3>
-                        </li>
-                    );
-                })
-            }
-        </ul>
-    );
-};
+  return (
+    <ul className={styles.masonry}>
+      {participants
+        .sort((a, b) => a.nickname.localeCompare(b.nickname))
+        .sort((a, b) => b.score - a.score)
+        .reduce((acc, curr, index) => {
+          const last = acc[acc.length - 1];
+          const rank =
+            index === 0 ? 1 : curr.score === last.score ? last.rank : index + 1;
+
+          acc.push({ ...curr, rank });
+          return acc;
+        }, [] as RankedParticipant[])
+        .map(({ nickname, uuid, score, rank }) => {
+          if (ranked) {
+            return (
+              <li id="ranked" key={uuid}>
+                <h2 role={rank.toString()} className={styles.rank}>
+                  {rank}°
+                </h2>
+                <div>
+                  <h3 className={styles.nickname}>{nickname}</h3>
+                  <p>{score} pontos</p>
+                </div>
+              </li>
+            );
+          }
+
+          return (
+            <li key={uuid}>
+              <h3 className={styles.nickname}>{nickname}</h3>
+            </li>
+          );
+        })}
+    </ul>
+  );
+}
