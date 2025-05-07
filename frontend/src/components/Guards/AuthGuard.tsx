@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../stores/useAuth";
+import useAuth from "@stores/useAuth";
 import { ReactNode, useEffect } from "react";
 
 interface Props {

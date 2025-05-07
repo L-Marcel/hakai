@@ -1,4 +1,4 @@
-import { Participant } from "../../stores/useRoom";
+import { Participant } from "@stores/useRoom";
 import styles from "./index.module.scss";
 
 interface Props {

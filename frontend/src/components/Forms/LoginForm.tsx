@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAuth, { LoginData } from "../../stores/useAuth";
+import useAuth, { LoginData } from "@stores/useAuth";
 import styles from "./index.module.scss";
 import Input from "@components/Input";
 import Button from "@components/Button";

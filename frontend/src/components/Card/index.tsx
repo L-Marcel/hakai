@@ -1,5 +1,5 @@
 import styles from "./index.module.scss";
-import useRoom from "../../stores/useRoom";
+import useRoom from "@stores/useRoom";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaEraser, FaPlay } from "react-icons/fa";
 import Button from "@components/Button";

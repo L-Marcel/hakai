@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "@components/Button";
-import useAuth, { RegisterUserData } from "../../stores/useAuth";
+import useAuth, { RegisterUserData } from "@stores/useAuth";
 
 export default function RegisterForm() {
   const navigate = useNavigate();

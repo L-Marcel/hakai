@@ -2,7 +2,7 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import RoomGuard from "@components/Guards/RoomGuard";
 import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
-import { Participant, QuestionVariant } from "../../stores/useRoom";
+import { Participant, QuestionVariant } from "@stores/useRoom";
 import Button from "@components/Button";
 import {
   FaArrowLeft,
@@ -14,7 +14,8 @@ import {
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
-import QuestionVariantsCarousel from "@components/Carousel/QuestionVariantsCarousel";
+import QuestionVariantsCarousel from "@components/Carousel";
+import QuestionView from "@components/Views/Question";
 
 export default function RoomPanelPage() {
   return (
@@ -124,6 +125,11 @@ function Page() {
     },
   ];
 
+  const hardestQuestionVariant =
+    mockedQuestionVariants.length == 0
+      ? ""
+      : mockedQuestionVariants[mockedQuestionVariants.length - 1].uuid;
+
   return (
     <main className={styles.main}>
       <section className={styles.panel}>
@@ -156,7 +162,19 @@ function Page() {
       </section>
       <section>
         <h1></h1>
-        <QuestionVariantsCarousel variants={mockedQuestionVariants} />
+        <QuestionVariantsCarousel
+          items={mockedQuestionVariants}
+          start={hardestQuestionVariant}
+          render={(selected, item) => {
+            return (
+              <QuestionView
+                variant={item}
+                hidden={selected !== item.uuid}
+                key={item.uuid}
+              />
+            );
+          }}
+        />
       </section>
       <section className={styles.participants}>
         <h4>

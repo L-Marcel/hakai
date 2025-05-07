@@ -2,7 +2,7 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import Card from "@components/Card";
 import { FaPlus, FaSignOutAlt } from "react-icons/fa";
-import useAuth from "../../stores/useAuth";
+import useAuth from "@stores/useAuth";
 import Button from "@components/Button";
 import CheckRoomForm from "@components/Forms/CheckRoomForm";
 
