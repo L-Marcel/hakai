@@ -7,7 +7,7 @@ interface Props
     HTMLButtonElement
   > {
   rounded?: "default" | "full";
-  theme?: "default" | "light-orange" | "full-orange";
+  theme?: "default" | "light-orange" | "full-orange" | "partial-orange";
 }
 
 export default function Button({
@@ -25,6 +25,9 @@ export default function Button({
       break;
     case "full-orange":
       classes.push(styles.fullOrange);
+      break;
+    case "partial-orange":
+      classes.push(styles.partialOrange);
       break;
     default:
       break;

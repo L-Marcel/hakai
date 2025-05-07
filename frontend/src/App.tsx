@@ -5,8 +5,24 @@ import RegisterPage from "@pages/Register";
 import DashboardPage from "@pages/Dashboard";
 import RoomPage from "@pages/Room";
 import RoomPanelPage from "@pages/RoomPanel";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-selectable]')) {
+        window.getSelection()?.removeAllRanges();
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, []);
+
   return (
     <>
       <Routes>

@@ -2,9 +2,21 @@ import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 
+enum Difficult {
+  Easy,
+  Medium,
+  Hard,
+}
+
+export const difficultToString: Record<Difficult, string> = {
+  [Difficult.Easy]: "Fácil",
+  [Difficult.Medium]: "Média",
+  [Difficult.Hard]: "Difícil",
+};
+
 export type QuestionVariant = {
   uuid: UUID;
-  level: number;
+  level: Difficult;
   context: string[];
   question: string;
   options: string[];

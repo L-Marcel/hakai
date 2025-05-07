@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
+import Tag from "@components/Tag";
 
 export default function RoomPanelPage() {
   return (
@@ -133,45 +134,49 @@ function Page() {
   return (
     <main className={styles.main}>
       <section className={styles.panel}>
-        <div>
+        <div className={styles.informations}>
           <h1>Sala de jogo</h1>
-          <p>Código: {code}</p>
+          <p>Código: <span data-selectable className={styles.code}>{code}</span></p>
         </div>
-        <div className={styles.buttons}>
-          <Button theme="full-orange">
-            <FaPlay />
-            Lançar
-          </Button>
-          <Button theme="light-orange">
-            <FaSync />
-            Gerar
-          </Button>
-          <Button disabled theme="light-orange">
-            <FaArrowLeft />
-            Anterior
-          </Button>
-          <Button theme="light-orange">
-            <FaArrowRight />
-            Próxima
-          </Button>
-          <Button theme="light-orange">
-            <FaSignOutAlt />
-            Finalizar
-          </Button>
+        <div className={styles.controllers}>
+          {/* <p className={styles.tags}>
+            <Tag value="Docker" theme="light-orange"/>
+            <Tag value="Container" theme="light-orange"/>
+            <Tag value="Configurações" theme="light-orange"/>
+          </p> */}
+          <div className={styles.buttons}>
+            <Button theme="full-orange">
+              <FaPlay />
+              Lançar
+            </Button>
+            <Button theme="light-orange">
+              <FaSync />
+              Gerar
+            </Button>
+            <Button disabled theme="light-orange">
+              <FaArrowLeft />
+              Anterior
+            </Button>
+            <Button theme="light-orange">
+              <FaArrowRight />
+              Próxima
+            </Button>
+            <Button theme="light-orange">
+              <FaSignOutAlt />
+              Finalizar
+            </Button>
+          </div>
         </div>
       </section>
       <section>
-        <h1></h1>
         <QuestionVariantsCarousel
           items={mockedQuestionVariants}
           start={hardestQuestionVariant}
           render={(selected, item) => {
             return (
-              <QuestionView
-                variant={item}
-                hidden={selected !== item.uuid}
-                key={item.uuid}
-              />
+              <li hidden={selected !== item.uuid} key={item.uuid}>
+                <QuestionView highlight="--restart=no" variant={item} />
+              </li>
             );
           }}
         />
