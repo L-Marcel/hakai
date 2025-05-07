@@ -38,10 +38,10 @@ const useAuth = create<AuthStore>()(
           },
           body: JSON.stringify(data),
         });
-        
+
         if (response.ok) {
           return {
-            ok: true
+            ok: true,
           };
         } else {
           const error = await response.json();

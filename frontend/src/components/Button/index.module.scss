@@ -23,8 +23,12 @@
     aspect-ratio: 1 / 1;
   }
 
-  &:disabled {
+  &:not([id="highlight"]):disabled {
     opacity: 0.75;
+  }
+
+  &[id="highlight"],&[id="option"]:disabled {
+    cursor: default !important;
   }
 }
 
@@ -37,12 +41,39 @@
   background-color: $orange-200;
   padding: 0.75rem 1rem 0.75rem 0.75rem;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled),
+  &[id="highlight"] {
     color: $orange-700;
   }
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled),
+  &[id="highlight"] {
     background: $orange-300;
+  }
+
+  &[id="highlight"] {
+    box-shadow: $ring-background, $ring-orange-500;
+  }
+}
+
+.partialOrange {
+  padding-left: calc(0.75rem + 4px);
+  background-color: $gray-300;
+  color: $gray-600;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+
+  &:hover:not(:disabled),
+  &[id="highlight"] {
+    color: $orange-700;
+  }
+
+  &:hover:not(:disabled),
+  &[id="highlight"] {
+    background: $orange-300;
+  }
+
+  &[id="highlight"] {
+    box-shadow: $ring-background, $ring-orange-500;
   }
 }
 

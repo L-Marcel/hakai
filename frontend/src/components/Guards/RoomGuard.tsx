@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useRoom from "../../stores/useRoom";
+import useRoom from "@stores/useRoom";
 
 interface Props {
   children: ReactNode;

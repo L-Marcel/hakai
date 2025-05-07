@@ -3,7 +3,7 @@ import Input from "@components/Input";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
-import useRoom from "../../stores/useRoom";
+import useRoom from "@stores/useRoom";
 import { useParams } from "react-router-dom";
 
 export default function JoinForm() {

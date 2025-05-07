@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import JoinPage from "@pages/Join";
-import useRoom from "../../stores/useRoom";
+import useRoom from "@stores/useRoom";
 
 interface Props {
   children: ReactNode;
