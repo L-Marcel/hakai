@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class QuestionVariant {
+    private String questionVariant;
     private int difficulty = 0;
     private List<String> options;
     private Question original;
