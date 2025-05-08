@@ -86,25 +86,6 @@ public class PedagogicalAgent {
             """, question.getQuestion(), question.getAnswer());
     }
 
-    private List<QuestionVariant> convertOutputToQuestionVariants(
-        List<QuestionVariant> output, 
-        Question origQuestion
-    ) {
-        List<QuestionVariant> questions = null;
-
-        for (QuestionVariant qv : output) {
-            QuestionVariant variant = new QuestionVariant(
-                    qv.getQuestionVariant(), 
-                    qv.getDifficulty(), 
-                    qv.getOptions(), 
-                    origQuestion
-                );
-
-            questions.add(variant);
-        }
-        return questions;
-    }
-
     public void generateRoomQuestionsVariants(UUID code) {
         Question question = questionService.getQuestionById(code);
         
@@ -117,10 +98,11 @@ public class PedagogicalAgent {
         chatbot.request(prompt, responseOpt -> {
             responseOpt.ifPresent(output -> {
                 try {
-                    
-                    this.convertOutputToQuestionVariants(
-                        objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {}),
-                        question);
+                    List<QuestionVariant> list = objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {});
+
+                    for(QuestionVariant variant : list) {
+                        variant.setOriginal(question);
+                    };
 
                 } catch (IOException e) {
                     e.printStackTrace();
