@@ -21,6 +21,13 @@ public class MessagingService {
         );
     };
 
+    public void closeRoomToAll(Room room) {
+        simp.convertAndSend(
+            "/channel/events/rooms/" + room.getCode() + "/closed",
+            "Sala fechada!"
+        );
+    };
+
     public void sendRoomToParticipant(Room room, UUID participant) {
         simp.convertAndSend(
             "/channel/events/rooms/" + room.getCode() + "/" + participant.toString() + "/entered", 

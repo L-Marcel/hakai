@@ -21,7 +21,8 @@ import { spawn } from "node:child_process";
     shell: true,
     env: {
       ...process.env,
-      VITE_BACKEND_URL: backendListener.url() as string
+      VITE_BACKEND_URL: backendListener.url() as string,
+      VITE_WEBSOCKET_URL: backendListener.url()?.replace("https://", "wss://") as string
     },
   });
 

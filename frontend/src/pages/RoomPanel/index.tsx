@@ -2,7 +2,7 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import RoomGuard from "@components/Guards/RoomGuard";
 import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
-import { Participant, QuestionVariant } from "@stores/useRoom";
+import useRoom, { Participant, QuestionVariant } from "@stores/useRoom";
 import Button from "@components/Button";
 import {
   FaArrowLeft,
@@ -30,6 +30,7 @@ export default function RoomPanelPage() {
 
 function Page() {
   const { code } = useParams();
+  const close = useRoom((state) => state.close);
 
   const mockedQuestionVariants: QuestionVariant[] = [
     {
@@ -166,7 +167,7 @@ function Page() {
               <FaArrowRight />
               Próxima
             </Button>
-            <Button theme="light-orange">
+            <Button onClick={() => close(code as string)} theme="light-orange">
               <FaSignOutAlt />
               Finalizar
             </Button>

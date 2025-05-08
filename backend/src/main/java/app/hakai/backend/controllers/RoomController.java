@@ -60,6 +60,16 @@ public class RoomController {
             .body("Sala encontrada!");
     };
 
+    @PostMapping("/{code}/close")
+    public ResponseEntity<String> close(
+        @PathVariable String code
+    ) {
+        Room room = roomService.getRoom(code);
+        roomService.closeRoom(room);
+        messagingService.closeRoomToAll(room);
+        return ResponseEntity.ok().body("Sala fechada!");
+    };
+
     @PostMapping("/{code}/join")
     public ResponseEntity<ParticipantResponse> join(
         @PathVariable String code,
