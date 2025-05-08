@@ -1,0 +1,1 @@
+INSERT INTO Games (uuid, owner) VALUES ('4ad9e19e-8f9b-4b93-a7a1-17ea469bd455', 'f4b8ef6e-581e-4a42-bcef-3c9c4a98008f');

@@ -11,15 +11,15 @@ function App() {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('[data-selectable]')) {
+      if (!target.closest("[data-selectable]")) {
         window.getSelection()?.removeAllRanges();
       }
     };
 
-    document.addEventListener('click', handleClick);
+    document.addEventListener("click", handleClick);
 
     return () => {
-      document.removeEventListener('click', handleClick);
+      document.removeEventListener("click", handleClick);
     };
   }, []);
 

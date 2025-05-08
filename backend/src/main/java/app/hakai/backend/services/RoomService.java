@@ -1,5 +1,6 @@
 package app.hakai.backend.services;
 
+import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Optional;
 
@@ -23,9 +24,14 @@ public class RoomService {
     private RoomsRepository repository;
 
     private String generateCode(int size) {
-        return Integer.toString(
-            RandomUtils.secure().hashCode()
-        ).substring(0, size);
+        SecureRandom random = new SecureRandom();
+        StringBuilder builder = new StringBuilder();
+        
+        for(int i = 0; i < size; i++) {
+            builder.append(random.nextInt(10));
+        };
+
+        return builder.toString();
     };
 
     public synchronized Room getRoom(String code) throws RoomNotFound {
@@ -81,5 +87,11 @@ public class RoomService {
         boolean alreadyInRoom = this.isParticipantAlreadyInRoom(room, participant);
         if(alreadyInRoom) throw new ParticipantAlreadyInRoom();
         room.getParticipants().add(participant);
+    };
+
+    public synchronized void closeRoom(
+        Room room
+    ) throws RoomNotFound, ParticipantAlreadyInRoom {
+        repository.remove(room);
     };
 };

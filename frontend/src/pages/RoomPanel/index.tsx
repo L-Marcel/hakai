@@ -2,7 +2,7 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import RoomGuard from "@components/Guards/RoomGuard";
 import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
-import { Participant, QuestionVariant } from "@stores/useRoom";
+import useRoom, { Participant, QuestionVariant } from "@stores/useRoom";
 import Button from "@components/Button";
 import {
   FaArrowLeft,
@@ -30,6 +30,7 @@ export default function RoomPanelPage() {
 
 function Page() {
   const { code } = useParams();
+  const close = useRoom((state) => state.close);
 
   const mockedQuestionVariants: QuestionVariant[] = [
     {
@@ -136,7 +137,12 @@ function Page() {
       <section className={styles.panel}>
         <div className={styles.informations}>
           <h1>Sala de jogo</h1>
-          <p>Código: <span data-selectable className={styles.code}>{code}</span></p>
+          <p>
+            Código:{" "}
+            <span data-selectable className={styles.code}>
+              {code}
+            </span>
+          </p>
         </div>
         <div className={styles.controllers}>
           {/* <p className={styles.tags}>
@@ -161,7 +167,7 @@ function Page() {
               <FaArrowRight />
               Próxima
             </Button>
-            <Button theme="light-orange">
+            <Button onClick={() => close(code as string)} theme="light-orange">
               <FaSignOutAlt />
               Finalizar
             </Button>
@@ -172,9 +178,10 @@ function Page() {
         <QuestionVariantsCarousel
           items={mockedQuestionVariants}
           start={hardestQuestionVariant}
-          render={(selected, item) => {
+          identifier={(item) => item.uuid}
+          render={(item) => {
             return (
-              <li hidden={selected !== item.uuid} key={item.uuid}>
+              <li>
                 <QuestionView highlight="--restart=no" variant={item} />
               </li>
             );

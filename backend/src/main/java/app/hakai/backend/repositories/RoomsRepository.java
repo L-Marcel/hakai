@@ -17,6 +17,10 @@ public class RoomsRepository {
         rooms.add(room);
     };
 
+    public synchronized void remove(Room room) {
+        rooms.remove(room);
+    };
+
     private Optional<Room> find(Function<Room, Boolean> search) {
         for(int i = 0; i < rooms.size(); i++) {
             Room room = this.rooms.get(i);

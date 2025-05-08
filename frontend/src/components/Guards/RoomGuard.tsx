@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useRoom from "@stores/useRoom";
 
@@ -9,16 +9,17 @@ interface Props {
 export default function RoomGuard({ children }: Props) {
   const { code } = useParams();
 
-  const [exists, setExists] = useState(false);
+  const exists = useRoom((state) => state.exists);
   const check = useRoom((state) => state.check);
   const navigate = useNavigate();
 
   useEffect(() => {
-    check(code).then((response: Result) => {
-      if (response.ok) setExists(true);
-      else navigate("/home");
-    });
-  }, [code, check, navigate]);
+    if(!exists) {
+      check(code).then((response: Result) => {
+        if (!response.ok) navigate("/home");
+      });
+    };
+  }, [exists, code, check, navigate]);
 
   return exists ? children : null;
 }

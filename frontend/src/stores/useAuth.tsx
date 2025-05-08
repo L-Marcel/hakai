@@ -28,10 +28,8 @@ type AuthStore = {
 const useAuth = create<AuthStore>()(
   persist(
     (set, get) => ({
-      token: undefined,
-      user: undefined,
       register: async (data: RegisterUserData) => {
-        const response = await fetch("http://localhost:8080/users", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -56,7 +54,7 @@ const useAuth = create<AuthStore>()(
         // eslint-disable-next-line no-constant-condition
         if (true) {
           const user = {
-            uuid: "ac87ba139-8903-4934-8f5d-baf74e291600" as UUID,
+            uuid: "f4b8ef6e-581e-4a42-bcef-3c9c4a98008f" as UUID,
             name: "Administrador",
           };
 
@@ -76,7 +74,7 @@ const useAuth = create<AuthStore>()(
         }
       },
       login: async (data: LoginData) => {
-        const response = await fetch("http://localhost:8080/users/login", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -97,10 +95,11 @@ const useAuth = create<AuthStore>()(
         }
       },
       logout: () => {
-        set({
+        set((state) => ({
+          ...state,
           token: undefined,
           user: undefined,
-        });
+        }));
       },
     }),
     {

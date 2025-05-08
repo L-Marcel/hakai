@@ -35,7 +35,9 @@ export default function ParticipantsMansoryGrid({
                   {rank}°
                 </h2>
                 <div>
-                  <h3 data-selectable className={styles.nickname}>{nickname}</h3>
+                  <h3 data-selectable className={styles.nickname}>
+                    {nickname}
+                  </h3>
                   <p>{score} pontos</p>
                 </div>
               </li>
@@ -44,7 +46,9 @@ export default function ParticipantsMansoryGrid({
 
           return (
             <li key={uuid}>
-              <h3 data-selectable className={styles.nickname}>{nickname}</h3>
+              <h3 data-selectable className={styles.nickname}>
+                {nickname}
+              </h3>
             </li>
           );
         })}

@@ -64,14 +64,9 @@ button {
   font-family: $roboto;
 }
 
-button,
-input {
-  &:hover,
-  &:focus {
-    &:not(:disabled) {
-      box-shadow: $ring-background, $ring-orange-500;
-    }
-  }
+button {
+  border: none;
+  background-color: transparent;
 }
 
 [data-selectable] {
