@@ -14,11 +14,11 @@ export default function RoomGuard({ children }: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!exists) {
+    if (!exists) {
       check(code).then((response: Result) => {
         if (!response.ok) navigate("/home");
       });
-    };
+    }
   }, [exists, code, check, navigate]);
 
   return exists ? children : null;

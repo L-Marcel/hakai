@@ -53,17 +53,20 @@ const useRoom = create<RoomStore>((set, get) => ({
   participants: [],
   exists: false,
   check: async (code?: string) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (response.ok) {
       set({ exists: true });
       return {
-        ok: true
+        ok: true,
       };
     } else {
       const error = await response.json();
@@ -121,20 +124,23 @@ const useRoom = create<RoomStore>((set, get) => ({
         }
       },
       onDisconnect: () => get().disconnect(),
-      onWebSocketError: () => get().disconnect()
+      onWebSocketError: () => get().disconnect(),
     });
 
     client.activate();
     set({ client });
   },
   create: async (game: UUID) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/rooms/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ game }),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/rooms/create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ game }),
+      }
+    );
 
     if (response.ok) {
       const room: Room = await response.json();
@@ -152,17 +158,20 @@ const useRoom = create<RoomStore>((set, get) => ({
     }
   },
   close: async (code: string) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/rooms/${code}/close`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}/close`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
     if (response.ok) {
       get().disconnect();
       return {
-        ok: true
+        ok: true,
       };
     } else {
       const error = await response.json();

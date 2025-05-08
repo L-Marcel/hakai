@@ -29,13 +29,16 @@ const useAuth = create<AuthStore>()(
   persist(
     (set, get) => ({
       register: async (data: RegisterUserData) => {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/users`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
 
         if (response.ok) {
           return {
@@ -74,13 +77,16 @@ const useAuth = create<AuthStore>()(
         }
       },
       login: async (data: LoginData) => {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/users/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        );
 
         if (response.ok) {
           const token = await response.text();

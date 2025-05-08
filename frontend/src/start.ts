@@ -22,7 +22,9 @@ import { spawn } from "node:child_process";
     env: {
       ...process.env,
       VITE_BACKEND_URL: backendListener.url() as string,
-      VITE_WEBSOCKET_URL: backendListener.url()?.replace("https://", "wss://") as string
+      VITE_WEBSOCKET_URL: backendListener
+        .url()
+        ?.replace("https://", "wss://") as string,
     },
   });
 
