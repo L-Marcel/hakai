@@ -5,8 +5,9 @@
         - [Justificativa](#justificativa)
     - [Branchs](#branchs)
         - [Exemplo](#exemplo-1)
-- [Instruções para devs (frontend)](#instruções-para-devs-frontend)
 - [Instruções para devs (backend)](#instruções-para-devs-backend)
+- [Instruções para devs (frontend)](#instruções-para-devs-frontend)
+    - [Tunelamento](#tunelamento)
 
 # Instruções para devs (geral)
 
@@ -93,8 +94,30 @@ cd frontend
 pnpm install
 ```
 
-Para executar, uma vez dentro da pasta `frontend`, basta:
+Agora, crie um arquivo `.env` na pasta `frontend` com o conteúdo idêntico ao arquivo `.env.example`, disponível na mesma pasta.
+
+Feito isso, para executar `localmente`, uma vez dentro da pasta `frontend`, basta:
+
+```cmd
+pnpm vite
+```
+
+## Tunelamento
+
+Como não vamos levar para a produção essa aplicação, para tornar toda aplicação algo mais apresentável, estamos utilziando o [Ngrok](https://ngrok.com/) para relizar um `tunelamento` do nosso `localhost` para um domínio público na internet.
+
+Para isso, temos um `script` que faz toda a lógica de sobrescrita das variáveis de ambiente do `frontend`. Para tal, se faz necessário que crie um conta no `Ngrok`, obtenha um `token` e coloque ele no arquivo `.env` criado anteriormente.
+
+Já deixamos uma variável de ambiente no arquivo de `.env.example` que representa a variável que você deve criar.
+
+Para executar com o `tunelamento`, use:
 
 ```cmd
 pnpm dev
+```
+
+Ao invés de:
+
+```cmd
+pnpm vite
 ```
