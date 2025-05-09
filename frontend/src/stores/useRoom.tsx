@@ -3,9 +3,9 @@ import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 
 enum Difficult {
-  Easy,
-  Medium,
-  Hard,
+  Easy = 1,
+  Medium = 2,
+  Hard = 3,
 }
 
 export const difficultToString: Record<Difficult, string> = {
@@ -17,7 +17,7 @@ export const difficultToString: Record<Difficult, string> = {
 export type QuestionVariant = {
   uuid: UUID;
   level: Difficult;
-  context: string[];
+  //context: string[];
   question: string;
   options: string[];
 };
@@ -122,6 +122,17 @@ const useRoom = create<RoomStore>((set, get) => ({
             destination: "/channel/triggers/rooms/" + code + "/" + participant,
           });
         }
+        
+        if (participant === get().room?.owner) {
+          client.subscribe(
+            "/channel/events/rooms/" + code + "/" + get().room?.owner,
+            (message) => {
+              const variants : QuestionVariant[] = JSON.parse(message.body);
+              // adicionar uso das questões...
+            }
+          );
+        }
+
       },
       onDisconnect: () => get().disconnect(),
       onWebSocketError: () => get().disconnect(),

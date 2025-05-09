@@ -12,10 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.hakai.backend.errors.QuestionNotFound;
 import app.hakai.backend.models.Question;
-import app.hakai.backend.services.GameService;
+import app.hakai.backend.services.MessagingService;
 import app.hakai.backend.services.QuestionService;
 import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.QuestionVariant;
+import app.hakai.backend.transients.Room;
 
 
 @Component
@@ -26,18 +27,15 @@ public class PedagogicalAgent {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    //private String prompt;
-    private RoomService roomService;
-    private GameService gameService;
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
-    public PedagogicalAgent(RoomService roomService, GameService gameService, QuestionService questionService) {
-        this.roomService = roomService;
-        this.gameService = gameService;
-        this.questionService = questionService;
-    }
+    private RoomService roomService;
+
+    @Autowired
+    private MessagingService messagingService;
+
 
     private String buildPrompt(Question question) {
         return String.format("""
@@ -95,6 +93,10 @@ public class PedagogicalAgent {
         
         String prompt = buildPrompt(question);
 
+        String stringUuidGame = questionService.getQuestionById(code).getGame().getUuid().toString();
+
+        Room room = roomService.getRoom(stringUuidGame);
+
         chatbot.request(prompt, responseOpt -> {
             responseOpt.ifPresent(output -> {
                 try {
@@ -103,6 +105,8 @@ public class PedagogicalAgent {
                     for(QuestionVariant variant : list) {
                         variant.setOriginal(question);
                     };
+
+                    messagingService.sendVariantsToOwner(room, list);
 
                 } catch (IOException e) {
                     e.printStackTrace();
