@@ -78,6 +78,17 @@ const useRoom = create<RoomStore>((set, get) => ({
 
         return { variants: updatedVariants };
     }),
+    requestVariants: (original: UUID) => {
+        const room = get().room;
+        const client = get().client;
+
+        if (!client || !room || room.owner !== get().participant?.uuid) return;
+
+        client.publish({
+            destination: "/channel/triggers/rooms/"+ room.code + "/" + room.owner + "/generate",
+            body: original,
+        });
+    },
     check: async (code?: string) => {
         const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`,

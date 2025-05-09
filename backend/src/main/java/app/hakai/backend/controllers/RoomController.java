@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import app.hakai.backend.dtos.RoomResponse;
+import app.hakai.backend.agents.PedagogicalAgent;
 import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
@@ -37,6 +38,9 @@ public class RoomController {
 
     @Autowired
     private MessagingService messagingService;
+
+    @Autowired
+    private PedagogicalAgent pedagogicalAgent;
 
     @PostMapping("/create")
     public ResponseEntity<RoomResponse> create(
@@ -93,4 +97,11 @@ public class RoomController {
         Room room = roomService.getRoom(code);
         messagingService.sendRoomToParticipant(room, participant);
     };
+
+    @PostMapping("/{code}/{owner}/generate")
+    public ResponseEntity<Void> generate(@RequestBody UUID id) {
+        pedagogicalAgent.generateRoomQuestionsVariants(id);
+        return ResponseEntity.ok().build();
+    }
+    
 };
