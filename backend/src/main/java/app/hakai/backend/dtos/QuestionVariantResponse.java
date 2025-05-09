@@ -14,6 +14,7 @@ public class QuestionVariantResponse {
     private String question;
     private int difficulty = 0;
     private List<String> options;
+    private UUID original;
     private String answer;
 
     public QuestionVariantResponse(QuestionVariant question, boolean hasAnswer){
@@ -21,6 +22,7 @@ public class QuestionVariantResponse {
         this.question = question.getQuestion();
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
+        this.original = question.getOriginal().getUuid();
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
         }
