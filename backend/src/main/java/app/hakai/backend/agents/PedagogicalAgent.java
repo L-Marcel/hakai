@@ -84,18 +84,15 @@ public class PedagogicalAgent {
             """, question.getQuestion(), question.getAnswer());
     }
 
-    public void generateRoomQuestionsVariants(UUID code) {
-        Question question = questionService.getQuestionById(code);
+    public void generateRoomQuestionsVariants(UUID questionCode) {
+        Question question = questionService.getQuestionById(questionCode);
         
-        if (question == null) {
-            throw new QuestionNotFound();
-        }
+        if (question == null) throw new QuestionNotFound();
         
         String prompt = buildPrompt(question);
 
-        String stringUuidGame = questionService.getQuestionById(code).getGame().getUuid().toString();
-
-        Room room = roomService.getRoom(stringUuidGame);
+        UUID uuidGame = questionService.getQuestionById(questionCode).getGame().getUuid();
+        Room room = roomService.getRoomByGame(uuidGame);
 
         chatbot.request(prompt, responseOpt -> {
             responseOpt.ifPresent(output -> {
