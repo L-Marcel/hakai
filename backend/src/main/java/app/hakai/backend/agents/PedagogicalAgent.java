@@ -12,10 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.hakai.backend.errors.QuestionNotFound;
 import app.hakai.backend.models.Question;
-import app.hakai.backend.services.GameService;
+import app.hakai.backend.services.MessagingService;
 import app.hakai.backend.services.QuestionService;
 import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.QuestionVariant;
+import app.hakai.backend.transients.Room;
 
 
 @Component
@@ -26,18 +27,15 @@ public class PedagogicalAgent {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    //private String prompt;
-    private RoomService roomService;
-    private GameService gameService;
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
-    public PedagogicalAgent(RoomService roomService, GameService gameService, QuestionService questionService) {
-        this.roomService = roomService;
-        this.gameService = gameService;
-        this.questionService = questionService;
-    }
+    private RoomService roomService;
+
+    @Autowired
+    private MessagingService messagingService;
+
 
     private String buildPrompt(Question question) {
         return String.format("""
@@ -86,41 +84,24 @@ public class PedagogicalAgent {
             """, question.getQuestion(), question.getAnswer());
     }
 
-    private List<QuestionVariant> convertOutputToQuestionVariants(
-        List<QuestionVariant> output, 
-        Question origQuestion
-    ) {
-        List<QuestionVariant> questions = null;
-
-        for (QuestionVariant qv : output) {
-            QuestionVariant variant = new QuestionVariant(
-                    qv.getQuestionVariant(), 
-                    qv.getDifficulty(), 
-                    qv.getOptions(), 
-                    origQuestion
-                );
-
-            questions.add(variant);
-        }
-        return questions;
-    }
-
-    public void generateRoomQuestionsVariants(UUID code) {
-        Question question = questionService.getQuestionById(code);
-        
-        if (question == null) {
-            throw new QuestionNotFound();
-        }
+    public void generateRoomQuestionsVariants(UUID questionCode) {
+        Question question = questionService.getQuestionById(questionCode);
         
         String prompt = buildPrompt(question);
 
-        chatbot.request(prompt, responseOpt -> {
-            responseOpt.ifPresent(output -> {
+        UUID uuidGame = question.getGame().getUuid();
+        Room room = roomService.getRoomByGame(uuidGame);
+
+        chatbot.request(prompt, response -> {
+            response.ifPresent(output -> {
                 try {
-                    
-                    this.convertOutputToQuestionVariants(
-                        objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {}),
-                        question);
+                    List<QuestionVariant> variants = objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {});
+
+                    for(QuestionVariant variant : variants) {
+                        variant.setOriginal(question);
+                    };
+
+                    messagingService.sendVariantsToOwner(room, variants);
 
                 } catch (IOException e) {
                     e.printStackTrace();

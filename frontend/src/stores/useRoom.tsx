@@ -1,11 +1,12 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
+import QuestionView from "@components/Views/Question";
 
 enum Difficult {
-  Easy,
-  Medium,
-  Hard,
+  Easy = 1,
+  Medium = 2,
+  Hard = 3,
 }
 
 export const difficultToString: Record<Difficult, string> = {
@@ -17,9 +18,15 @@ export const difficultToString: Record<Difficult, string> = {
 export type QuestionVariant = {
   uuid: UUID;
   level: Difficult;
-  context: string[];
+  //context: string[];
   question: string;
   options: string[];
+  original: UUID;
+};
+
+export type QuestionVariantsGroup = {
+  original: UUID;
+  questionVariants: QuestionVariant[];
 };
 
 export type Participant = {
@@ -41,6 +48,8 @@ type RoomStore = {
   room?: Room;
   participant?: Participant;
   exists: boolean;
+  variants?: QuestionVariantsGroup[];
+  setVariants: (v: QuestionVariantsGroup) => void;
   check: (code?: string) => Promise<Result>;
   disconnect: () => void;
   connect: (code?: string, participant?: UUID) => Promise<void>;
@@ -52,6 +61,36 @@ type RoomStore = {
 const useRoom = create<RoomStore>((set, get) => ({
   participants: [],
   exists: false,
+  variants: [],
+  setVariants: (newGroup) =>
+    set((state) => {
+      const existing = state.variants ?? [];
+      const updatedVariants = [...existing];
+
+      const index = existing.findIndex(
+        (group) => group.original === newGroup.original
+      );
+
+      if (index !== -1) {
+        updatedVariants[index] = newGroup;
+      } else {
+        updatedVariants.push(newGroup);
+      }
+
+      return { variants: updatedVariants };
+    }),
+  requestVariants: (original: UUID) => {
+    const room = get().room;
+    const client = get().client;
+
+    if (!client || !room) return;
+
+    client.publish({
+      destination:
+        "/channel/triggers/rooms/" + room.code + "/" + room.owner + "/generate",
+      body: original,
+    });
+  },
   check: async (code?: string) => {
     const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`,
@@ -86,7 +125,7 @@ const useRoom = create<RoomStore>((set, get) => ({
       participant: undefined,
     }));
   },
-  connect: async (code?: string, participant?: UUID) => {
+  connect: async (code?: string, participant?: UUID, isOwner?: boolean) => {
     const client: Client = new Client({
       brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
       reconnectDelay: 5000,
@@ -121,6 +160,22 @@ const useRoom = create<RoomStore>((set, get) => ({
           client.publish({
             destination: "/channel/triggers/rooms/" + code + "/" + participant,
           });
+        }
+
+        if (isOwner) {
+          client.subscribe(
+            "/channel/events/rooms/" + code + "/" + get().room?.owner,
+            (message) => {
+              const v: QuestionVariant[] = JSON.parse(message.body);
+
+              const group: QuestionVariantsGroup = {
+                original: v[0].original,
+                questionVariants: v,
+              };
+
+              get().setVariants(group);
+            }
+          );
         }
       },
       onDisconnect: () => get().disconnect(),

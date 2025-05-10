@@ -3,6 +3,7 @@ package app.hakai.backend.services;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class RoomService {
 
     public synchronized Room getRoom(String code) throws RoomNotFound {
         return repository.findByCode(code).orElseThrow(
+            () -> new RoomNotFound()
+        );
+    };
+
+    public synchronized Room getRoomByGame(UUID game) throws RoomNotFound {
+        return repository.findByGame(game).orElseThrow( 
             () -> new RoomNotFound()
         );
     };
