@@ -50,6 +50,7 @@ type RoomStore = {
   exists: boolean;
   variants?: QuestionVariantsGroup[];
   setVariants: (v: QuestionVariantsGroup) => void;
+  requestVariants: (original: UUID) => void;
   check: (code?: string) => Promise<Result>;
   disconnect: () => void;
   connect: (code?: string, participant?: UUID) => Promise<void>;
@@ -81,14 +82,23 @@ const useRoom = create<RoomStore>((set, get) => ({
     }),
   requestVariants: (original: UUID) => {
     const room = get().room;
-    const client = get().client;
 
-    if (!client || !room) return;
+    if (!room) return;
 
-    client.publish({
-      destination:
-        "/channel/triggers/rooms/" + room.code + "/" + room.owner + "/question/" + original + "/generate"
-    });
+    fetch(
+      "/api/triggers/rooms/" + room.code + "/question/" + original + "/generate",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({})
+      }
+    )
+    .then(response =>{
+      if(!response.ok) throw new Error("Erro na requisição");
+      return response.json;
+    })
   },
   check: async (code?: string) => {
     const response = await fetch(
