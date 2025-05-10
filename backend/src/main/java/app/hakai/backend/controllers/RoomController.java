@@ -104,11 +104,17 @@ public class RoomController {
         messagingService.sendRoomToParticipant(room, participant);
     };
 
-    @PostMapping("/{code}/{owner}/question/{uuid}/generate")
-    public ResponseEntity<Void> generate(@PathVariable UUID uuid) {
+    @PostMapping("/{code}/question/{uuid}/generate")
+    public ResponseEntity<Void> requestToGenerate(@PathVariable String code, @PathVariable UUID uuid) {
         Question question = questionService.getQuestionById(uuid);
-        pedagogicalAgent.generateRoomQuestionsVariants(question);
+        Room room = roomService.getRoom(code);
+        
+        pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
+            messagingService.sendVariantsToOwner(room, variants);
+        });
         return ResponseEntity.ok().build();
     }
+
+    
     
 };
