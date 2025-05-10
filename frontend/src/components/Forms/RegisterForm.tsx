@@ -3,12 +3,12 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "@components/Button";
-import useAuth, { RegisterUserData } from "@stores/useAuth";
+import { register, RegisterUserData } from "../../services/authService";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
-  const register = useAuth((state) => state.register);
-  const [error, setError] = useState(""); const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [data, setData] = useState<RegisterUserData>({
     email: "",
     password: "",
@@ -16,24 +16,15 @@ export default function RegisterForm() {
   });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-
     const { name, value } = e.target;
 
     if (name === "confirmPassword") {
       setConfirmPassword(value);
-
-
     } else {
-
       const updatedData = { ...data, [name]: value };
       setData(updatedData);
-
     }
     setError("");
-
-
-
   };
 
   const onSubmit = async (e: React.FormEvent) => {

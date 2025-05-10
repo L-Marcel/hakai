@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import useRoom from "@stores/useRoom";
 import { useNavigate, useParams } from "react-router-dom";
+import { connect } from "../../services/socketService";
 
 interface Props {
   children: ReactNode;
@@ -8,8 +9,7 @@ interface Props {
 
 export default function OwnerGuard({ children }: Props) {
   const { code } = useParams();
-  const room = useRoom((state) => state.room);
-  const connect = useRoom((state) => state.connect);
+  const room = useRoom((state) => state.room);;
   const navigate = useNavigate();
   const [isOwner, setIsOwner] = useState(true);
 
@@ -17,7 +17,7 @@ export default function OwnerGuard({ children }: Props) {
 
   useEffect(() => {
     connect(code);
-  }, [code, room, setIsOwner, navigate, connect]);
+  }, [code, room, setIsOwner, navigate]);
 
   return isOwner ? children : null;
 }

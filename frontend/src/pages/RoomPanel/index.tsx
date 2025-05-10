@@ -2,7 +2,6 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 import RoomGuard from "@components/Guards/RoomGuard";
 import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
-import useRoom, { Participant, QuestionVariant } from "@stores/useRoom";
 import Button from "@components/Button";
 import {
   FaArrowLeft,
@@ -16,7 +15,9 @@ import { useParams } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
-import Tag from "@components/Tag";
+import { close } from "../../services/roomService";
+import { Participant } from "@stores/useRoom";
+import { QuestionVariant } from "@stores/useQuestions";
 
 export default function RoomPanelPage() {
   return (
@@ -30,12 +31,13 @@ export default function RoomPanelPage() {
 
 function Page() {
   const { code } = useParams();
-  const close = useRoom((state) => state.close);
+  //const { questions } = useQuestions();
 
   const mockedQuestionVariants: QuestionVariant[] = [
     {
       uuid: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
-      level: 0,
+      original: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
+      level: 1,
       context: ["Docker", "Container", "Configurações"],
       question:
         "Qual parâmetro do Docker impede que um container reinicie automaticamente?",
@@ -43,7 +45,8 @@ function Page() {
     },
     {
       uuid: "62a7f3c0-68d4-4604-8733-fcaa3e8d0f4c",
-      level: 0,
+      original: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
+      level: 1,
       context: ["Docker", "Container", "Configurações"],
       question:
         "Ao criar um container Docker, qual opção desativa o reinício automático?",
@@ -56,7 +59,8 @@ function Page() {
     },
     {
       uuid: "48f76efb-0e7c-4649-b627-59bc6599a397",
-      level: 1,
+      original: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
+      level: 2,
       context: ["Docker", "Container", "Configurações"],
       question:
         "Qual das seguintes políticas de --restart garante que o container nunca será reiniciado automaticamente em nenhuma situação?",
@@ -70,7 +74,8 @@ function Page() {
     },
     {
       uuid: "3e7f3ae5-ef08-4b74-a9ae-62aa6204f6c0",
-      level: 2,
+      original: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
+      level: 3,
       context: ["Docker", "Container", "Configurações"],
       question:
         "Um engenheiro DevOps precisa garantir que um container só inicie quando explicitamente ordenado, sem reinício automático após falhas ou reboot do host. Qual política --restart se aplica?",
@@ -84,7 +89,8 @@ function Page() {
     },
     {
       uuid: "a6e173f7-f57b-4bd1-8a7f-eaa4c7730c5d",
-      level: 2,
+      original: "b8b6d0e3-5a13-4f5c-9d38-81f79d44e530",
+      level: 3,
       context: ["Docker", "Container", "Configurações"],
       question:
         "Considerando as seguintes opções de --restart do Docker, qual garante que um container nunca será reiniciado automaticamente, mesmo após uma falha ou reboot do sistema?",
@@ -145,11 +151,6 @@ function Page() {
           </p>
         </div>
         <div className={styles.controllers}>
-          {/* <p className={styles.tags}>
-            <Tag value="Docker" theme="light-orange"/>
-            <Tag value="Container" theme="light-orange"/>
-            <Tag value="Configurações" theme="light-orange"/>
-          </p> */}
           <div className={styles.buttons}>
             <Button theme="full-orange">
               <FaPlay />

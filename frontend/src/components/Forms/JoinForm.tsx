@@ -3,12 +3,11 @@ import Input from "@components/Input";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
-import useRoom from "@stores/useRoom";
 import { useParams } from "react-router-dom";
+import { join } from "../../services/roomService";
 
 export default function JoinForm() {
   const { code } = useParams();
-  const join = useRoom((state) => state.join);
   const [error, setError] = useState("");
   const [nickname, setNickname] = useState("");
 
