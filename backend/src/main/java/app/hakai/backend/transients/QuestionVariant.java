@@ -17,11 +17,4 @@ public class QuestionVariant {
     private int difficulty = 0;
     private List<String> options;
     private Question original;
-
-    public QuestionVariant(String question, int difficulty, List<String> options, Question original){
-        this.question = question;
-        this.difficulty = difficulty;
-        this.options = options;
-        this.original = original;
-    }
 };

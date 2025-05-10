@@ -2,7 +2,6 @@ package app.hakai.backend.agents;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,13 +9,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.hakai.backend.errors.QuestionNotFound;
 import app.hakai.backend.models.Question;
-import app.hakai.backend.services.MessagingService;
-import app.hakai.backend.services.QuestionService;
-import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.QuestionVariant;
-import app.hakai.backend.transients.Room;
 
 
 @Component
@@ -26,15 +20,6 @@ public class PedagogicalAgent {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private QuestionService questionService;
-
-    @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private MessagingService messagingService;
 
 
     private String buildPrompt(Question question) {
@@ -84,13 +69,8 @@ public class PedagogicalAgent {
             """, question.getQuestion(), question.getAnswer());
     }
 
-    public void generateRoomQuestionsVariants(UUID questionCode) {
-        Question question = questionService.getQuestionById(questionCode);
-        
+    public void generateRoomQuestionsVariants(Question question, PedagogicAgentCallback callback) {
         String prompt = buildPrompt(question);
-
-        UUID uuidGame = question.getGame().getUuid();
-        Room room = roomService.getRoomByGame(uuidGame);
 
         chatbot.request(prompt, response -> {
             response.ifPresent(output -> {
@@ -101,8 +81,7 @@ public class PedagogicalAgent {
                         variant.setOriginal(question);
                     };
 
-                    messagingService.sendVariantsToOwner(room, variants);
-
+                    callback.accept(variants);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

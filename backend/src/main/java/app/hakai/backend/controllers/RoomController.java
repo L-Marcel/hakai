@@ -20,8 +20,10 @@ import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
 import app.hakai.backend.models.Game;
+import app.hakai.backend.models.Question;
 import app.hakai.backend.services.GameService;
 import app.hakai.backend.services.MessagingService;
+import app.hakai.backend.services.QuestionService;
 import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.Participant;
 import app.hakai.backend.transients.Room;
@@ -30,11 +32,15 @@ import app.hakai.backend.transients.Room;
 @RequestMapping("/rooms")
 @MessageMapping
 public class RoomController {
+
     @Autowired
     private RoomService roomService;
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Autowired
     private MessagingService messagingService;
@@ -98,10 +104,17 @@ public class RoomController {
         messagingService.sendRoomToParticipant(room, participant);
     };
 
-    @PostMapping("/{code}/{owner}/generate")
-    public ResponseEntity<Void> generate(@RequestBody UUID question) {
-        pedagogicalAgent.generateRoomQuestionsVariants(question);
+    @PostMapping("/{code}/question/{uuid}/generate")
+    public ResponseEntity<Void> requestToGenerate(@PathVariable String code, @PathVariable UUID uuid) {
+        Question question = questionService.getQuestionById(uuid);
+        Room room = roomService.getRoom(code);
+        
+        pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
+            messagingService.sendVariantsToOwner(room, variants);
+        });
         return ResponseEntity.ok().build();
     }
+
+    
     
 };
