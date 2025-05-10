@@ -12,6 +12,6 @@ import app.hakai.backend.models.Question;
 
 @Repository
 public interface QuestionsRepository extends JpaRepository<Question, UUID> {
-    public Optional<List<Question>> findAllByGame(Game game);
+    public List<Question> findAllByGame(Game game);
     public Optional<Question> findByUuid(UUID uuid);
 };
