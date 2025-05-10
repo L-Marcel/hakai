@@ -87,23 +87,21 @@ public class PedagogicalAgent {
     public void generateRoomQuestionsVariants(UUID questionCode) {
         Question question = questionService.getQuestionById(questionCode);
         
-        if (question == null) throw new QuestionNotFound();
-        
         String prompt = buildPrompt(question);
 
-        UUID uuidGame = questionService.getQuestionById(questionCode).getGame().getUuid();
+        UUID uuidGame = question.getGame().getUuid();
         Room room = roomService.getRoomByGame(uuidGame);
 
-        chatbot.request(prompt, responseOpt -> {
-            responseOpt.ifPresent(output -> {
+        chatbot.request(prompt, response -> {
+            response.ifPresent(output -> {
                 try {
-                    List<QuestionVariant> list = objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {});
+                    List<QuestionVariant> variants = objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {});
 
-                    for(QuestionVariant variant : list) {
+                    for(QuestionVariant variant : variants) {
                         variant.setOriginal(question);
                     };
 
-                    messagingService.sendVariantsToOwner(room, list);
+                    messagingService.sendVariantsToOwner(room, variants);
 
                 } catch (IOException e) {
                     e.printStackTrace();

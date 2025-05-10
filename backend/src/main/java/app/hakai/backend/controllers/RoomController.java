@@ -99,8 +99,8 @@ public class RoomController {
     };
 
     @PostMapping("/{code}/{owner}/generate")
-    public ResponseEntity<Void> generate(@RequestBody UUID id) {
-        pedagogicalAgent.generateRoomQuestionsVariants(id);
+    public ResponseEntity<Void> generate(@RequestBody UUID question) {
+        pedagogicalAgent.generateRoomQuestionsVariants(question);
         return ResponseEntity.ok().build();
     }
     
