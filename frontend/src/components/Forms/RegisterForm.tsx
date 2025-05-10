@@ -8,7 +8,7 @@ import useAuth, { RegisterUserData } from "@stores/useAuth";
 export default function RegisterForm() {
   const navigate = useNavigate();
   const register = useAuth((state) => state.register);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); const [confirmPassword, setConfirmPassword] = useState("");
   const [data, setData] = useState<RegisterUserData>({
     email: "",
     password: "",
@@ -16,12 +16,43 @@ export default function RegisterForm() {
   });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+
+
+    const { name, value } = e.target;
+
+    if (name === "confirmPassword") {
+      setConfirmPassword(value);
+
+
+    } else {
+
+      const updatedData = { ...data, [name]: value };
+      setData(updatedData);
+
+    }
     setError("");
+
+
+
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!data.name || !data.email || !data.password || !confirmPassword) {
+      setError("Preencha todos os campos.");
+      return;
+    }
+
+    if (data.password.length < 6) {
+      setError("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (data.password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
+
     const response = await register(data);
     if (response.ok) navigate("/login");
     else setError(response.error.message);
@@ -48,6 +79,13 @@ export default function RegisterForm() {
         type="password"
         name="password"
         placeholder="Senha"
+        onChange={onChange}
+      />
+      <Input
+        autoComplete="off"
+        type="confirmPassword"
+        name="confirmPassword"
+        placeholder="Confirme a senha"
         onChange={onChange}
       />
       {error && <p className={styles.error}>{error}</p>}
