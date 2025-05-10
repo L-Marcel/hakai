@@ -86,7 +86,7 @@ const useRoom = create<RoomStore>((set, get) => ({
     if (!room) return;
 
     fetch(
-      "/api/triggers/rooms/" + room.code + "/question/" + original + "/generate",
+      `${import.meta.env.VITE_BACKEND_URL}/rooms/${room.code}/question/${original}/generate`,
       {
         method: "POST",
         headers: {
@@ -97,8 +97,10 @@ const useRoom = create<RoomStore>((set, get) => ({
     )
     .then(response =>{
       if(!response.ok) throw new Error("Erro na requisição");
-      return response.json;
     })
+    .catch(error => {
+      console.error("Erro ao enviar requisição:", error);
+    });
   },
   check: async (code?: string) => {
     const response = await fetch(
