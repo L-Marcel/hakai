@@ -87,8 +87,7 @@ const useRoom = create<RoomStore>((set, get) => ({
 
     client.publish({
       destination:
-        "/channel/triggers/rooms/" + room.code + "/" + room.owner + "/generate",
-      body: original,
+        "/channel/triggers/rooms/" + room.code + "/" + room.owner + "/question/" + original + "/generate"
     });
   },
   check: async (code?: string) => {

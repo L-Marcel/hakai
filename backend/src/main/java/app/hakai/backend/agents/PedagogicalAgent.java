@@ -84,9 +84,7 @@ public class PedagogicalAgent {
             """, question.getQuestion(), question.getAnswer());
     }
 
-    public void generateRoomQuestionsVariants(UUID questionCode) {
-        Question question = questionService.getQuestionById(questionCode);
-        
+    public void generateRoomQuestionsVariants(Question question) {
         String prompt = buildPrompt(question);
 
         UUID uuidGame = question.getGame().getUuid();
