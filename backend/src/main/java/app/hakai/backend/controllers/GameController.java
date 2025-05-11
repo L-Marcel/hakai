@@ -30,7 +30,7 @@ public class GameController {
         return ResponseEntity.ok().body(response);
     };
 
-    @GetMapping("/games")
+    @GetMapping
     public ResponseEntity<List<GameResponse>> getGamesToUser(@AuthenticationPrincipal User user) {
         List<Game> games = gameService.getGamesToUser(user.getUuid());
         List<GameResponse> response = games.stream()

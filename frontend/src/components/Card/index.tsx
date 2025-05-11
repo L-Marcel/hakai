@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit, FaEraser, FaPlay } from "react-icons/fa";
 import Button from "@components/Button";
 import { create } from "../../services/roomService";
-
-export default function Card() {
+import { Game } from "@stores/useGame";
+interface CardProps {
+  game: Game;
+}
+export default function Card({ game }: CardProps) {
   const navigate = useNavigate();
 
   const onStart = async () => {
@@ -16,8 +19,8 @@ export default function Card() {
   return (
     <li className={styles.card}>
       <div className={styles.content}>
-        <h1>Processos de software</h1>
-        <p>5 perguntas contextualizadas</p>
+        <h1>{game.title}</h1> {/* Exibindo o título do jogo */}
+        <p>{game.questions.length} perguntas contextualizadas</p> {/* Exibindo a quantidade de perguntas */}
       </div>
       <div className={styles.buttons}>
         <Button rounded="full" disabled>
