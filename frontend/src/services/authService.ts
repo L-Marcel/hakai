@@ -49,7 +49,7 @@ export async function load({ setUser }: AuthStore): Promise<Result> {
   // eslint-disable-next-line no-constant-condition
   if (true) {
     const user = {
-      uuid: "f4b8ef6e-581e-4a42-bcef-3c9c4a98008f" as UUID,
+      uuid: "08b89edf-6ce1-4c41-8b98-6daff49146c5" as UUID,
       name: "Administrador",
     };
 
