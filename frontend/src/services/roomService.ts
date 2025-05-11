@@ -87,7 +87,7 @@ export async function create(game: UUID): Promise<Result<string>> {
 }
 
 export async function check(code?: string): Promise<Result> {
-  const { setExists } = useRoom.getState();
+  const { setRoom } = useRoom.getState();
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/rooms/${code}`,
     {
@@ -99,7 +99,8 @@ export async function check(code?: string): Promise<Result> {
   );
 
   if (response.ok) {
-    setExists(true);
+    const room: Room = await response.json();
+    setRoom(room);
     return {
       ok: true,
     };

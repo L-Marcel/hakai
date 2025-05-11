@@ -1,7 +1,7 @@
 import useRoom from "@stores/useRoom";
 import { UUID } from "crypto";
 
-export async function request(original: UUID): Promise<Result> {
+export async function generate(original: UUID): Promise<Result> {
   const { room } = useRoom.getState();
 
   const response = await fetch(

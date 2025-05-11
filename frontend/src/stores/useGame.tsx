@@ -13,39 +13,46 @@ export const difficultToString: Record<Difficult, string> = {
   [Difficult.Hard]: "Difícil",
 };
 
+export type Game = {
+  uuid: UUID;
+  owner: UUID;
+  title: string;
+  questions: Question[];
+};
+
 export type Question = {
   uuid: UUID;
   question: string;
   answer: string;
-  variants: QuestionVariant[];
+  variants?: QuestionVariant[];
+  context: string[];
 };
 
 export type QuestionVariant = {
   uuid: UUID;
-  level: Difficult;
+  difficulty: Difficult;
   context: string[];
   question: string;
   options: string[];
   original: UUID;
 };
 
-type QuestionVariantsStore = {
+type GameStore = {
   current?: QuestionVariant;
-  questions: Question[];
+  game?: Game;
   setCurrent: (current: QuestionVariant) => void;
-  setQuestions: (questions: Question[]) => void;
+  setGame: (game: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
 };
 
-const useQuestions = create<QuestionVariantsStore>((set) => ({
-  questions: [],
+const useGame = create<GameStore>((set) => ({
   setCurrent: (current: QuestionVariant) => set({ current }),
-  setQuestions: (questions: Question[]) => set({ questions }),
+  setGame: (game: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
-      if (variants.length === 0) return state;
+      if (variants.length === 0 || !state.game) return state;
 
-      const questions = state.questions.map((question) => {
+      const questions = state.game.questions.map((question) => {
         if (question.uuid === variants[0].original) {
           return {
             ...question,
@@ -55,8 +62,13 @@ const useQuestions = create<QuestionVariantsStore>((set) => ({
         return question;
       });
 
-      return { questions };
+      return {
+        game: {
+          ...state.game,
+          questions,
+        },
+      };
     }),
 }));
 
-export default useQuestions;
+export default useGame;

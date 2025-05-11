@@ -8,7 +8,7 @@ export type User = {
   name: string;
 };
 
-type AuthStore = {
+export type AuthStore = {
   token?: string;
   user?: User;
   setToken: (token?: string) => void;
@@ -27,7 +27,7 @@ const useAuth = create<AuthStore>()(
       partialize: (state: AuthStore) => ({ token: state.token }),
       onRehydrateStorage: () => {
         return (state?: AuthStore, error?: unknown) => {
-          if (state?.token && !error) load();
+          if (state?.token && !error) load(state);
         };
       },
     }

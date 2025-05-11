@@ -12,6 +12,7 @@ export type Participant = {
 export type Room = {
   code: string;
   owner: UUID;
+  game: UUID;
   participants: Participant[];
   ready: boolean;
 };
@@ -20,19 +21,15 @@ type RoomStore = {
   client?: Client;
   room?: Room;
   participant?: Participant;
-  exists: boolean;
   setClient: (client?: Client) => void;
   setRoom: (room?: Room) => void;
   setParticipant: (participant?: Participant) => void;
-  setExists: (exists: boolean) => void;
 };
 
 const useRoom = create<RoomStore>((set) => ({
-  exists: false,
   setClient: (client?: Client) => set({ client }),
   setRoom: (room?: Room) => set({ room }),
-  setParticipant: (participant?: Participant) => set({ participant }),
-  setExists: (exists: boolean) => set({ exists }),
+  setParticipant: (participant?: Participant) => set({ participant })
 }));
 
 export default useRoom;

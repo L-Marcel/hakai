@@ -1,4 +1,4 @@
-import useAuth from "@stores/useAuth";
+import useAuth, { AuthStore } from "@stores/useAuth";
 import { UUID } from "crypto";
 
 export type LoginData = {
@@ -19,7 +19,7 @@ export function logout(): void {
 
 export async function login(data: LoginData): Promise<Result> {
   const { setToken } = useAuth.getState();
-  
+
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/users/login`,
     {
@@ -34,7 +34,7 @@ export async function login(data: LoginData): Promise<Result> {
   if (response.ok) {
     const token = await response.text();
     setToken(token);
-    return await load();
+    return await load(useAuth.getState());
   } else {
     const error = await response.json();
     return {
@@ -44,8 +44,7 @@ export async function login(data: LoginData): Promise<Result> {
   }
 }
 
-export async function load(): Promise<Result> {
-  const { setUser } = useAuth.getState();
+export async function load({ setUser }: AuthStore): Promise<Result> {
   // [TODO] Fazer a requisição aqui quando tiver a rota...
   // eslint-disable-next-line no-constant-condition
   if (true) {

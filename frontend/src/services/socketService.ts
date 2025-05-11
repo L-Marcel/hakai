@@ -1,16 +1,15 @@
 import { Client } from "@stomp/stompjs";
-import useQuestions, { QuestionVariant } from "@stores/useQuestions";
+import useGame, { QuestionVariant } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 
 export function disconnect(): void {
-  const { client, setRoom, setParticipant, setClient, setExists } =
+  const { client, setRoom, setParticipant, setClient } =
     useRoom.getState();
 
   if (client) client.deactivate();
   setRoom(undefined);
   setClient(undefined);
-  setExists(false);
   setParticipant(undefined);
 }
 
@@ -20,16 +19,14 @@ export function connect(
   isOwner?: boolean
 ): void {
   const { room, setRoom, setClient } = useRoom.getState();
-  const { setVariants } = useQuestions.getState();
+  const { setVariants } = useGame.getState();
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
     reconnectDelay: 5000,
     onConnect: () => {
-      console.log("abc");
       client.subscribe(
         "/channel/events/rooms/" + code + "/closed",
         (message) => {
-          console.log(message);
           disconnect();
         }
       );
