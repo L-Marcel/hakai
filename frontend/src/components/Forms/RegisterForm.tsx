@@ -24,6 +24,7 @@ export default function RegisterForm() {
       const updatedData = { ...data, [name]: value };
       setData(updatedData);
     }
+
     setError("");
   };
 
@@ -74,7 +75,7 @@ export default function RegisterForm() {
       />
       <Input
         autoComplete="off"
-        type="confirmPassword"
+        type="password"
         name="confirmPassword"
         placeholder="Confirme a senha"
         onChange={onChange}
