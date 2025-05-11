@@ -22,7 +22,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     public void register(String email, String password, String name) {
-        if(repository.findByEmail(email).isPresent()) 
+        if (repository.findByEmail(email).isPresent())
             throw new EmailAlreadyInUse();
         User user = new User(email, encoder.encode(password), name);
         repository.save(user);
@@ -30,12 +30,11 @@ public class UserService {
 
     public String login(String email, String password) throws UserNotFound {
         User user = repository.findByEmail(email).orElseThrow(
-            () -> new UserNotFound()
-        );
-
-        if(!encoder.matches(password, user.getPassword()))
+                () -> new UserNotFound());
+        if (!encoder.matches(password, user.getPassword()))
             throw new UserNotFound();
-        
+
         return jwtUtil.generateToken(user.getUuid());
     };
+
 };

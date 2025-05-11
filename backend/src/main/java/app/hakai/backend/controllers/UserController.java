@@ -15,35 +15,32 @@ import app.hakai.backend.services.UserService;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService service;
+        @Autowired
+        private UserService service;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(
-        @RequestBody LoginRequestBody body
-    ) {
-        String token = service.login(
-            body.getEmail(), 
-            body.getPassword()
-        );
+        @PostMapping("/login")
+        public ResponseEntity<String> login(
+                        @RequestBody LoginRequestBody body) {
+                String token = service.login(
+                                body.getEmail(),
+                                body.getPassword());
 
-        return ResponseEntity
-            .status(HttpStatus.ACCEPTED)
-            .body(token);
-    };
+                return ResponseEntity
+                                .status(HttpStatus.ACCEPTED)
+                                .body(token);
+        };
 
-    @PostMapping
-    public ResponseEntity<String> register(
-        @RequestBody RegisterRequestBody body
-    ) {
-        service.register(
-            body.getEmail(),
-            body.getPassword(),
-            body.getName()
-        );
-        
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body("Usuário registrado com sucesso!");
-    };
+        @PostMapping
+        public ResponseEntity<String> register(
+                        @RequestBody RegisterRequestBody body) {
+                service.register(
+                                body.getEmail(),
+                                body.getPassword(),
+                                body.getName());
+
+                return ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body("Usuário registrado com sucesso!");
+        };
+
 };
