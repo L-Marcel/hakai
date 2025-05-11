@@ -1,0 +1,1 @@
+INSERT INTO Questions (uuid, answer, question, game) VALUES ('4ad9e19e-8f9b-4b93-a7a1-17ea469bd455', 'Godot', 'Qual engine famosa open-source é conhecida pela utilização de nós pre-configurados?', '4ad9e19e-8f9b-4b93-a7a1-17ea469bd455')

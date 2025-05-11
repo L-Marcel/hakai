@@ -12,12 +12,14 @@ import lombok.Setter;
 @Setter
 public class RoomResponse {
     private String code;
+    private UUID game;
     private UUID owner;
     private List<ParticipantResponse> participants;
     private boolean ready;
 
     public RoomResponse(Room room) {
         this.code = room.getCode();
+        this.game = room.getGame().getUuid();
         this.owner = room.getGame().getOwner().getUuid();
         this.ready = room.isReady();
         this.participants = room.getParticipants()

@@ -1,15 +1,14 @@
 import styles from "./index.module.scss";
-import useRoom from "@stores/useRoom";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaEraser, FaPlay } from "react-icons/fa";
 import Button from "@components/Button";
+import { create } from "../../services/roomService";
 
 export default function Card() {
-  const createRoom = useRoom((state) => state.create);
   const navigate = useNavigate();
 
   const onStart = async () => {
-    const response = await createRoom("4ad9e19e-8f9b-4b93-a7a1-17ea469bd455");
+    const response = await create("4ad9e19e-8f9b-4b93-a7a1-17ea469bd455");
     // [TODO] Vai ter que criar um guard depois para redirecionar se já tiver sala de jogo
     if (response.ok) navigate("/room/panel/" + response.value);
   };

@@ -3,12 +3,11 @@ import Input from "@components/Input";
 import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
-import useRoom from "@stores/useRoom";
 import { useNavigate } from "react-router-dom";
+import { check } from "../../services/roomService";
 
 export default function CheckRoomForm() {
   const navigation = useNavigate();
-  const check = useRoom((state) => state.check);
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
 

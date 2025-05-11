@@ -1,11 +1,10 @@
 import { useState } from "react";
-import useAuth, { LoginData } from "@stores/useAuth";
 import styles from "./index.module.scss";
 import Input from "@components/Input";
 import Button from "@components/Button";
+import { login, LoginData } from "../../services/authService";
 
 export default function LoginForm() {
-  const login = useAuth((state) => state.login);
   const [error, setError] = useState("");
   const [data, setData] = useState<LoginData>({
     email: "",

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,6 +23,9 @@ public class Game {
     @Id
     @GeneratedValue
     private UUID uuid;
+
+    @Column
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "owner", nullable = false)

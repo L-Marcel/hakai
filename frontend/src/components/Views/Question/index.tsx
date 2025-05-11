@@ -1,56 +1,89 @@
 import { DetailedHTMLProps, HTMLAttributes } from "react";
-import { difficultToString, QuestionVariant } from "@stores/useRoom";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
+import { difficultToString, Question, QuestionVariant } from "@stores/useGame";
 
 interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  variant: QuestionVariant;
+  question?: Question;
+  variant?: QuestionVariant;
   highlight?: string;
 }
 
 export default function QuestionView({
   highlight,
+  question,
   variant,
   className,
   ...props
 }: Props) {
-  const { level, context, options, question, uuid } = variant;
-  const classes = [styles.question, className];
-  const finalClassName = classes.join(" ");
-  return (
-    <article className={finalClassName} {...props}>
-      <header className={styles.header}>
-        <p className={styles.tags}>
-          <Tag theme="full-orange" value={difficultToString[level]} />
-          {context.map((value) => {
+  if (variant) {
+    const { difficulty, context, options, question, uuid } = variant;
+    const classes = [styles.question, className];
+    const finalClassName = classes.join(" ");
+    return (
+      <article className={finalClassName} {...props}>
+        <header className={styles.header}>
+          <p className={styles.tags}>
+            <Tag theme="full-orange" value={difficultToString[difficulty]} />
+            {context.map((value) => {
+              return (
+                <Tag
+                  theme="light-orange"
+                  key={uuid + "-" + value}
+                  value={value}
+                />
+              );
+            })}
+          </p>
+          <h1>{question}</h1>
+        </header>
+        <ol className={styles.options}>
+          {options.map((option) => {
+            const id =
+              highlight && option === highlight ? "highlight" : "option";
             return (
-              <Tag
-                theme="light-orange"
-                key={uuid + "-" + value}
-                value={value}
-              />
+              <Button
+                disabled={!!highlight}
+                id={id}
+                theme="partial-orange"
+                key={uuid + "-" + option}
+              >
+                {option}
+              </Button>
             );
           })}
-        </p>
-        <h1>{question}</h1>
-      </header>
-      <ol className={styles.options}>
-        {options.map((option) => {
-          const id = highlight && option === highlight ? "highlight" : "option";
-          return (
-            <Button
-              disabled={!!highlight}
-              id={id}
-              theme="partial-orange"
-              key={uuid + "-" + option}
-            >
-              {option}
-            </Button>
-          );
-        })}
-      </ol>
-    </article>
-  );
+        </ol>
+      </article>
+    );
+  } else if (question) {
+    const { answer, question: content, uuid } = question;
+    const classes = [styles.question, className];
+    const finalClassName = classes.join(" ");
+    return (
+      <article className={finalClassName} {...props}>
+        <header className={styles.header}>
+          <p className={styles.tags}>
+            <Tag theme="full-orange" value="base" />
+            {question.context.map((value) => {
+              return (
+                <Tag
+                  theme="light-orange"
+                  key={uuid + "-" + value}
+                  value={value}
+                />
+              );
+            })}
+          </p>
+          <h1>{content}</h1>
+        </header>
+        <ol className={styles.options}>
+          <Button disabled id="highlight" theme="partial-orange">
+            {answer}
+          </Button>
+        </ol>
+      </article>
+    );
+  } else return null;
 }

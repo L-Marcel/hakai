@@ -1,6 +1,10 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import useRoom from "@stores/useRoom";
 import { useNavigate, useParams } from "react-router-dom";
+import { connect } from "../../services/socketService";
+import useGame from "@stores/useGame";
+import useAuth from "@stores/useAuth";
+import { request } from "../../services/gameService";
 
 interface Props {
   children: ReactNode;
@@ -9,15 +13,16 @@ interface Props {
 export default function OwnerGuard({ children }: Props) {
   const { code } = useParams();
   const room = useRoom((state) => state.room);
-  const connect = useRoom((state) => state.connect);
+  const game = useGame((state) => state.game);
+  const user = useAuth((state) => state.user);
   const navigate = useNavigate();
-  const [isOwner, setIsOwner] = useState(true);
-
-  //[TODO] Fazer verificar de verdade
+  const isOwner = user?.uuid === game?.owner;
 
   useEffect(() => {
-    connect(code);
-  }, [code, room, setIsOwner, navigate, connect]);
+    if (!game?.owner && !isOwner && room) request(room?.game);
+    else if (isOwner) connect(code, undefined, true);
+    else if (room) navigate("/home");
+  }, [isOwner, code, room, game, navigate, user]);
 
   return isOwner ? children : null;
 }

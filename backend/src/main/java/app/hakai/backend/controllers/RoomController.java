@@ -61,13 +61,12 @@ public class RoomController {
     };
 
     @GetMapping("/{code}")
-    public ResponseEntity<String> get(
+    public ResponseEntity<RoomResponse> get(
         @PathVariable String code
     ){
-        roomService.getRoom(code);
-        return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .body("Sala encontrada!");
+        Room room = roomService.getRoom(code);
+        RoomResponse response = new RoomResponse(room);
+        return ResponseEntity.ok().body(response);
     };
 
     @PostMapping("/{code}/close")

@@ -33,7 +33,7 @@ public class AIChatbot implements Chatbot {
     public void request(String prompt, ChatbotCallback callback) {
         try {
             Map<String, Object> requestBody = Map.of(
-                "model", "deepseek/deepseek-r1:free",
+                "model", "nousresearch/deephermes-3-mistral-24b-preview:free",
                 "messages", List.of(
                     Map.of(
                         "role", "user", 

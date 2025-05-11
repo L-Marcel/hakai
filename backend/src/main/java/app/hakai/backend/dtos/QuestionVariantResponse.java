@@ -1,5 +1,6 @@
 package app.hakai.backend.dtos;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ public class QuestionVariantResponse {
     private String question;
     private int difficulty = 0;
     private List<String> options;
+    private List<String> context;
     private UUID original;
     private String answer;
 
@@ -25,6 +27,7 @@ public class QuestionVariantResponse {
         this.original = question.getOriginal().getUuid();
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
+            this.context = new LinkedList<>();
         }
     }
 }
