@@ -17,4 +17,8 @@ public class QuestionVariant {
     private int difficulty = 0;
     private List<String> options;
     private Question original;
+
+    public QuestionVariant() {
+        this.uuid = UUID.randomUUID();
+    };
 };
