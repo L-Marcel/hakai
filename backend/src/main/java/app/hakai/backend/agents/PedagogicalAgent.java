@@ -21,7 +21,6 @@ public class PedagogicalAgent {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     private String buildPrompt(Question question) {
         return String.format("""
             Você irá ajudar na criação de variações de questões.
@@ -30,11 +29,11 @@ public class PedagogicalAgent {
             • Médio (2): pergunta um pouco mais desafiadora com 4-5 opções medianas para acertar (incluindo a certa)
             • Difícil (3): pergunta com formulação mais elaborada ou técnica com 6 opções difíceis de acertar (incluindo a certa)
             Identifique as variações em dificuldade com os valores numérico acima definidos.
-            Como resposta, apenas gere um json no seguinte formato:
+            Como resposta, apenas gere um json no seguinte formato (e não coloque dentro de bloco de código, retorne apenas com texto):
             [
                 {
                     "difficulty": 1,
-                    "questionVariant": "...",
+                    "question": "...",
                     "options": [
                     "...",
                     "...",
@@ -43,7 +42,7 @@ public class PedagogicalAgent {
                 },
                 {
                     "difficulty": 2,
-                    "questionVariant": "...",
+                    "question": "...",
                     "options": [
                     "...",
                     "...",
@@ -53,7 +52,7 @@ public class PedagogicalAgent {
                 },
                 {
                     "difficulty": 3,
-                    "questionVariant": "...",
+                    "question": "...",
                     "options": [
                     "...",
                     "...",
@@ -74,8 +73,10 @@ public class PedagogicalAgent {
 
         chatbot.request(prompt, response -> {
             response.ifPresent(output -> {
+                String json = output.replaceAll("(?s)```(?:json)?\\s*(.*?)\\s*```", "$1").trim();
+
                 try {
-                    List<QuestionVariant> variants = objectMapper.readValue(output, new TypeReference<List<QuestionVariant>>() {});
+                    List<QuestionVariant> variants = objectMapper.readValue(json, new TypeReference<List<QuestionVariant>>() {});
 
                     for(QuestionVariant variant : variants) {
                         variant.setOriginal(question);
