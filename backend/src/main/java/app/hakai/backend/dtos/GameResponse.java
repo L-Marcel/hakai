@@ -19,8 +19,8 @@ public class GameResponse {
         this.uuid = game.getUuid();
         this.owner = game.getOwner().getUuid();
         this.questions = game.getQuestions()
-            .stream()
-            .map(QuestionResponse::new)
-            .collect(Collectors.toList());
+                .stream()
+                .map(QuestionResponse::new)
+                .collect(Collectors.toList());
     };
 };
