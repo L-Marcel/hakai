@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import styles from "./index.module.scss";
 import { GoDot, GoDotFill } from "react-icons/go";
 
@@ -6,7 +6,7 @@ interface Props<T> {
   items: T[];
   start: number | string;
   identifier: (item: T, index: number) => number | string;
-  render: (item: T, index: number) => ReactNode;
+  render: (item: T, key: number | string, index: number) => ReactNode;
 }
 
 export default function Carousel<T>({
@@ -20,6 +20,10 @@ export default function Carousel<T>({
   const onSelect = (item: T, index: number) => {
     setSelected(identifier(item, index));
   };
+
+  useEffect(() => {
+    setSelected(start);
+  }, [start]);
 
   return (
     <div className={styles.carousel}>
@@ -46,12 +50,9 @@ export default function Carousel<T>({
       </div>
       <ul>
         {items.map((item, index) => {
-          if (selected === identifier(item, index))
-            return (
-              <Fragment key={identifier(item, index)}>
-                {render(item, index)}
-              </Fragment>
-            );
+          const key = identifier(item, index);
+          if (selected === key)
+            return render(item, key, index);
           else return null;
         })}
       </ul>

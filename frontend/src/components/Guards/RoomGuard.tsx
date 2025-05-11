@@ -10,16 +10,16 @@ interface Props {
 export default function RoomGuard({ children }: Props) {
   const { code } = useParams();
 
-  const exists = useRoom((state) => state.exists);
+  const room = useRoom((state) => state.room);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!exists) {
+    if (!room) {
       check(code).then((response: Result) => {
         if (!response.ok) navigate("/home");
       });
     }
-  }, [exists, code, navigate]);
+  }, [room, code, navigate]);
 
-  return exists ? children : null;
+  return room ? children : null;
 }
