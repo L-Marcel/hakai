@@ -43,27 +43,45 @@ export async function login(data: LoginData): Promise<Result> {
     };
   }
 }
-
 export async function load({ setUser }: AuthStore): Promise<Result> {
-  // [TODO] Fazer a requisição aqui quando tiver a rota...
-  // eslint-disable-next-line no-constant-condition
-  if (true) {
-    const user = {
-      uuid: "f4b8ef6e-581e-4a42-bcef-3c9c4a98008f" as UUID,
-      name: "Administrador",
-    };
+  const { token } = useAuth.getState();
 
-    setUser(user);
+  if (!token) {
     return {
-      ok: true,
+      ok: false,
+      error: {
+        message: "Token não encontrado.",
+        status: 401,
+      },
     };
-  } else {
+  }
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const user = await response.json();
+      setUser(user);
+      return { ok: true };
+    } else {
+      logout();
+      const error = await response.json();
+      return {
+        ok: false,
+        error,
+      };
+    }
+  } catch (err) {
     logout();
     return {
       ok: false,
       error: {
-        message: "",
-        status: 400,
+        message: "Erro de rede ao carregar o usuário.",
+        status: 500,
       },
     };
   }
