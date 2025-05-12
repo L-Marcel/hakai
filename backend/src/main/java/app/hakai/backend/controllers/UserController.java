@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.anotations.RequireAuth;
 import app.hakai.backend.dtos.LoginRequestBody;
 import app.hakai.backend.dtos.RegisterRequestBody;
 import app.hakai.backend.dtos.UserResponse;
@@ -48,8 +49,10 @@ public class UserController {
         };
 
         @GetMapping("/me")
+        @RequireAuth
         public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal User user) {
-                return ResponseEntity.ok(new UserResponse(user));
+                UserResponse response = new UserResponse(user);
+                return ResponseEntity.ok(response);
         }
 
 };

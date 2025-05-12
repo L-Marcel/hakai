@@ -43,19 +43,7 @@ export async function login(data: LoginData): Promise<Result> {
     };
   }
 }
-export async function load({ setUser }: AuthStore): Promise<Result> {
-  const { token } = useAuth.getState();
-
-  if (!token) {
-    return {
-      ok: false,
-      error: {
-        message: "Token não encontrado.",
-        status: 401,
-      },
-    };
-  }
-
+export async function load({ setUser, token }: AuthStore): Promise<Result> {
   try {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/me`, {
       headers: {
