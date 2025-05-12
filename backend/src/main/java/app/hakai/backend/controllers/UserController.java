@@ -3,6 +3,8 @@ package app.hakai.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.LoginRequestBody;
 import app.hakai.backend.dtos.RegisterRequestBody;
+import app.hakai.backend.dtos.UserResponse;
+import app.hakai.backend.models.User;
 import app.hakai.backend.services.UserService;
 
 @RestController
@@ -42,5 +46,10 @@ public class UserController {
                                 .status(HttpStatus.CREATED)
                                 .body("Usuário registrado com sucesso!");
         };
+
+        @GetMapping("/me")
+        public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal User user) {
+                return ResponseEntity.ok(new UserResponse(user));
+        }
 
 };
