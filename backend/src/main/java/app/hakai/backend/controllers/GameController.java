@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.anotations.RequireAuth;
+import app.hakai.backend.annotations.RequireAuth;
 import app.hakai.backend.dtos.GameResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
@@ -41,5 +41,4 @@ public class GameController {
 
         return ResponseEntity.ok(response);
     }
-
 };

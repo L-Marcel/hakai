@@ -1,4 +1,4 @@
-package app.hakai.backend.anotations;
+package app.hakai.backend.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,5 +10,4 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("isAuthenticated()")
-public @interface RequireAuth {
-}
+public @interface RequireAuth {}
