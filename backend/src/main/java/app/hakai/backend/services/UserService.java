@@ -57,5 +57,4 @@ public class UserService {
 
         return jwtUtil.generateToken(user.getUuid());
     }
-
 };

@@ -70,7 +70,7 @@ button {
 }
 
 [data-selectable] {
-  user-select: all;
+  user-select: text;
 
   &::selection {
     background: $orange-600;

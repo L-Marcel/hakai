@@ -24,9 +24,9 @@ public class JwtUtil {
 
         return Jwts
                 .builder()
-                .setSubject(uuid.toString()) // Quem é o dono do token
-                .setIssuedAt(currentDate) // Quando ele foi criado
-                .setExpiration(expirationDate) // Quando ele expira
+                .setSubject(uuid.toString())
+                .setIssuedAt(currentDate)
+                .setExpiration(expirationDate)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }

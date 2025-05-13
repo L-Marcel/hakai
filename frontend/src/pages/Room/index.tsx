@@ -10,12 +10,12 @@ export default function RoomPage() {
       <ParticipantGuard>
         <main className={styles.main}>
           <div
-          style={{
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            height: "100vh",
-          }}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
           >
             <Page />
           </div>
@@ -27,14 +27,21 @@ export default function RoomPage() {
 
 function Page() {
   const gameName = useGame().game?.title;
-  const current  = useGame().current;
+  const current = useGame().current;
 
-  if (!current) return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <h1>ROOM: {gameName}</h1>
-      <h2>Aguardando pergunta...</h2>
-    </div>
-  );
+  if (!current)
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h1>ROOM: {gameName}</h1>
+        <h2>Aguardando pergunta...</h2>
+      </div>
+    );
 
   return (
     <>

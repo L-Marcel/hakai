@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "ngrox": "tsx ./src/start.ts",
+    "ngrok": "tsx ./src/start.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

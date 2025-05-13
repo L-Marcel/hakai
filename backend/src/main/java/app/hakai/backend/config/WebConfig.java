@@ -17,16 +17,4 @@ public class WebConfig implements WebMvcConfigurer {
     ) {
         registry.addConverter(new StringToUuidConverter());
     };
-
-    @Override
-    public void addCorsMappings(
-        @SuppressWarnings("null") CorsRegistry registry
-    ) {
-        registry
-            .addMapping("/**") // Aplica CORS para todos os endpoints
-            .allowedOrigins("http://localhost:5173") // Permite apenas o frontend React
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
-            .allowedHeaders("*") // Permite todos os headers
-            .allowCredentials(true); // Permite envio de cookies/sessões
-    };
 };
