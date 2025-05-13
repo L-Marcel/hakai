@@ -48,16 +48,8 @@ public class UserService {
     }
 
     public String login(String email, String password) {
-        if (email == null || email.isBlank() || password == null || password.isBlank()) {
-            throw new MissingFields();
-        }
-
-        if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            throw new InvalidEmail();
-        }
-
         User user = repository.findByEmail(email)
-                .orElseThrow(InvalidCredentials::new);
+            .orElseThrow(InvalidCredentials::new);
 
         if (!encoder.matches(password, user.getPassword())) {
             throw new InvalidCredentials();
