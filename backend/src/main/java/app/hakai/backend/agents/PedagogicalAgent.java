@@ -25,10 +25,13 @@ public class PedagogicalAgent {
         return String.format("""
             Você irá ajudar na criação de variações de questões.
             Será enviado uma questão com a resposta certa e você deve criar variações nos níveis fácil, médio e difícil dessa questão.
+
             • Fácil (1): pergunta mais simples com 3-4 opções fáceis (incluindo a certa)
             • Médio (2): pergunta um pouco mais desafiadora com 4-5 opções medianas para acertar (incluindo a certa)
             • Difícil (3): pergunta com formulação mais elaborada ou técnica com 6 opções difíceis de acertar (incluindo a certa)
+
             Identifique as variações em dificuldade com os valores numérico acima definidos.
+
             Como resposta, apenas gere um json no seguinte formato (e não coloque dentro de bloco de código, retorne apenas com texto):
             [
                 {
@@ -65,6 +68,9 @@ public class PedagogicalAgent {
             
             Questão: %s
             Resposta certa: %s
+
+            Certifique-se que a resposta certa que estou te passando aparece exatamente igual nas opções de resposta de cada uma das questões. Podendo mudar apenas
+            o seu índice.
             """, question.getQuestion(), question.getAnswer());
     }
 
