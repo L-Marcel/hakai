@@ -76,7 +76,7 @@ importers:
         specifier: ^8.24.1
         version: 8.29.0(eslint@9.23.0)(typescript@5.7.3)
       vite:
-        specifier: ^6.2.0
+        specifier: ^6.2.4
         version: 6.2.4(@types/node@22.14.0)(sass@1.86.1)(tsx@4.19.4)(yaml@2.7.1)
       zustand:
         specifier: ^5.0.3

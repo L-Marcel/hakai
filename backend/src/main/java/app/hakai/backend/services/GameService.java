@@ -1,5 +1,6 @@
 package app.hakai.backend.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,13 @@ public class GameService {
     private GamesRepository repository;
 
     public Game getGame(UUID uuid) throws GameNotFound {
-        if(uuid == null) throw new GameNotFound();
+        if (uuid == null)
+            throw new GameNotFound();
         return repository.findById(uuid).orElseThrow(
-            () -> new GameNotFound()
-        );
+                () -> new GameNotFound());
     };
+
+    public List<Game> getGamesToUser(UUID uuid) {
+        return repository.findByOwnerUuid(uuid);
+    }
 };

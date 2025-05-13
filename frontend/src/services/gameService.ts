@@ -44,3 +44,28 @@ export function sendQuestion(variants: QuestionVariant[]): void {
     body: JSON.stringify(variants),
   });
 }
+
+export async function requestAllGames(): Promise<Result<Game[]>> {
+  const { token } = useAuth.getState();
+
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/games`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  if (response.ok) {
+    const games: Game[] = await response.json();
+    return {
+      ok: true,
+      value: games,
+    };
+  } else {
+    const error = await response.json();
+    return {
+      ok: false,
+      error,
+    };
+  }
+}
