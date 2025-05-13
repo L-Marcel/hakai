@@ -32,7 +32,6 @@ import app.hakai.backend.transients.Room;
 @RequestMapping("/rooms")
 @MessageMapping
 public class RoomController {
-
     @Autowired
     private RoomService roomService;
 
@@ -112,8 +111,5 @@ public class RoomController {
             messagingService.sendVariantsToOwner(room, variants);
         });
         return ResponseEntity.ok().build();
-    }
-
-    
-    
+    };
 };

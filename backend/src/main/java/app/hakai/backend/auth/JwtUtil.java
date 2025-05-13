@@ -20,24 +20,25 @@ public class JwtUtil {
     public String generateToken(UUID uuid) {
         Date currentDate = new Date();
         Date expirationDate = new Date(
-                currentDate.getTime() + EXPIRATION_TIME);
+            currentDate.getTime() + EXPIRATION_TIME
+        );
 
         return Jwts
-                .builder()
-                .setSubject(uuid.toString())
-                .setIssuedAt(currentDate)
-                .setExpiration(expirationDate)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+            .builder()
+            .setSubject(uuid.toString())
+            .setIssuedAt(currentDate)
+            .setExpiration(expirationDate)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
     }
 
     public UUID validateTokenAndGetUserId(String token) {
         Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
 
         String userId = claims.getSubject();
         return UUID.fromString(userId);

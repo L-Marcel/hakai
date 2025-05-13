@@ -24,5 +24,5 @@ public class GameService {
 
     public List<Game> getGamesToUser(UUID uuid) {
         return repository.findByOwnerUuid(uuid);
-    }
+    };
 };

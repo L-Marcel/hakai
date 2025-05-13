@@ -44,5 +44,5 @@ public class MessagingService {
             "/channel/events/rooms/" + room.getCode() + "/" + room.getGame().getOwner().getUuid().toString(),
             list.stream().map((QuestionVariant question) -> new QuestionVariantResponse(question, true))
         );
-    }
+    };
 };
