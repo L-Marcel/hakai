@@ -77,7 +77,7 @@ function Page() {
         </div>
         <div className={styles.controllers}>
           <div className={styles.buttons}>
-            <Button 
+            <Button
               onClick={() => sendQuestion(variants as QuestionVariant[])}
               theme="full-orange"
             >

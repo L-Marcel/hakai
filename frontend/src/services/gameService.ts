@@ -33,7 +33,6 @@ export async function request(uuid?: UUID): Promise<Result> {
   }
 }
 
-
 export function sendQuestion(variants: QuestionVariant[]): void {
   const client = useRoom.getState().client;
   const room = useRoom.getState().room;
@@ -44,7 +43,7 @@ export function sendQuestion(variants: QuestionVariant[]): void {
     destination: "/channel/events/rooms/" + room.code + "/question",
     body: JSON.stringify(variants),
   });
- }
+}
 
 export async function requestAllGames(): Promise<Result<Game[]>> {
   const { token } = useAuth.getState();
