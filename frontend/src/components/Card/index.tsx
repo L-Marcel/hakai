@@ -19,9 +19,8 @@ export default function Card({ game }: CardProps) {
   return (
     <li className={styles.card}>
       <div className={styles.content}>
-        <h1>{game.title}</h1> {/* Exibindo o título do jogo */}
-        <p>{game.questions.length} perguntas contextualizadas</p>{" "}
-        {/* Exibindo a quantidade de perguntas */}
+        <h1>{game.title}</h1>
+        <p>{game.questions.length} perguntas contextualizadas</p>
       </div>
       <div className={styles.buttons}>
         <Button rounded="full" disabled>

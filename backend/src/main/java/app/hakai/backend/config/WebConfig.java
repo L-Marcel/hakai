@@ -23,10 +23,10 @@ public class WebConfig implements WebMvcConfigurer {
         @SuppressWarnings("null") CorsRegistry registry
     ) {
         registry
-            .addMapping("/**") // Aplica CORS para todos os endpoints
-            .allowedOrigins("http://localhost:5173") // Permite apenas o frontend React
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
-            .allowedHeaders("*") // Permite todos os headers
-            .allowCredentials(true); // Permite envio de cookies/sessões
+            .addMapping("/**")
+            .allowedOrigins("http://localhost:5173", "*..ngrok-free.app")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
     };
 };
