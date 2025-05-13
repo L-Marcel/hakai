@@ -22,6 +22,7 @@ import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { generate } from "../../services/variantService";
 import { UUID } from "crypto";
+import { sendQuestion } from "../../services/gameService";
 
 export default function RoomPanelPage() {
   return (
@@ -76,7 +77,10 @@ function Page() {
         </div>
         <div className={styles.controllers}>
           <div className={styles.buttons}>
-            <Button theme="full-orange">
+            <Button 
+              onClick={() => sendQuestion(variants as QuestionVariant[])}
+              theme="full-orange"
+            >
               <FaPlay />
               Lançar
             </Button>

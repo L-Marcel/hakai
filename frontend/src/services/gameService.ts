@@ -1,6 +1,6 @@
 import useAuth from "@stores/useAuth";
-import useGame from "@stores/useGame";
-import { Game } from "@stores/useGame";
+import useGame, { QuestionVariant, Game } from "@stores/useGame";
+import useRoom from "@stores/useRoom";
 import { UUID } from "crypto";
 
 export async function request(uuid?: UUID): Promise<Result> {
@@ -32,6 +32,19 @@ export async function request(uuid?: UUID): Promise<Result> {
     };
   }
 }
+
+
+export function sendQuestion(variants: QuestionVariant[]): void {
+  const client = useRoom.getState().client;
+  const room = useRoom.getState().room;
+
+  if (!room || !client) return;
+
+  client.publish({
+    destination: "/channel/events/rooms/" + room.code + "/question",
+    body: JSON.stringify(variants),
+  });
+ }
 
 export async function requestAllGames(): Promise<Result<Game[]>> {
   const { token } = useAuth.getState();

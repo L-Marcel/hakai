@@ -38,6 +38,16 @@ export function connect(
         }
       );
 
+      client.subscribe(
+        "/channel/events/rooms/" + code + "/question",
+        (message) => {
+          const variants: QuestionVariant[] = JSON.parse(message.body);
+          if (variants.length > 0) {
+            useGame.getState().setCurrent(variants[0]);
+          }
+        }
+      );
+
       if (participant) {
         const subscription = client.subscribe(
           "/channel/events/rooms/" + code + "/" + participant + "/entered",
