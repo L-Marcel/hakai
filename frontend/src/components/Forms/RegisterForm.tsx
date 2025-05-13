@@ -30,15 +30,6 @@ export default function RegisterForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!data.name || !data.email || !data.password || !confirmPassword) {
-      setError("Preencha todos os campos.");
-      return;
-    }
-
-    if (data.password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
 
     if (data.password !== confirmPassword) {
       setError("As senhas não coincidem.");

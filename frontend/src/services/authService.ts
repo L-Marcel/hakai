@@ -43,27 +43,36 @@ export async function login(data: LoginData): Promise<Result> {
     };
   }
 }
+export async function load({ setUser, token }: AuthStore): Promise<Result> {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/users/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-export async function load({ setUser }: AuthStore): Promise<Result> {
-  // [TODO] Fazer a requisição aqui quando tiver a rota...
-  // eslint-disable-next-line no-constant-condition
-  if (true) {
-    const user = {
-      uuid: "08b89edf-6ce1-4c41-8b98-6daff49146c5" as UUID,
-      name: "Administrador",
-    };
-
-    setUser(user);
-    return {
-      ok: true,
-    };
-  } else {
+    if (response.ok) {
+      const user = await response.json();
+      setUser(user);
+      return { ok: true };
+    } else {
+      logout();
+      const error = await response.json();
+      return {
+        ok: false,
+        error,
+      };
+    }
+  } catch (err) {
     logout();
     return {
       ok: false,
       error: {
-        message: "",
-        status: 400,
+        message: "Erro de rede ao carregar o usuário.",
+        status: 500,
       },
     };
   }

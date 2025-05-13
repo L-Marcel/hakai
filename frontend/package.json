@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx ./src/start.ts",
+    "ngrox": "tsx ./src/start.ts",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier \"**/*.{js,ts,tsx,scss}\" --write",
@@ -35,7 +36,7 @@
     "tsx": "^4.19.4",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.0",
+    "vite": "^6.2.4",
     "zustand": "^5.0.3"
   }
 }
