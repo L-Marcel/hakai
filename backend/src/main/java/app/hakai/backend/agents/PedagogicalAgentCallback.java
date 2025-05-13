@@ -6,4 +6,4 @@ import java.util.function.Consumer;
 import app.hakai.backend.transients.QuestionVariant;
 
 public @FunctionalInterface
-interface PedagogicAgentCallback extends Consumer<List<QuestionVariant>> {};
+interface PedagogicalAgentCallback extends Consumer<List<QuestionVariant>> {};
