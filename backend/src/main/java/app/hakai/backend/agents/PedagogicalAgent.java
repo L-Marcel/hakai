@@ -69,8 +69,11 @@ public class PedagogicalAgent {
             Questão: %s
             Resposta certa: %s
 
-            Certifique-se que a resposta certa que estou te passando aparece exatamente igual nas opções de resposta de cada uma das questões. Podendo mudar apenas
-            o seu índice.
+            ATENÇÃO: Certifique-se que a resposta certa que estou te passando aparece EXATAMENTE igual nas opções de resposta de cada uma das questões. Podendo mudar apenas o seu índice na lista.
+
+            ATENÇÃO: Não coloque prefixos de listagem nas respostas, ex: A. B. C.; I. II. III. ou 1. 2. 3.
+
+            ATENÇÃO: Não coloque perguntas como opções de resposta, exceto que a resposta correta também seja uma pergunta.
             """, question.getQuestion(), question.getAnswer());
     }
 
