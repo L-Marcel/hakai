@@ -15,7 +15,9 @@ import app.hakai.backend.errors.RouteNotFound;
 @ControllerAdvice
 public class ExceptionAdvice {
     @ExceptionHandler(HttpError.class)
-    public ResponseEntity<Map<String, Object>> handleHttpErrors(HttpError error) {
+    public ResponseEntity<Map<String, Object>> handleHttpErrors(
+        HttpError error
+    ) {
         return ResponseEntity
             .status(error.getStatus())
             .body(error.getError());

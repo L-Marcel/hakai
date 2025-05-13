@@ -25,7 +25,8 @@ public class GameController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> get(
-            @PathVariable(required = false) UUID uuid) {
+        @PathVariable(required = false) UUID uuid
+    ) {
         Game game = gameService.getGame(uuid);
         GameResponse response = new GameResponse(game);
         return ResponseEntity.ok().body(response);
@@ -33,12 +34,17 @@ public class GameController {
 
     @GetMapping
     @RequireAuth
-    public ResponseEntity<List<GameResponse>> getGamesToUser(@AuthenticationPrincipal User user) {
-        List<Game> games = gameService.getGamesToUser(user.getUuid());
+    public ResponseEntity<List<GameResponse>> getGamesToUser(
+        @AuthenticationPrincipal User user
+    ) {
+        List<Game> games = gameService.getGamesToUser(
+            user.getUuid()
+        );
+
         List<GameResponse> response = games.stream()
-                .map(GameResponse::new)
-                .toList();
+            .map(GameResponse::new)
+            .toList();
 
         return ResponseEntity.ok(response);
-    }
+    };
 };
