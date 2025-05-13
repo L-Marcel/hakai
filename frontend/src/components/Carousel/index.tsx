@@ -51,8 +51,7 @@ export default function Carousel<T>({
       <ul>
         {items.map((item, index) => {
           const key = identifier(item, index);
-          if (selected === key)
-            return render(item, key, index);
+          if (selected === key) return render(item, key, index);
           else return null;
         })}
       </ul>

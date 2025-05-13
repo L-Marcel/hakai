@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx ./src/start.ts",
+    "ngrox": "tsx ./src/start.ts",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "format": "prettier \"**/*.{js,ts,tsx,scss}\" --write",
