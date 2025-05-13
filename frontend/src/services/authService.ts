@@ -45,11 +45,14 @@ export async function login(data: LoginData): Promise<Result> {
 }
 export async function load({ setUser, token }: AuthStore): Promise<Result> {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/users/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (response.ok) {
       const user = await response.json();

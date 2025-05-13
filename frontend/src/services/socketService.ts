@@ -4,8 +4,7 @@ import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 
 export function disconnect(): void {
-  const { client, setRoom, setParticipant, setClient } =
-    useRoom.getState();
+  const { client, setRoom, setParticipant, setClient } = useRoom.getState();
 
   if (client) client.deactivate();
   setRoom(undefined);
