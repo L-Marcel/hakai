@@ -82,7 +82,7 @@ public class PedagogicalAgent {
 
     public void generateRoomQuestionsVariants(
         Question question, 
-        PedagogicAgentCallback callback
+        PedagogicalAgentCallback callback
     ) {
         String prompt = buildPrompt(question);
 
