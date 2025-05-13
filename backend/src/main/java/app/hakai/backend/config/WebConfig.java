@@ -17,16 +17,4 @@ public class WebConfig implements WebMvcConfigurer {
     ) {
         registry.addConverter(new StringToUuidConverter());
     };
-
-    @Override
-    public void addCorsMappings(
-        @SuppressWarnings("null") CorsRegistry registry
-    ) {
-        registry
-            .addMapping("/**")
-            .allowedOrigins("http://localhost:5173", "*..ngrok-free.app")
-            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("*")
-            .allowCredentials(true);
-    };
 };
