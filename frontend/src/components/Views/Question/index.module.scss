@@ -20,7 +20,10 @@
 
   button {
     display: flex;
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
+    height: fit-content;
+    align-items: baseline;
+    text-align: left;
     border-radius: $border-radius;
     justify-content: flex-start;
 
