@@ -29,7 +29,7 @@ type RoomStore = {
 const useRoom = create<RoomStore>((set) => ({
   setClient: (client?: Client) => set({ client }),
   setRoom: (room?: Room) => set({ room }),
-  setParticipant: (participant?: Participant) => set({ participant })
+  setParticipant: (participant?: Participant) => set({ participant }),
 }));
 
 export default useRoom;
