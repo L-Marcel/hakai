@@ -24,7 +24,11 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void register(String email, String password, String name) {
+    public void register(
+        String email, 
+        String password, 
+        String name
+    ) {
         if (email == null || email.isBlank() ||
                 password == null || password.isBlank() ||
                 name == null || name.isBlank()) {
@@ -47,23 +51,17 @@ public class UserService {
         repository.save(user);
     }
 
-    public String login(String email, String password) {
-        if (email == null || email.isBlank() || password == null || password.isBlank()) {
-            throw new MissingFields();
-        }
-
-        if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-            throw new InvalidEmail();
-        }
-
+    public String login(
+        String email, 
+        String password
+    ) {
         User user = repository.findByEmail(email)
-                .orElseThrow(InvalidCredentials::new);
+            .orElseThrow(InvalidCredentials::new);
 
         if (!encoder.matches(password, user.getPassword())) {
             throw new InvalidCredentials();
         }
 
         return jwtUtil.generateToken(user.getUuid());
-    }
-
+    };
 };

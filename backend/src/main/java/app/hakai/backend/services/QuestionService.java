@@ -33,9 +33,9 @@ public class QuestionService {
     public Question getQuestionById(UUID uuid) throws QuestionNotFound {
         if(uuid == null) throw new QuestionNotFound();
         return repository.findByUuid(uuid).orElseThrow(() -> new QuestionNotFound());
-<<<<<<< Updated upstream
+
     }
-=======
+
     };
 
     public void generateQuestionVariants(Question question, Room room) {
@@ -43,5 +43,4 @@ public class QuestionService {
             messagingService.sendVariantsToOwner(room, variants);
         });
     };
->>>>>>> Stashed changes
 };

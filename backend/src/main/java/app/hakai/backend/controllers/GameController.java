@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.anotations.RequireAuth;
+import app.hakai.backend.annotations.RequireAuth;
 import app.hakai.backend.dtos.GameResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
@@ -25,7 +25,8 @@ public class GameController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> get(
-            @PathVariable(required = false) UUID uuid) {
+        @PathVariable(required = false) UUID uuid
+    ) {
         Game game = gameService.getGame(uuid);
         GameResponse response = new GameResponse(game);
         return ResponseEntity.ok().body(response);
@@ -33,13 +34,17 @@ public class GameController {
 
     @GetMapping
     @RequireAuth
-    public ResponseEntity<List<GameResponse>> getGamesToUser(@AuthenticationPrincipal User user) {
-        List<Game> games = gameService.getGamesToUser(user.getUuid());
+    public ResponseEntity<List<GameResponse>> getGamesToUser(
+        @AuthenticationPrincipal User user
+    ) {
+        List<Game> games = gameService.getGamesToUser(
+            user.getUuid()
+        );
+
         List<GameResponse> response = games.stream()
-                .map(GameResponse::new)
-                .toList();
+            .map(GameResponse::new)
+            .toList();
 
         return ResponseEntity.ok(response);
-    }
-
+    };
 };

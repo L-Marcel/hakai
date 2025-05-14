@@ -49,8 +49,8 @@ function Page() {
           {games.map((game) => (
             <Card key={game.uuid} game={game} />
           ))}
-        </ul>{error && <p className={styles.error}>{error}</p>}
-
+        </ul>
+        {error && <p className={styles.error}>{error}</p>}
       </section>
     </main>
   );

@@ -22,6 +22,7 @@ import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { generate } from "../../services/variantService";
 import { UUID } from "crypto";
+import { sendQuestion } from "../../services/gameService";
 
 export default function RoomPanelPage() {
   return (
@@ -49,9 +50,15 @@ function Page() {
     return questions[questionIndex];
   }, [index, questions]);
 
-  const variants: QuestionVariant[] = useMemo(() => question?.variants ?? [], [question]);
+  const variants: QuestionVariant[] = useMemo(
+    () => question?.variants ?? [],
+    [question]
+  );
 
-  const hardestVariant = useMemo(() => variants.length == 0 ? "" : variants[variants.length - 1].uuid, [variants]);
+  const hardestVariant = useMemo(
+    () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
+    [variants]
+  );
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
@@ -70,7 +77,10 @@ function Page() {
         </div>
         <div className={styles.controllers}>
           <div className={styles.buttons}>
-            <Button theme="full-orange">
+            <Button
+              onClick={() => sendQuestion(variants as QuestionVariant[])}
+              theme="full-orange"
+            >
               <FaPlay />
               Lançar
             </Button>
@@ -107,18 +117,20 @@ function Page() {
       </section>
       <section>
         <QuestionView highlight={question?.answer} question={question} />
-        {variants && variants.length > 0 && <QuestionVariantsCarousel
-          items={variants}
-          start={hardestVariant}
-          identifier={(item) => item.uuid}
-          render={(item) => {
-            return (
-              <li>
-                <QuestionView highlight={question?.answer} variant={item} />
-              </li>
-            );
-          }}
-        />}
+        {variants && variants.length > 0 && (
+          <QuestionVariantsCarousel
+            items={variants}
+            start={hardestVariant}
+            identifier={(item) => item.uuid}
+            render={(item) => {
+              return (
+                <li>
+                  <QuestionView highlight={question?.answer} variant={item} />
+                </li>
+              );
+            }}
+          />
+        )}
       </section>
       <section className={styles.participants}>
         <h4>

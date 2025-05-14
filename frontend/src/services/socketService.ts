@@ -4,8 +4,7 @@ import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 
 export function disconnect(): void {
-  const { client, setRoom, setParticipant, setClient } =
-    useRoom.getState();
+  const { client, setRoom, setParticipant, setClient } = useRoom.getState();
 
   if (client) client.deactivate();
   setRoom(undefined);
@@ -36,6 +35,16 @@ export function connect(
         (message) => {
           const room: Room = JSON.parse(message.body);
           setRoom(room);
+        }
+      );
+
+      client.subscribe(
+        "/channel/events/rooms/" + code + "/question",
+        (message) => {
+          const variants: QuestionVariant[] = JSON.parse(message.body);
+          if (variants.length > 0) {
+            useGame.getState().setCurrent(variants[0]);
+          }
         }
       );
 

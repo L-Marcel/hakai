@@ -15,5 +15,5 @@ public class UserResponse {
     public UserResponse(User user) {
         this.uuid = user.getUuid();
         this.name = user.getName();
-    }
-}
+    };
+};
