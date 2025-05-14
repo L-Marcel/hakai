@@ -7,18 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.dtos.RoomResponse;
-import app.hakai.backend.agents.PedagogicalAgent;
 import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
+import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.services.GameService;
@@ -28,7 +27,7 @@ import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.Participant;
 import app.hakai.backend.transients.Room;
 
-@Controller
+@RestController
 @RequestMapping("/rooms")
 @MessageMapping
 public class RoomController {
@@ -45,8 +44,6 @@ public class RoomController {
     @Autowired
     private MessagingService messagingService;
 
-    @Autowired
-    private PedagogicalAgent pedagogicalAgent;
 
     @PostMapping("/create")
     public ResponseEntity<RoomResponse> create(
@@ -107,10 +104,8 @@ public class RoomController {
     public ResponseEntity<Void> requestToGenerate(@PathVariable String code, @PathVariable UUID uuid) {
         Question question = questionService.getQuestionById(uuid);
         Room room = roomService.getRoom(code);
+        questionService.generateQuestionVariants(question, room);
         
-        pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
-            messagingService.sendVariantsToOwner(room, variants);
-        });
         return ResponseEntity.ok().build();
     }
 
