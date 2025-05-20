@@ -3,49 +3,42 @@ import styles from "./index.module.scss";
 import ParticipantGuard from "@components/Guards/ParticipantGuard";
 import useGame from "@stores/useGame";
 import QuestionView from "@components/Views/Question";
+import { FaUserGroup } from "react-icons/fa6";
+import useRoom from "@stores/useRoom";
+import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
 
 export default function RoomPage() {
   return (
     <RoomGuard>
       <ParticipantGuard>
-        <main className={styles.main}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Page />
-          </div>
-        </main>
+        <Page />
       </ParticipantGuard>
     </RoomGuard>
   );
 }
 
 function Page() {
-  const gameName = useGame().game?.title;
-  const current = useGame().current;
-
-  if (!current)
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <h1>ROOM: {gameName}</h1>
-        <h2>Aguardando pergunta...</h2>
-      </div>
-    );
+  const room = useRoom((state) => state.room);
+  const question = useGame((state) => state.question);
 
   return (
-    <>
-      <QuestionView variant={current} />
-    </>
+    <main className={styles.main}>
+      {question ? (
+        <section>
+          <QuestionView variant={question} />
+        </section>
+      ) : (
+        <section className={styles.participants}>
+          <h1>Aguardando dono da sala...</h1>
+          <h4>
+            <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
+          </h4>
+          <ParticipantsMansoryGrid
+            ranked
+            participants={room?.participants ?? []}
+          />
+        </section>
+      )}
+    </main>
   );
 }

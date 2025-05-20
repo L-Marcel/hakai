@@ -26,7 +26,6 @@
     }
 
     p {
-      margin-bottom: -4px;
       font-size: small;
       text-wrap: nowrap;
     }
@@ -45,6 +44,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      text-align: start;
     }
 
     .rank {

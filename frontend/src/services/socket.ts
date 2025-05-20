@@ -2,15 +2,18 @@ import { Client } from "@stomp/stompjs";
 import useGame, { QuestionVariant } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
+import { getRoom } from "./room";
 
 export function disconnect(): void {
-  const { client, setRoom, setParticipant, setClient } = useRoom.getState();
+  const { setRoom, setParticipant, setClient } = useRoom.getState();
+  const { setGame, setQuestion } = useGame.getState();
 
-  if (client) client.deactivate();
-
+  setClient(undefined);
   setRoom(undefined);
   setClient(undefined);
   setParticipant(undefined);
+  setGame(undefined);
+  setQuestion(undefined);
 }
 
 export function connect(
@@ -18,18 +21,17 @@ export function connect(
   participant?: UUID,
   isOwner?: boolean
 ): void {
-  const { room, setRoom, setClient } = useRoom.getState();
-  const { setVariants } = useGame.getState();
+  const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
+  const { setVariants, setQuestion } = useGame.getState();
+
+  if (oldClient && oldClient.connected) return;
 
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
     reconnectDelay: 5000,
     onConnect: () => {
-      client.subscribe(
-        "/channel/events/rooms/" + code + "/closed",
-        (message) => {
-          disconnect();
-        }
+      client.subscribe("/channel/events/rooms/" + code + "/closed", () =>
+        disconnect()
       );
 
       client.subscribe(
@@ -45,25 +47,12 @@ export function connect(
         (message) => {
           const variants: QuestionVariant[] = JSON.parse(message.body);
           if (variants.length > 0) {
-            useGame.getState().setCurrent(variants[0]);
+            setQuestion(variants[0]);
           }
         }
       );
 
-      if (participant) {
-        const subscription = client.subscribe(
-          "/channel/events/rooms/" + code + "/" + participant + "/entered",
-          (message) => {
-            const room: Room = JSON.parse(message.body);
-            setRoom(room);
-            subscription.unsubscribe();
-          }
-        );
-
-        client.publish({
-          destination: "/channel/triggers/rooms/" + code + "/" + participant,
-        });
-      }
+      if (participant) getRoom(code);
 
       if (isOwner) {
         client.subscribe(
@@ -75,8 +64,6 @@ export function connect(
         );
       }
     },
-    onDisconnect: disconnect,
-    onWebSocketError: disconnect,
   });
 
   client.activate();

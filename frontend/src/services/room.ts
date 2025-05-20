@@ -5,11 +5,13 @@ import api from "./axios";
 
 export async function join(nickname: string, code?: string): Promise<void> {
   const { setParticipant } = useRoom.getState();
+
   return await api
     .post<Participant>(`rooms/${code}/join`, {
       nickname,
     })
     .then((response) => {
+      console.log(response.data);
       connect(code, response.data.uuid);
       setParticipant(response.data);
     });
@@ -32,7 +34,7 @@ export async function create(game: UUID): Promise<string> {
     });
 }
 
-export async function check(code?: string): Promise<void> {
+export async function getRoom(code?: string): Promise<void> {
   const { setRoom } = useRoom.getState();
 
   return await api.get<Room>(`rooms/${code}`).then((response) => {
@@ -44,4 +46,15 @@ export async function getOpenRoom(): Promise<Room> {
   return await api.get<Room>("rooms").then((response) => {
     return response.data;
   });
+}
+
+export async function getParticipant(code?: string): Promise<void> {
+  const { setParticipant } = useRoom.getState();
+
+  return await api
+    .get<Participant>(`rooms/${code}/participant`)
+    .then((response) => {
+      connect(code, response.data.uuid);
+      setParticipant(response.data);
+    });
 }

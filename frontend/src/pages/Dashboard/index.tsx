@@ -14,7 +14,7 @@ export default function DashboardPage() {
   return (
     <AuthGuard>
       <DashboardGuard>
-        <Page/>
+        <Page />
       </DashboardGuard>
     </AuthGuard>
   );

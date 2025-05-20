@@ -14,7 +14,6 @@ export type Room = {
   owner: UUID;
   game: UUID;
   participants: Participant[];
-  ready: boolean;
 };
 
 type RoomStore = {
