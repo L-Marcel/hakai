@@ -43,9 +43,9 @@ export function connect(
         (message) => {
           const variants: QuestionVariant[] = JSON.parse(message.body);
           if (variants.length > 0) {
-            const nextDifficult = useRoom.getState().getNextDifficult();
+            const nextDifficulty = useRoom.getState().getNextDifficulty();
             const selected = variants.find(
-              (v) => v.difficulty === nextDifficult
+              (v) => v.difficulty === nextDifficulty
             );
             if (selected) {
               useGame.getState().setCurrent(selected);

@@ -1,16 +1,16 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 
-export enum Difficult {
+export enum Difficulty {
   Easy = 1,
   Medium = 2,
   Hard = 3,
 }
 
-export const difficultToString: Record<Difficult, string> = {
-  [Difficult.Easy]: "Fácil",
-  [Difficult.Medium]: "Média",
-  [Difficult.Hard]: "Difícil",
+export const difficultyToString: Record<Difficulty, string> = {
+  [Difficulty.Easy]: "Fácil",
+  [Difficulty.Medium]: "Média",
+  [Difficulty.Hard]: "Difícil",
 };
 
 export type Game = {
@@ -30,7 +30,7 @@ export type Question = {
 
 export type QuestionVariant = {
   uuid: UUID;
-  difficulty: Difficult;
+  difficulty: Difficulty;
   context: string[];
   question: string;
   options: string[];

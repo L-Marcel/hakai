@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
-import { Difficult } from "@stores/useGame";
+import { Difficulty } from "@stores/useGame";
 
 export type Participant = {
   uuid: UUID;
@@ -14,7 +14,7 @@ export type QuestionAttempt = {
   question: UUID;
   chosenOption: string;
   correct: boolean;
-  difficult: Difficult;
+  difficulty: Difficulty;
 }
 
 export type Room = {
@@ -34,7 +34,7 @@ type RoomStore = {
   setRoom: (room?: Room) => void;
   setParticipant: (participant?: Participant) => void;
   setHistory: (attempt: QuestionAttempt) => void;
-  getNextDifficult: () => Difficult;
+  getNextDifficulty: () => Difficulty;
 };
 
 const useRoom = create<RoomStore>((set, get) => ({
@@ -45,15 +45,15 @@ const useRoom = create<RoomStore>((set, get) => ({
   setHistory: (attempt) => set((state) =>({
     history: [...state.history, attempt]
   })),
-  getNextDifficult: () => {
+  getNextDifficulty: () => {
     const history = get().history;
-    if (history.length === 0) return Difficult.Medium;
+    if (history.length === 0) return Difficulty.Medium;
 
     const last = history[history.length - 1];
-    
+
     return last.correct
-      ? Math.min(Difficult.Hard, last.difficult + 1)
-      : Math.max(Difficult.Easy, last.difficult - 1);
+      ? Math.min(Difficulty.Hard, last.difficulty + 1)
+      : Math.max(Difficulty.Easy, last.difficulty - 1);
   },
 }));
 
