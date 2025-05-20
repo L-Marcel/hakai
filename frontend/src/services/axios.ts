@@ -14,6 +14,16 @@ api.interceptors.request.use((request) => {
 
   if (token) {
     request.headers["Authorization"] = "Bearer " + token;
+  } else {
+    const storage = localStorage.getItem("hakai@auth");
+    if (storage) {
+      const parsed = JSON.parse(storage);
+      const storedToken = parsed?.state?.token;
+      if (storedToken) {
+        useAuth.getState().setToken(storedToken);
+        request.headers["Authorization"] = "Bearer " + storedToken;
+      }
+    }
   }
 
   return request;

@@ -2,7 +2,7 @@ import { DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
-import { difficultToString, Question, QuestionVariant } from "@stores/useGame";
+import { difficultyToString, Question, QuestionVariant } from "@stores/useGame";
 import { sendQuestionAnswer } from "../../../services/questions";
 
 interface Props
@@ -29,7 +29,7 @@ export default function QuestionView({
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
           <p className={styles.tags}>
-            <Tag theme="full-orange" value={difficultToString[difficulty]} />
+            <Tag theme="full-orange" value={difficultyToString[difficulty]} />
             {context.map((value) => {
               return (
                 <Tag

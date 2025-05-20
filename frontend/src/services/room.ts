@@ -11,7 +11,6 @@ export async function join(nickname: string, code?: string): Promise<void> {
       nickname,
     })
     .then((response) => {
-      console.log(response.data);
       connect(code, response.data.uuid);
       setParticipant(response.data);
     });
