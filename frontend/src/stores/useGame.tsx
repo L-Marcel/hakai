@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 
-enum Difficult {
+export enum Difficult {
   Easy = 1,
   Medium = 2,
   Hard = 3,

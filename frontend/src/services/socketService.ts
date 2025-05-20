@@ -43,7 +43,13 @@ export function connect(
         (message) => {
           const variants: QuestionVariant[] = JSON.parse(message.body);
           if (variants.length > 0) {
-            useGame.getState().setCurrent(variants[0]);
+            const nextDifficult = useRoom.getState().getNextDifficult();
+            const selected = variants.find(
+              (v) => v.difficulty === nextDifficult
+            );
+            if (selected) {
+              useGame.getState().setCurrent(selected);
+            }
           }
         }
       );
@@ -69,6 +75,14 @@ export function connect(
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
             setVariants(variants);
+          }
+        );
+
+        client.subscribe(
+          "/channel/events/rooms/" + code + "/answers",
+          (message) => {
+            const response = JSON.parse(message.body);
+            // mostrar ao prof
           }
         );
       }
