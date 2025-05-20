@@ -15,14 +15,14 @@ import { useParams } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
-import { close } from "../../services/roomService";
+import { close } from "../../services/room";
 import useRoom from "@stores/useRoom";
 import useGame, { QuestionVariant } from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
-import { generate } from "../../services/variantService";
+import { generate } from "../../services/variants";
 import { UUID } from "crypto";
-import { sendQuestion } from "../../services/gameService";
+import { sendQuestion } from "../../services/game";
 
 export default function RoomPanelPage() {
   return (
@@ -108,7 +108,7 @@ function Page() {
               <FaArrowRight />
               Próxima
             </Button>
-            <Button onClick={() => close(code as string)} theme="light-orange">
+            <Button onClick={close} theme="light-orange">
               <FaSignOutAlt />
               Finalizar
             </Button>

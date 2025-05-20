@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./index.module.scss";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import { login, LoginData } from "../../services/authService";
+import { login, LoginData } from "../../services/user";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
@@ -16,10 +16,11 @@ export default function LoginForm() {
     setError("");
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await login(data);
-    if (!response.ok) setError(response.error.message);
+    login(data).catch((error: HttpError) => {
+      setError(error.message);
+    });
   };
 
   return (

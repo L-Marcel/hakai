@@ -53,7 +53,7 @@ public class RoomsRepository {
         return this.findByCode(code).isPresent();
     };
 
-    public boolean existsByGame(UUID game) {
-        return this.findByGame(game).isPresent();
+    public boolean existsByUser(UUID user) {
+        return this.findByUser(user).isPresent();
     };
 };
