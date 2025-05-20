@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.RoomResponse;
-import app.hakai.backend.anotations.RequireAuth;
+import app.hakai.backend.annotations.RequireAuth;
 import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
-import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
