@@ -3,12 +3,14 @@ import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
 import { difficultToString, Question, QuestionVariant } from "@stores/useGame";
+import { sendQuestionAnswer } from "../../../services/questions";
 
 interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   question?: Question;
   variant?: QuestionVariant;
   highlight?: string;
+  editable?: boolean;
 }
 
 export default function QuestionView({
@@ -22,6 +24,7 @@ export default function QuestionView({
     const { difficulty, context, options, question, uuid } = variant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
+
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -43,9 +46,11 @@ export default function QuestionView({
           {options.map((option) => {
             const id =
               highlight && option === highlight ? "highlight" : "option";
+
             return (
               <Button
                 disabled={!!highlight}
+                onClick={() => sendQuestionAnswer(option)}
                 id={id}
                 theme="partial-orange"
                 key={uuid + "-" + option}

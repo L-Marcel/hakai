@@ -16,15 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.annotations.RequireAuth;
+import app.hakai.backend.dtos.AnswerQuestionRequestBody;
 import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
 import app.hakai.backend.models.Game;
+import app.hakai.backend.models.Question;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
 import app.hakai.backend.services.GameService;
 import app.hakai.backend.services.MessagingService;
 import app.hakai.backend.services.ParticipantService;
+import app.hakai.backend.services.QuestionService;
 import app.hakai.backend.services.QuestionVariantsService;
 import app.hakai.backend.services.RoomService;
 import app.hakai.backend.transients.Participant;
@@ -38,6 +41,9 @@ public class RoomController {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Autowired
     private ParticipantService participantService;
@@ -85,7 +91,7 @@ public class RoomController {
 
     @RequireAuth
     @GetMapping
-    public ResponseEntity<RoomResponse> findRoom(
+    public ResponseEntity<RoomResponse> findRoomByUser(
         @AuthenticationPrincipal User user
     ){
         Room room = roomService.findRoomByUser(user.getUuid());
@@ -97,9 +103,24 @@ public class RoomController {
     };
 
     @RequireAuth
+    @GetMapping("/{code}/participant")
+    public ResponseEntity<ParticipantResponse> findParticipantByUser(
+        @PathVariable String code,
+        @AuthenticationPrincipal User user
+    ){
+        Room room = roomService.findRoomByCode(code);
+        Participant participant = participantService.findParticipantByUser(room, user);
+        ParticipantResponse response = new ParticipantResponse(participant);
+
+        return ResponseEntity
+            .ok()
+            .body(response);
+    };
+
+    @RequireAuth
     @PostMapping("/questions/{uuid}/generate")
     public ResponseEntity<Void> startVariantsGeneration(
-        @PathVariable UUID uuid,
+        @PathVariable(required = false) UUID uuid,
         @AuthenticationPrincipal User user
     ) {
         Room room = roomService.findRoomByUser(user.getUuid());
@@ -141,5 +162,31 @@ public class RoomController {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response);
+    };
+
+    @PostMapping("/{code}/questions/{uuid}/answer")
+    public ResponseEntity<Void> answerQuestion(
+        @PathVariable String code,
+        @PathVariable(required = false) UUID uuid,
+        @RequestBody AnswerQuestionRequestBody body
+    ) {
+        Room room = roomService.findRoomByCode(code);
+        Question question = questionService.findQuestionById(uuid);
+        Participant participant = participantService.findParticipantByUuid(
+            room, 
+            body.getParticipant()
+        );
+
+        participantService.answerQuestion(
+            question, 
+            participant, 
+            body.getAnswer()
+        );
+
+        messagingService.sendRoomToAll(room);
+
+        return ResponseEntity
+            .ok()
+            .build();
     };
 };

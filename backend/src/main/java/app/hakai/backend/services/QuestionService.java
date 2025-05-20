@@ -21,8 +21,7 @@ public class QuestionService {
     };
 
     public Question findQuestionById(UUID uuid) throws QuestionNotFound {
-        return repository.findByUuid(uuid).orElseThrow(
-            () -> new QuestionNotFound()
-        );
+        return repository.findByUuid(uuid)
+            .orElseThrow(QuestionNotFound::new);
     };
 };

@@ -15,13 +15,11 @@ public class RoomResponse {
     private UUID game;
     private UUID owner;
     private List<ParticipantResponse> participants;
-    private boolean ready;
 
     public RoomResponse(Room room) {
         this.code = room.getCode();
         this.game = room.getGame().getUuid();
         this.owner = room.getGame().getOwner().getUuid();
-        this.ready = room.isReady();
         this.participants = room.getParticipants()
             .stream()
             .map(ParticipantResponse::new)

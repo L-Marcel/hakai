@@ -38,26 +38,23 @@ public class RoomService {
     public synchronized Room findRoomByCode(
         String code
     ) throws RoomNotFound {
-        return repository.findByCode(code).orElseThrow(
-            () -> new RoomNotFound()
-        );
+        return repository.findByCode(code)
+            .orElseThrow(RoomNotFound::new);
     };
 
     public synchronized Room findRoomByGame(
         UUID game
     ) throws RoomNotFound {
-        return repository.findByGame(game).orElseThrow( 
-            () -> new RoomNotFound()
-        );
+        return repository.findByGame(game)
+            .orElseThrow(RoomNotFound::new);
     };
 
 
     public synchronized Room findRoomByUser(
         UUID user
     ) throws RoomNotFound {
-        return repository.findByUser(user).orElseThrow( 
-            () -> new RoomNotFound()
-        );
+        return repository.findByUser(user)
+            .orElseThrow(RoomNotFound::new);
     };
 
     private boolean isParticipantAlreadyInRoom(
@@ -98,9 +95,8 @@ public class RoomService {
         
         Room room = new Room(
             code, 
-            game, 
-            new LinkedList<Participant>(), 
-            false
+            game,
+            new LinkedList<Participant>()
         );
 
         repository.add(room);
