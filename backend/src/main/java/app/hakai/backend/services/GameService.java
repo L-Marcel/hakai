@@ -15,14 +15,12 @@ public class GameService {
     @Autowired
     private GamesRepository repository;
 
-    public Game getGame(UUID uuid) throws GameNotFound {
-        if (uuid == null)
-            throw new GameNotFound();
-        return repository.findById(uuid).orElseThrow(
-                () -> new GameNotFound());
+    public Game findGameById(UUID uuid) throws GameNotFound {
+        return repository.findById(uuid)
+            .orElseThrow(GameNotFound::new);
     };
 
-    public List<Game> getGamesToUser(UUID uuid) {
+    public List<Game> findGamesByUser(UUID uuid) {
         return repository.findByOwnerUuid(uuid);
     };
 };

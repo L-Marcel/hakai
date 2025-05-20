@@ -14,5 +14,4 @@ public class Room {
     private String code;
     private Game game;
     private List<Participant> participants;
-    private boolean ready;
 };

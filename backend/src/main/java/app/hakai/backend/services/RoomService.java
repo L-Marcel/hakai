@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
-import app.hakai.backend.errors.GameRoomAlreadyExists;
+import app.hakai.backend.errors.UserRoomAlreadyExists;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.RoomNotFound;
 import app.hakai.backend.models.Game;
@@ -34,20 +34,27 @@ public class RoomService {
         return builder.toString();
     };
 
-    public synchronized Room getRoom(
+
+    public synchronized Room findRoomByCode(
         String code
     ) throws RoomNotFound {
-        return repository.findByCode(code).orElseThrow(
-            () -> new RoomNotFound()
-        );
+        return repository.findByCode(code)
+            .orElseThrow(RoomNotFound::new);
     };
 
-    public synchronized Room getRoomByGame(
+    public synchronized Room findRoomByGame(
         UUID game
     ) throws RoomNotFound {
-        return repository.findByGame(game).orElseThrow( 
-            () -> new RoomNotFound()
-        );
+        return repository.findByGame(game)
+            .orElseThrow(RoomNotFound::new);
+    };
+
+
+    public synchronized Room findRoomByUser(
+        UUID user
+    ) throws RoomNotFound {
+        return repository.findByUser(user)
+            .orElseThrow(RoomNotFound::new);
     };
 
     private boolean isParticipantAlreadyInRoom(
@@ -63,7 +70,9 @@ public class RoomService {
             Optional<User> user = participant.getUser();
             Optional<User> candidateUser = candidate.getUser();
             if(user.isPresent() && candidateUser.isPresent()) {
-                userAlreadyInUse = user.get().getEmail().equals(candidateUser.get().getEmail());
+                userAlreadyInUse = user.get().getEmail().equals(
+                    candidateUser.get().getEmail()
+                );
             };
 
             if(nicknameAlreadyInUse || idAlreadyInUse || userAlreadyInUse) 
@@ -77,8 +86,8 @@ public class RoomService {
         Game game
     ) throws GameNotFound {
         if(game == null) throw new GameNotFound();
-        else if(repository.existsByGame(game.getUuid())) 
-            throw new GameRoomAlreadyExists();
+        else if(repository.existsByUser(game.getOwner().getUuid())) 
+            throw new UserRoomAlreadyExists();
 
         String code = this.generateCode(6);
         while(repository.existsByCode(code)) 
@@ -86,9 +95,8 @@ public class RoomService {
         
         Room room = new Room(
             code, 
-            game, 
-            new LinkedList<Participant>(), 
-            false
+            game,
+            new LinkedList<Participant>()
         );
 
         repository.add(room);

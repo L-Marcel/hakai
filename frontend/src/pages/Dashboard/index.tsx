@@ -4,15 +4,18 @@ import Card from "@components/Card";
 import { FaPlus, FaSignOutAlt } from "react-icons/fa";
 import Button from "@components/Button";
 import CheckRoomForm from "@components/Forms/CheckRoomForm";
-import { logout } from "../../services/authService";
+import { logout } from "../../services/user";
 import { useEffect, useState } from "react";
 import { Game } from "@stores/useGame";
-import { requestAllGames } from "../../services/gameService";
+import { requestAllGames } from "../../services/game";
+import DashboardGuard from "@components/Guards/DashboardGuard";
 
 export default function DashboardPage() {
   return (
     <AuthGuard>
-      <Page />
+      <DashboardGuard>
+        <Page />
+      </DashboardGuard>
     </AuthGuard>
   );
 }
@@ -21,14 +24,13 @@ function Page() {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    requestAllGames().then((result) => {
-      if (result.ok) {
-        setGames(result.value);
-      } else {
-        console.error("Erro ao carregar jogos:", result.error);
-        setError(result.error.message);
-      }
-    });
+    requestAllGames()
+      .then((games) => {
+        setGames(games);
+      })
+      .catch((error: HttpError) => {
+        setError(error.message);
+      });
   }, []);
 
   return (
@@ -40,7 +42,7 @@ function Page() {
           </Button>
           <CheckRoomForm />
         </div>
-        <Button theme="full-orange" onClick={logout}>
+        <Button theme="full-orange" onClick={() => logout()}>
           <FaSignOutAlt />
         </Button>
       </header>

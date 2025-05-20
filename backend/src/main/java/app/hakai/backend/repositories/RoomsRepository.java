@@ -22,13 +22,18 @@ public class RoomsRepository {
     };
 
     private Optional<Room> find(Function<Room, Boolean> search) {
-        for(int i = 0; i < rooms.size(); i++) {
-            Room room = this.rooms.get(i);
+        for(Room room : this.rooms) {
             if(search.apply(room))
                 return Optional.of(room);
         };
 
         return Optional.empty();
+    };
+
+    public Optional<Room> findByUser(UUID user) {
+        return this.find((Room room) -> {
+            return room.getGame().getOwner().getUuid().equals(user);
+        });
     };
 
     public Optional<Room> findByGame(UUID game) {
@@ -47,7 +52,7 @@ public class RoomsRepository {
         return this.findByCode(code).isPresent();
     };
 
-    public boolean existsByGame(UUID game) {
-        return this.findByGame(game).isPresent();
+    public boolean existsByUser(UUID user) {
+        return this.findByUser(user).isPresent();
     };
 };

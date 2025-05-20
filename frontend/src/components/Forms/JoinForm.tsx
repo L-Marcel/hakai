@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
 import { useParams } from "react-router-dom";
-import { join } from "../../services/roomService";
+import { join } from "../../services/room";
 
 export default function JoinForm() {
   const { code } = useParams();
@@ -16,10 +16,11 @@ export default function JoinForm() {
     setError("");
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await join(nickname, code);
-    if (!response.ok) setError(response.error.message);
+    join(nickname, code).catch((error: HttpError) => {
+      setError(error.message);
+    });
   };
 
   return (

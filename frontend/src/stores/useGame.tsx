@@ -38,16 +38,16 @@ export type QuestionVariant = {
 };
 
 type GameStore = {
-  current?: QuestionVariant;
+  question?: QuestionVariant;
   game?: Game;
-  setCurrent: (current: QuestionVariant) => void;
-  setGame: (game: Game) => void;
+  setQuestion: (current?: QuestionVariant) => void;
+  setGame: (game?: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
 };
 
 const useGame = create<GameStore>((set) => ({
-  setCurrent: (current: QuestionVariant) => set({ current }),
-  setGame: (game: Game) => set({ game }),
+  setQuestion: (question?: QuestionVariant) => set({ question }),
+  setGame: (game?: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
       if (variants.length === 0 || !state.game) return state;

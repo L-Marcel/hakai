@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
-import { check } from "../../services/roomService";
+import { getRoom } from "../../services/room";
 
 export default function CheckRoomForm() {
   const navigation = useNavigate();
@@ -20,9 +20,13 @@ export default function CheckRoomForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await check(code);
-    if (response.ok) navigation("/room/" + code);
-    else setError(response.error.message);
+    getRoom(code)
+      .then(() => {
+        navigation("/room/" + code);
+      })
+      .catch((error: HttpError) => {
+        setError(error.message);
+      });
   };
 
   return (

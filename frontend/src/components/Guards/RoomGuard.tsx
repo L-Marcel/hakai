@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useRoom from "@stores/useRoom";
-import { check } from "../../services/roomService";
+import { getRoom } from "../../services/room";
 
 interface Props {
   children: ReactNode;
@@ -15,8 +15,8 @@ export default function RoomGuard({ children }: Props) {
 
   useEffect(() => {
     if (!room) {
-      check(code).then((response: Result) => {
-        if (!response.ok) navigate("/home");
+      getRoom(code).catch(() => {
+        navigate("/home");
       });
     }
   }, [room, code, navigate]);
