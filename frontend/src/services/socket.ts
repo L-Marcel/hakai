@@ -7,6 +7,7 @@ export function disconnect(): void {
   const { client, setRoom, setParticipant, setClient } = useRoom.getState();
 
   if (client) client.deactivate();
+
   setRoom(undefined);
   setClient(undefined);
   setParticipant(undefined);
@@ -19,6 +20,7 @@ export function connect(
 ): void {
   const { room, setRoom, setClient } = useRoom.getState();
   const { setVariants } = useGame.getState();
+
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
     reconnectDelay: 5000,

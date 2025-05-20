@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
 import { useParams } from "react-router-dom";
-import { join } from "../../services/roomService";
+import { join } from "../../services/room";
 
 export default function JoinForm() {
   const { code } = useParams();

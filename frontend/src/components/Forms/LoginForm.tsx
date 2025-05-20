@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./index.module.scss";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import { login, LoginData } from "../../services/authService";
+import { login, LoginData } from "../../services/user";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
