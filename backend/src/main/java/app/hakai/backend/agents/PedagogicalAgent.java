@@ -74,10 +74,16 @@ public class PedagogicalAgent {
             ATENÇÃO: Não coloque prefixos de listagem nas respostas, ex: A. B. C.; I. II. III. ou 1. 2. 3.
 
             ATENÇÃO: Não coloque perguntas como opções de resposta, exceto que a resposta correta também seja uma pergunta.
-            """, question.getQuestion(), question.getAnswer());
-    }
+            """, 
+            question.getQuestion(), 
+            question.getAnswer()
+        );
+    };
 
-    public void generateRoomQuestionsVariants(Question question, PedagogicAgentCallback callback) {
+    public void generateRoomQuestionsVariants(
+        Question question, 
+        PedagogicalAgentCallback callback
+    ) {
         String prompt = buildPrompt(question);
 
         chatbot.request(prompt, response -> {
@@ -95,11 +101,7 @@ public class PedagogicalAgent {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            
-
             });
         });
-
-    }
-
-}
+    };
+};

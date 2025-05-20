@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import app.hakai.backend.anotations.RequireAuth;
 import app.hakai.backend.dtos.CreateRoomRequestBody;
 import app.hakai.backend.dtos.JoinRoomRequestBody;
 import app.hakai.backend.dtos.ParticipantResponse;
+import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
@@ -52,7 +54,7 @@ public class RoomController {
 
     @RequireAuth
     @PostMapping("/create")
-    public ResponseEntity<RoomResponse> create(
+    public ResponseEntity<RoomResponse> createRoom(
         @RequestBody CreateRoomRequestBody body,
         @AuthenticationPrincipal User user
     ) {
@@ -69,7 +71,7 @@ public class RoomController {
 
     @RequireAuth
     @PostMapping("/close")
-    public ResponseEntity<Void> close(
+    public ResponseEntity<Void> closeRoom(
         @AuthenticationPrincipal User user
     ) {
         Room room = roomService.findRoomByUser(user.getUuid());
@@ -84,7 +86,7 @@ public class RoomController {
 
     @RequireAuth
     @PostMapping("/questions/{uuid}/generate")
-    public ResponseEntity<Void> requestToGenerate(
+    public ResponseEntity<Void> startVariantsGeneration(
         @PathVariable UUID uuid,
         @AuthenticationPrincipal User user
     ) {
@@ -97,7 +99,7 @@ public class RoomController {
     };
 
     @GetMapping("/{code}")
-    public ResponseEntity<RoomResponse> get(
+    public ResponseEntity<RoomResponse> findRoomByCode(
         @PathVariable String code
     ){
         Room room = roomService.findRoomByCode(code);
@@ -109,7 +111,7 @@ public class RoomController {
     };
 
     @PostMapping("/{code}/join")
-    public ResponseEntity<ParticipantResponse> join(
+    public ResponseEntity<ParticipantResponse> joinRoom(
         @PathVariable String code,
         @RequestBody JoinRoomRequestBody body,
         @AuthenticationPrincipal User user

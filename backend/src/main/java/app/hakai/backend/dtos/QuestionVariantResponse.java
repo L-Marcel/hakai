@@ -28,6 +28,6 @@ public class QuestionVariantResponse {
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
             this.context = new LinkedList<>();
-        }
-    }
-}
+        };
+    };
+};

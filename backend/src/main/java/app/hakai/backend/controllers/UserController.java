@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.anotations.RequireAuth;
+import app.hakai.backend.annotations.RequireAuth;
 import app.hakai.backend.dtos.LoginRequestBody;
 import app.hakai.backend.dtos.RegisterRequestBody;
 import app.hakai.backend.dtos.UserResponse;
@@ -38,7 +38,7 @@ public class UserController {
     };
 
     @PostMapping
-    public ResponseEntity<Void> register(
+    public ResponseEntity<Void> createUser(
         @RequestBody RegisterRequestBody body
     ) {
         service.createUser(

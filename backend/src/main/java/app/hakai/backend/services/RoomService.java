@@ -34,25 +34,36 @@ public class RoomService {
         return builder.toString();
     };
 
-    public synchronized Room findRoomByCode(String code) throws RoomNotFound {
+
+    public synchronized Room findRoomByCode(
+        String code
+    ) throws RoomNotFound {
         return repository.findByCode(code).orElseThrow(
             () -> new RoomNotFound()
         );
     };
 
-    public synchronized Room findRoomByGame(UUID game) throws RoomNotFound {
+    public synchronized Room findRoomByGame(
+        UUID game
+    ) throws RoomNotFound {
         return repository.findByGame(game).orElseThrow( 
             () -> new RoomNotFound()
         );
     };
 
-    public synchronized Room findRoomByUser(UUID user) throws RoomNotFound {
+
+    public synchronized Room findRoomByUser(
+        UUID user
+    ) throws RoomNotFound {
         return repository.findByUser(user).orElseThrow( 
             () -> new RoomNotFound()
         );
     };
 
-    private boolean isParticipantAlreadyInRoom(Room room, Participant candidate) {
+    private boolean isParticipantAlreadyInRoom(
+        Room room, 
+        Participant candidate
+    ) {
         for(Participant participant : room.getParticipants()) {
             String nickname = participant.getNickname().toUpperCase();
             String candidateNickname = candidate.getNickname().toUpperCase();
@@ -74,7 +85,9 @@ public class RoomService {
         return false;
     };
 
-    public synchronized Room createRoom(Game game) throws GameNotFound {
+    public synchronized Room createRoom(
+        Game game
+    ) throws GameNotFound {
         if(game == null) throw new GameNotFound();
         else if(repository.existsByGame(game.getUuid())) 
             throw new GameRoomAlreadyExists();
