@@ -16,10 +16,11 @@ export default function JoinForm() {
     setError("");
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await join(nickname, code);
-    if (!response.ok) setError(response.error.message);
+    join(nickname, code).catch((error: HttpError) => {
+      setError(error.message);
+    });
   };
 
   return (

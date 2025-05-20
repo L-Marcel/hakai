@@ -8,11 +8,14 @@ import { logout } from "../../services/user";
 import { useEffect, useState } from "react";
 import { Game } from "@stores/useGame";
 import { requestAllGames } from "../../services/game";
+import DashboardGuard from "@components/Guards/DashboardGuard";
 
 export default function DashboardPage() {
   return (
     <AuthGuard>
-      <Page />
+      <DashboardGuard>
+        <Page/>
+      </DashboardGuard>
     </AuthGuard>
   );
 }

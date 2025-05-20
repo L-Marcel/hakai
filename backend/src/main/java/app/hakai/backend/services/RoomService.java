@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
-import app.hakai.backend.errors.GameRoomAlreadyExists;
+import app.hakai.backend.errors.UserRoomAlreadyExists;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.RoomNotFound;
 import app.hakai.backend.models.Game;
@@ -89,8 +89,8 @@ public class RoomService {
         Game game
     ) throws GameNotFound {
         if(game == null) throw new GameNotFound();
-        else if(repository.existsByGame(game.getUuid())) 
-            throw new GameRoomAlreadyExists();
+        else if(repository.existsByUser(game.getOwner().getUuid())) 
+            throw new UserRoomAlreadyExists();
 
         String code = this.generateCode(6);
         while(repository.existsByCode(code)) 

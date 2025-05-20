@@ -16,10 +16,11 @@ export default function LoginForm() {
     setError("");
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await login(data);
-    if (!response.ok) setError(response.error.message);
+    login(data).catch((error: HttpError) => {
+      setError(error.message);
+    });
   };
 
   return (

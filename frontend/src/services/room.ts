@@ -39,3 +39,9 @@ export async function check(code?: string): Promise<void> {
     setRoom(response.data);
   });
 }
+
+export async function getOpenRoom(): Promise<Room> {
+  return await api.get<Room>("rooms").then((response) => {
+    return response.data;
+  });
+}

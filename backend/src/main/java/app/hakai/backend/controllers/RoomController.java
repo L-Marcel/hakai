@@ -84,6 +84,19 @@ public class RoomController {
     };
 
     @RequireAuth
+    @GetMapping
+    public ResponseEntity<RoomResponse> findRoom(
+        @AuthenticationPrincipal User user
+    ){
+        Room room = roomService.findRoomByUser(user.getUuid());
+        RoomResponse response = new RoomResponse(room);
+
+        return ResponseEntity
+            .ok()
+            .body(response);
+    };
+
+    @RequireAuth
     @PostMapping("/questions/{uuid}/generate")
     public ResponseEntity<Void> startVariantsGeneration(
         @PathVariable UUID uuid,
