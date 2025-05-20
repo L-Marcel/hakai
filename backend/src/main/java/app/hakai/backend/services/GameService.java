@@ -16,9 +16,8 @@ public class GameService {
     private GamesRepository repository;
 
     public Game findGameById(UUID uuid) throws GameNotFound {
-        return repository.findById(uuid).orElseThrow(
-            () -> new GameNotFound()
-        );
+        return repository.findById(uuid)
+            .orElseThrow(GameNotFound::new);
     };
 
     public List<Game> findGamesByUser(UUID uuid) {

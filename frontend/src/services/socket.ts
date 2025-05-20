@@ -42,6 +42,7 @@ export function connect(
         }
       );
 
+
       if (participant) {
         getRoom(code);
 

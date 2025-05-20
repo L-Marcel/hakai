@@ -1,5 +1,4 @@
-import useGame, { QuestionVariant, Game } from "@stores/useGame";
-import useRoom from "@stores/useRoom";
+import useGame, { Game } from "@stores/useGame";
 import { UUID } from "crypto";
 import api from "./axios";
 
@@ -8,18 +7,6 @@ export async function request(uuid?: UUID): Promise<void> {
 
   return await api.get<Game>(`games/${uuid}`).then((response) => {
     setGame(response.data);
-  });
-}
-
-export function sendQuestion(variants: QuestionVariant[]): void {
-  const client = useRoom.getState().client;
-  const room = useRoom.getState().room;
-
-  if (!room || !client) return;
-
-  client.publish({
-    destination: "/channel/events/rooms/" + room.code + "/question",
-    body: JSON.stringify(variants),
   });
 }
 

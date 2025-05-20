@@ -22,8 +22,7 @@ public class RoomsRepository {
     };
 
     private Optional<Room> find(Function<Room, Boolean> search) {
-        for(int i = 0; i < rooms.size(); i++) {
-            Room room = this.rooms.get(i);
+        for(Room room : this.rooms) {
             if(search.apply(room))
                 return Optional.of(room);
         };
