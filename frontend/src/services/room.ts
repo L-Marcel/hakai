@@ -32,7 +32,7 @@ export async function create(game: UUID): Promise<string> {
     });
 }
 
-export async function check(code?: string): Promise<void> {
+export async function getRoom(code?: string): Promise<void> {
   const { setRoom } = useRoom.getState();
 
   return await api.get<Room>(`rooms/${code}`).then((response) => {

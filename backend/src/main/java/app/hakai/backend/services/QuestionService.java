@@ -20,21 +20,8 @@ public class QuestionService {
         return repository.findAllByGame(game);
     };
 
-<<<<<<< HEAD
-    public Question getQuestionById(UUID uuid) throws QuestionNotFound {
-        if(uuid == null) throw new QuestionNotFound();
-        return repository.findByUuid(uuid).orElseThrow(() -> new QuestionNotFound());
-    };
-
-    public void generateQuestionVariants(Question question, Room room) {
-        pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
-            messagingService.sendVariantsToOwner(room, variants);
-        });
-=======
     public Question findQuestionById(UUID uuid) throws QuestionNotFound {
-        return repository.findByUuid(uuid).orElseThrow(
-            () -> new QuestionNotFound()
-        );
->>>>>>> main
+        return repository.findByUuid(uuid)
+            .orElseThrow(QuestionNotFound::new);
     };
 };
