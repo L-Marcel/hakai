@@ -21,8 +21,15 @@ public class GameResponse {
         this.owner = game.getOwner().getUuid();
         this.title = game.getTitle();
         this.questions = game.getQuestions()
-                .stream()
-                .map(QuestionResponse::new)
-                .collect(Collectors.toList());
+            .stream()
+            .map(QuestionResponse::new)
+            .collect(Collectors.toList()
+        );
+    };
+
+    public static List<GameResponse> mapFromList(List<Game> games) {
+        return games.stream()
+            .map(GameResponse::new)
+            .toList();
     };
 };

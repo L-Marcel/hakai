@@ -34,14 +34,20 @@ public class RoomService {
         return builder.toString();
     };
 
-    public synchronized Room getRoom(String code) throws RoomNotFound {
+    public synchronized Room findRoomByCode(String code) throws RoomNotFound {
         return repository.findByCode(code).orElseThrow(
             () -> new RoomNotFound()
         );
     };
 
-    public synchronized Room getRoomByGame(UUID game) throws RoomNotFound {
+    public synchronized Room findRoomByGame(UUID game) throws RoomNotFound {
         return repository.findByGame(game).orElseThrow( 
+            () -> new RoomNotFound()
+        );
+    };
+
+    public synchronized Room findRoomByUser(UUID user) throws RoomNotFound {
+        return repository.findByUser(user).orElseThrow( 
             () -> new RoomNotFound()
         );
     };
@@ -56,7 +62,9 @@ public class RoomService {
             Optional<User> user = participant.getUser();
             Optional<User> candidateUser = candidate.getUser();
             if(user.isPresent() && candidateUser.isPresent()) {
-                userAlreadyInUse = user.get().getEmail().equals(candidateUser.get().getEmail());
+                userAlreadyInUse = user.get().getEmail().equals(
+                    candidateUser.get().getEmail()
+                );
             };
 
             if(nicknameAlreadyInUse || idAlreadyInUse || userAlreadyInUse) 

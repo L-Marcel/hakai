@@ -20,39 +20,44 @@ import app.hakai.backend.services.UserService;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-        @Autowired
-        private UserService service;
+    @Autowired
+    private UserService service;
 
-        @PostMapping("/login")
-        public ResponseEntity<String> login(
-                        @RequestBody LoginRequestBody body) {
-                String token = service.login(
-                                body.getEmail(),
-                                body.getPassword());
+    @PostMapping("/login")
+    public ResponseEntity<String> login(
+        @RequestBody LoginRequestBody body
+    ) {
+        String token = service.login(
+            body.getEmail(),
+            body.getPassword()
+        );
 
-                return ResponseEntity
-                                .status(HttpStatus.ACCEPTED)
-                                .body(token);
-        };
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(token);
+    };
 
-        @PostMapping
-        public ResponseEntity<String> register(
-                        @RequestBody RegisterRequestBody body) {
-                service.register(
-                                body.getEmail(),
-                                body.getPassword(),
-                                body.getName());
+    @PostMapping
+    public ResponseEntity<Void> register(
+        @RequestBody RegisterRequestBody body
+    ) {
+        service.createUser(
+            body.getEmail(),
+            body.getPassword(),
+            body.getName()
+        );
 
-                return ResponseEntity
-                                .status(HttpStatus.CREATED)
-                                .body("Usuário registrado com sucesso!");
-        };
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .build();
+    };
 
-        @GetMapping("/me")
-        @RequireAuth
-        public ResponseEntity<UserResponse> getCurrentUser(@AuthenticationPrincipal User user) {
-                UserResponse response = new UserResponse(user);
-                return ResponseEntity.ok(response);
-        }
-
+    @RequireAuth
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(
+        @AuthenticationPrincipal User user
+    ) {
+        UserResponse response = new UserResponse(user);
+        return ResponseEntity.ok(response);
+    };
 };

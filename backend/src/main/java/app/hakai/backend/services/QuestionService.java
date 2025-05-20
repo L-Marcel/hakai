@@ -17,13 +17,15 @@ public class QuestionService {
     @Autowired
     private QuestionsRepository repository;
 
-    public List<Question> getQuestionsByGame(Game game) throws GameNotFound {
+    public List<Question> findQuestionsByGame(Game game) throws GameNotFound {
         if(game == null) throw new GameNotFound();
         return repository.findAllByGame(game);
     };
 
-    public Question getQuestionById(UUID uuid) throws QuestionNotFound {
+    public Question findQuestionById(UUID uuid) throws QuestionNotFound {
         if(uuid == null) throw new QuestionNotFound();
-        return repository.findByUuid(uuid).orElseThrow(() -> new QuestionNotFound());
-    }
+        return repository.findByUuid(uuid).orElseThrow(
+            () -> new QuestionNotFound()
+        );
+    };
 };

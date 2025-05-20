@@ -31,6 +31,12 @@ public class RoomsRepository {
         return Optional.empty();
     };
 
+    public Optional<Room> findByUser(UUID user) {
+        return this.find((Room room) -> {
+            return room.getGame().getOwner().getUuid().equals(user);
+        });
+    };
+
     public Optional<Room> findByGame(UUID game) {
         return this.find((Room room) -> {
             return room.getGame().getUuid().equals(game);

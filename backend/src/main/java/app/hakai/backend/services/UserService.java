@@ -24,37 +24,42 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void register(String email, String password, String name) {
-        if (email == null || email.isBlank() ||
-                password == null || password.isBlank() ||
-                name == null || name.isBlank()) {
-            throw new MissingFields();
-        }
+    public User createUser(
+        String email, 
+        String password, 
+        String name
+    ) throws MissingFields, InvalidEmail, WeakPassword, EmailAlreadyInUse {
+        if (
+            email == null || email.isBlank() ||
+            password == null || password.isBlank() ||
+            name == null || name.isBlank()
+        ) throw new MissingFields();
 
-        if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+        if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
             throw new InvalidEmail();
-        }
 
-        if (password.length() < 6) {
+        if (password.length() < 6)
             throw new WeakPassword();
-        }
 
-        if (repository.findByEmail(email).isPresent()) {
+        if (repository.findByEmail(email).isPresent())
             throw new EmailAlreadyInUse();
-        }
 
         User user = new User(email, encoder.encode(password), name);
         repository.save(user);
-    }
 
-    public String login(String email, String password) {
+        return user;
+    };
+
+    public String login(
+        String email, 
+        String password
+    ) throws InvalidCredentials {
         User user = repository.findByEmail(email)
             .orElseThrow(InvalidCredentials::new);
 
-        if (!encoder.matches(password, user.getPassword())) {
+        if (!encoder.matches(password, user.getPassword()))
             throw new InvalidCredentials();
-        }
 
         return jwtUtil.generateToken(user.getUuid());
-    }
+    };
 };
