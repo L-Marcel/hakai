@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "@components/Button";
-import { register, RegisterUserData } from "../../services/authService";
+import { register, RegisterUserData } from "../../services/user";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function RegisterForm() {
     setError("");
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (data.password !== confirmPassword) {
@@ -36,9 +36,13 @@ export default function RegisterForm() {
       return;
     }
 
-    const response = await register(data);
-    if (response.ok) navigate("/login");
-    else setError(response.error.message);
+    register(data)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error: HttpError) => {
+        setError(error.message);
+      });
   };
 
   return (

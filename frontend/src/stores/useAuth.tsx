@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { load } from "../services/authService";
+import { load } from "../services/user";
 
 export type User = {
   uuid: UUID;

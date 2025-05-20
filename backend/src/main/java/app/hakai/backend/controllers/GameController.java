@@ -15,6 +15,7 @@ import app.hakai.backend.annotations.RequireAuth;
 import app.hakai.backend.dtos.GameResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
+import app.hakai.backend.services.AccessControlService;
 import app.hakai.backend.services.GameService;
 
 @RestController
@@ -23,28 +24,33 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
+    @Autowired
+    private AccessControlService accessControlService;
+
+    @RequireAuth
     @GetMapping("/{uuid}")
-    public ResponseEntity<GameResponse> get(
-        @PathVariable(required = false) UUID uuid
+    public ResponseEntity<GameResponse> findGame(
+        @PathVariable(required = false) UUID uuid,
+        @AuthenticationPrincipal User user
     ) {
-        Game game = gameService.getGame(uuid);
+        Game game = gameService.findGameById(uuid);
+        accessControlService.checkGameOwnership(user, game);
+        
         GameResponse response = new GameResponse(game);
-        return ResponseEntity.ok().body(response);
+
+        return ResponseEntity
+            .ok()
+            .body(response);
     };
 
     @GetMapping
     @RequireAuth
-    public ResponseEntity<List<GameResponse>> getGamesToUser(
+    public ResponseEntity<List<GameResponse>> findGamesByUser(
         @AuthenticationPrincipal User user
     ) {
-        List<Game> games = gameService.getGamesToUser(
-            user.getUuid()
-        );
-
-        List<GameResponse> response = games.stream()
-            .map(GameResponse::new)
-            .toList();
-
+        List<Game> games = gameService.findGamesByUser(user.getUuid());
+        List<GameResponse> response = GameResponse.mapFromList(games);
+        
         return ResponseEntity.ok(response);
     };
 };

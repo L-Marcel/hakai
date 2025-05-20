@@ -26,4 +26,10 @@ public class GameResponse {
             .collect(Collectors.toList()
         );
     };
+
+    public static List<GameResponse> mapFromList(List<Game> games) {
+        return games.stream()
+            .map(GameResponse::new)
+            .toList();
+    };
 };

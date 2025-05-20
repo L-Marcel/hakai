@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import styles from "./index.module.scss";
 import { useNavigate } from "react-router-dom";
-import { check } from "../../services/roomService";
+import { check } from "../../services/room";
 
 export default function CheckRoomForm() {
   const navigation = useNavigate();

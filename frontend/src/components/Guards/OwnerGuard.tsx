@@ -1,10 +1,10 @@
 import { ReactNode, useEffect } from "react";
 import useRoom from "@stores/useRoom";
 import { useNavigate, useParams } from "react-router-dom";
-import { connect } from "../../services/socketService";
+import { connect } from "../../services/socket";
 import useGame from "@stores/useGame";
 import useAuth from "@stores/useAuth";
-import { request } from "../../services/gameService";
+import { request } from "../../services/game";
 
 interface Props {
   children: ReactNode;

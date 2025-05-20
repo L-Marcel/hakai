@@ -3,13 +3,11 @@ import styles from "./index.module.scss";
 import Button from "@components/Button";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-interface Props
-  extends DetailedHTMLProps<
-    InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
-  > {}
-
-export default function Input({ className, type, ...props }: Props) {
+export default function Input({
+  className,
+  type,
+  ...props
+}: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>) {
   const [show, setShow] = useState(false);
   const classes = [styles.input, className];
   const isPassword = type === "password";
