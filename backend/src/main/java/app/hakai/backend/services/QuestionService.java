@@ -33,9 +33,6 @@ public class QuestionService {
     public Question getQuestionById(UUID uuid) throws QuestionNotFound {
         if(uuid == null) throw new QuestionNotFound();
         return repository.findByUuid(uuid).orElseThrow(() -> new QuestionNotFound());
-
-    }
-
     };
 
     public void generateQuestionVariants(Question question, Room room) {
