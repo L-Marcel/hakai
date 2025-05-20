@@ -18,29 +18,14 @@ import app.hakai.backend.transients.Room;
 public class QuestionService {
     @Autowired
     private QuestionsRepository repository;
-
-    @Autowired
-    private MessagingService messagingService;
-
-    @Autowired
-    private PedagogicalAgent pedagogicalAgent;
-
-    public List<Question> getQuestionsByGame(Game game) throws GameNotFound {
-        if(game == null) throw new GameNotFound();
+  
+    public List<Question> findQuestionsByGame(Game game) {
         return repository.findAllByGame(game);
     };
 
-    public Question getQuestionById(UUID uuid) throws QuestionNotFound {
-        if(uuid == null) throw new QuestionNotFound();
-        return repository.findByUuid(uuid).orElseThrow(() -> new QuestionNotFound());
-
-    }
-
-    };
-
-    public void generateQuestionVariants(Question question, Room room) {
-        pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
-            messagingService.sendVariantsToOwner(room, variants);
-        });
+    public Question findQuestionById(UUID uuid) throws QuestionNotFound {
+        return repository.findByUuid(uuid).orElseThrow(
+            () -> new QuestionNotFound()
+        );
     };
 };

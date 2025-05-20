@@ -33,15 +33,15 @@ public class UserController {
         );
 
         return ResponseEntity
-            .status(HttpStatus.ACCEPTED)
+            .status(HttpStatus.OK)
             .body(token);
     };
 
     @PostMapping
-    public ResponseEntity<String> register(
+    public ResponseEntity<Void> createUser(
         @RequestBody RegisterRequestBody body
     ) {
-        service.register(
+        service.createUser(
             body.getEmail(),
             body.getPassword(),
             body.getName()
@@ -49,12 +49,12 @@ public class UserController {
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("Usuário registrado com sucesso!");
+            .build();
     };
 
-    @GetMapping("/me")
     @RequireAuth
-    public ResponseEntity<UserResponse> getCurrentUser(
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(
         @AuthenticationPrincipal User user
     ) {
         UserResponse response = new UserResponse(user);

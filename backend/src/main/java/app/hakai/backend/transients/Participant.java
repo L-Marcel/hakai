@@ -22,9 +22,4 @@ public class Participant {
         this.nickname = nickname;
         this.user = Optional.empty();
     };
-
-    public Participant(String nickname, User user) {
-        this.nickname = nickname;
-        this.user = Optional.of(user);
-    };
 };
