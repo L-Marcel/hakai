@@ -15,7 +15,7 @@ export type QuestionAttempt = {
   chosenOption: string;
   correct: boolean;
   difficulty: Difficulty;
-}
+};
 
 export type Room = {
   code: string;
@@ -28,7 +28,7 @@ type RoomStore = {
   client?: Client;
   room?: Room;
   participant?: Participant;
-  history: QuestionAttempt[]; 
+  history: QuestionAttempt[];
   setClient: (client?: Client) => void;
   setRoom: (room?: Room) => void;
   setParticipant: (participant?: Participant) => void;
@@ -41,9 +41,10 @@ const useRoom = create<RoomStore>((set, get) => ({
   setRoom: (room?: Room) => set({ room }),
   setParticipant: (participant?: Participant) => set({ participant }),
   history: [],
-  setHistory: (attempt) => set((state) =>({
-    history: [...state.history, attempt]
-  })),
+  setHistory: (attempt) =>
+    set((state) => ({
+      history: [...state.history, attempt],
+    })),
   getNextDifficulty: () => {
     const history = get().history;
     if (history.length === 0) return Difficulty.Medium;
