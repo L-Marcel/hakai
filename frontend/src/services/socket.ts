@@ -35,7 +35,7 @@ export function connect(
       );
 
       client.subscribe(
-        "/channel/events/rooms/" + code + "/participants/entered",
+        "/channel/events/rooms/" + code + "/updated",
         (message) => {
           const room: Room = JSON.parse(message.body);
           setRoom(room);
@@ -63,19 +63,10 @@ export function connect(
 
       if (isOwner) {
         client.subscribe(
-          "/channel/events/rooms/" + code + "/" + room?.owner,
+          "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
             setVariants(variants);
-          }
-        );
-
-        client.subscribe(
-          "/channel/events/rooms/" + code + "/answers",
-          (message) => {
-            const response = JSON.parse(message.body);
-            console.log(response);
-            // mostrar ao prof
           }
         );
       }

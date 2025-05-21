@@ -11,12 +11,12 @@ import app.hakai.backend.errors.InvalidEmail;
 import app.hakai.backend.errors.MissingFields;
 import app.hakai.backend.errors.WeakPassword;
 import app.hakai.backend.models.User;
-import app.hakai.backend.repositories.UsersRepository;
+import app.hakai.backend.repositories.UserRepository;
 
 @Service
 public class UserService {
     @Autowired
-    private UsersRepository repository;
+    private UserRepository repository;
 
     @Autowired
     private BCryptPasswordEncoder encoder;

@@ -3,7 +3,7 @@ import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
 import { difficultyToString, Question, QuestionVariant } from "@stores/useGame";
-import { sendQuestionAnswer } from "../../../services/questions";
+import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
@@ -50,7 +50,7 @@ export default function QuestionView({
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => sendQuestionAnswer(option)}
+                onClick={() => sendParticipantAnswer(option)}
                 id={id}
                 theme="partial-orange"
                 key={uuid + "-" + option}

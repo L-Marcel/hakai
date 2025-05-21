@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnswerQuestionRequestBody {
+    private UUID question;
     private UUID participant;
     private String answer;
 };

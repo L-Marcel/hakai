@@ -21,7 +21,7 @@ import useGame, { QuestionVariant } from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
-import { generateVariants, sendQuestion } from "../../services/questions";
+import { generateVariants, sendQuestion } from "../../services/question";
 
 export default function RoomPanelPage() {
   return (

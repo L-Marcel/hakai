@@ -32,9 +32,7 @@ public class UserController {
             body.getPassword()
         );
 
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(token);
+        return ResponseEntity.ok(token);
     };
 
     @PostMapping
