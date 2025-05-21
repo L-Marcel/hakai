@@ -36,8 +36,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
-                UUID userId = jwtUtil.validateTokenAndGetUserId(token);
-                User user = usersRepository.findById(userId)
+                UUID uuid = jwtUtil.validateTokenAndGetUserId(token);
+                User user = usersRepository.findById(uuid)
                     .orElseThrow(
                         () -> new RuntimeException("User not found")
                     );

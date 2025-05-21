@@ -9,6 +9,8 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Repository;
 
+import app.hakai.backend.models.Game;
+import app.hakai.backend.models.User;
 import app.hakai.backend.transients.Room;
 
 @Repository
@@ -36,15 +38,15 @@ public class RoomRepository {
         }
     };
 
-    public Optional<Room> findByUser(UUID user) {
+    public Optional<Room> findByUser(User user) {
         return this.find((Room room) -> {
-            return room.getGame().getOwner().getUuid().equals(user);
+            return room.getGame().getOwner().getUuid().equals(user.getUuid());
         });
     };
 
-    public Optional<Room> findByGame(UUID game) {
+    public Optional<Room> findByGame(Game game) {
         return this.find((Room room) -> {
-            return room.getGame().getUuid().equals(game);
+            return room.getGame().getUuid().equals(game.getUuid());
         });
     };
 
@@ -58,7 +60,7 @@ public class RoomRepository {
         return this.findByCode(code).isPresent();
     };
 
-    public boolean existsByUser(UUID user) {
+    public boolean existsByUser(User user) {
         return this.findByUser(user).isPresent();
     };
 };

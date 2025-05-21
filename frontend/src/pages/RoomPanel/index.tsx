@@ -139,6 +139,7 @@ function Page() {
         </h4>
         <ParticipantsMansoryGrid
           ranked
+          userIsRoomOwner
           participants={room?.participants ?? []}
         />
       </section>

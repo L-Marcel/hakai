@@ -19,6 +19,13 @@
     min-width: 0;
     width: 100%;
     overflow: hidden;
+    position: relative;
+
+    button {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+    }
 
     &[id="ranked"] {
       padding: 1rem 4rem 1rem 1rem;

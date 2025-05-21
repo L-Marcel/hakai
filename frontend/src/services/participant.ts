@@ -3,6 +3,10 @@ import api from "./axios";
 import useGame from "@stores/useGame";
 import { connect } from "./socket";
 
+export async function exit(): Promise<void> {
+  return await api.delete("participants");
+}
+
 export async function sendParticipantAnswer(answer: string): Promise<void> {
   const { participant } = useRoom.getState();
   const { question, setQuestion } = useGame.getState();

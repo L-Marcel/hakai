@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import org.springframework.stereotype.Repository;
 
+import app.hakai.backend.models.User;
 import app.hakai.backend.transients.Participant;
 
 @Repository
@@ -36,10 +37,10 @@ public class ParticipantRepository {
         }
     };
 
-    public Optional<Participant> findByUser(UUID user) {
+    public Optional<Participant> findByUser(User user) {
         return this.find((Participant participant) -> {
             return participant.getUser().isPresent() && 
-                participant.getUser().get().getUuid().equals(user);
+                participant.getUser().get().getUuid().equals(user.getUuid());
         });
     };
 

@@ -1,5 +1,7 @@
 package app.hakai.backend.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,9 +65,24 @@ public class RoomController {
     public ResponseEntity<Void> closeRoom(
         @AuthenticationPrincipal User user
     ) {
-        Room room = roomService.findRoomByUser(user.getUuid());
+        Room room = roomService.findRoomByUser(user);
         participantService.removeAllByRoom(room);
         roomService.closeRoom(room);
+
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .build();
+    };
+
+    @RequireAuth
+    @DeleteMapping("/participants/{uuid}")
+    public ResponseEntity<Void> kickFromRoom(
+        @PathVariable UUID uuid,
+        @AuthenticationPrincipal User user
+    ) {
+        Participant participant = participantService.findParticipantByUuid(uuid);
+        accessControlService.checkRoomOwnership(user, participant.getRoom());
+        participantService.removeParticipant(participant);
 
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
@@ -77,7 +94,7 @@ public class RoomController {
     public ResponseEntity<RoomResponse> findRoomByUser(
         @AuthenticationPrincipal User user
     ){
-        Room room = roomService.findRoomByUser(user.getUuid());
+        Room room = roomService.findRoomByUser(user);
         RoomResponse response = new RoomResponse(room);
 
         return ResponseEntity.ok(response);

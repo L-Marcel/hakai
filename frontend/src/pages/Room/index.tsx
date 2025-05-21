@@ -6,6 +6,9 @@ import QuestionView from "@components/Views/Question";
 import { FaUserGroup } from "react-icons/fa6";
 import useRoom from "@stores/useRoom";
 import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
+import { FaArrowLeft } from "react-icons/fa";
+import Button from "@components/Button";
+import { exit } from "../../services/participant";
 
 export default function RoomPage() {
   return (
@@ -23,16 +26,21 @@ function Page() {
 
   return (
     <main className={styles.main}>
+      <header className={styles.header}>
+        <Button theme="full-orange" onClick={() => exit()}><FaArrowLeft/> Sair</Button>
+        <div className={styles.participants}>
+          <h3>Aguardando dono da sala...</h3>
+          <h4>
+            <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
+          </h4>
+        </div>
+      </header>
       {question ? (
         <section>
           <QuestionView variant={question} />
         </section>
       ) : (
-        <section className={styles.participants}>
-          <h1>Aguardando dono da sala...</h1>
-          <h4>
-            <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
-          </h4>
+        <section>
           <ParticipantsMansoryGrid
             ranked
             participants={room?.participants ?? []}

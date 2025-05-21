@@ -1,8 +1,11 @@
 import { Participant } from "@stores/useRoom";
 import styles from "./index.module.scss";
+import { FaX } from "react-icons/fa6";
+import { kick } from "../../services/room";
 
 interface Props {
   ranked?: boolean;
+  userIsRoomOwner?: boolean;
   participants: Participant[];
 }
 
@@ -13,6 +16,7 @@ type RankedParticipant = Participant & {
 export default function ParticipantsMansoryGrid({
   participants,
   ranked = false,
+  userIsRoomOwner = false,
 }: Props) {
   return (
     <ul className={styles.masonry}>
@@ -31,6 +35,7 @@ export default function ParticipantsMansoryGrid({
           if (ranked) {
             return (
               <li id="ranked" key={uuid}>
+                {userIsRoomOwner && <button onClick={() => kick(uuid)}><FaX/></button> }
                 <h2 role={rank.toString()} className={styles.rank}>
                   {rank}°
                 </h2>
@@ -46,6 +51,7 @@ export default function ParticipantsMansoryGrid({
 
           return (
             <li key={uuid}>
+              {userIsRoomOwner && <button onClick={() => kick(uuid)}><FaX/></button> }
               <h3 data-selectable className={styles.nickname}>
                 {nickname}
               </h3>

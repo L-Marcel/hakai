@@ -16,6 +16,10 @@ export async function join(nickname: string, code?: string): Promise<void> {
     });
 }
 
+export async function kick(participant: UUID): Promise<void> {
+  return await api.delete(`rooms/participants/${participant}`);
+}
+
 export async function close(): Promise<void> {
   return await api.delete("rooms").then(() => {
     disconnect();
