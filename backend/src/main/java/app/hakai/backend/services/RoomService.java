@@ -12,6 +12,7 @@ import app.hakai.backend.events.RoomEventPublisher;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.RoomNotFound;
 import app.hakai.backend.models.Game;
+import app.hakai.backend.models.User;
 import app.hakai.backend.repositories.RoomRepository;
 import app.hakai.backend.transients.Room;
 
@@ -42,14 +43,14 @@ public class RoomService {
     };
 
     public Room findRoomByGame(
-        UUID game
+        Game game
     ) throws RoomNotFound {
         return repository.findByGame(game)
             .orElseThrow(RoomNotFound::new);
     };
 
     public Room findRoomByUser(
-        UUID user
+        User user
     ) throws RoomNotFound {
         return repository.findByUser(user)
             .orElseThrow(RoomNotFound::new);
@@ -59,7 +60,7 @@ public class RoomService {
         Game game
     ) throws GameNotFound {
         synchronized (repository) {
-            if(repository.existsByUser(game.getOwner().getUuid())) 
+            if(repository.existsByUser(game.getOwner())) 
             throw new UserRoomAlreadyExists();
 
             String code = this.generateCode(6);

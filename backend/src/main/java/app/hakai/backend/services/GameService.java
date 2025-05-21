@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
+import app.hakai.backend.models.User;
 import app.hakai.backend.repositories.GameRepository;
 
 @Service
@@ -20,7 +21,7 @@ public class GameService {
             .orElseThrow(GameNotFound::new);
     };
 
-    public List<Game> findGamesByUser(UUID uuid) {
-        return this.repository.findByOwnerUuid(uuid);
+    public List<Game> findGamesByUser(User user) {
+        return this.repository.findByOwnerUuid(user.getUuid());
     };
 };

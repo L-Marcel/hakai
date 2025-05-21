@@ -72,7 +72,7 @@ public class ParticipantService {
     };
 
     public Participant findParticipantByUser(
-        UUID user
+        User user
     ) throws ParticipantNotFound {
         return this.repository.findByUser(user)
             .orElseThrow(ParticipantNotFound::new);
@@ -91,6 +91,15 @@ public class ParticipantService {
                 this.repository.remove(participant);
             };
         };
+    };
+
+    public void removeParticipant(Participant participant) {
+        synchronized (participant.getRoom().getParticipants()) {
+            participant.getRoom().getParticipants().remove(participant);
+            this.repository.remove(participant);
+        };
+
+        this.roomEventPublisher.emitRoomUpdated(participant.getRoom());
     };
 
     public void answerQuestion(

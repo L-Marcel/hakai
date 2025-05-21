@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class ParticipantController {
     public ResponseEntity<ParticipantResponse> findParticipantByUser(
         @AuthenticationPrincipal User user
     ){
-        Participant participant = participantService.findParticipantByUser(user.getUuid());
+        Participant participant = participantService.findParticipantByUser(user);
         ParticipantResponse response = new ParticipantResponse(participant);
 
         return ResponseEntity.ok(response);
@@ -59,6 +60,19 @@ public class ParticipantController {
             participant, 
             body.getAnswer()
         );
+
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .build();
+    };
+
+    @RequireAuth
+    @DeleteMapping
+    public ResponseEntity<Void> kickFromRoom(
+        @AuthenticationPrincipal User user
+    ) {
+        Participant participant = participantService.findParticipantByUser(user);
+        participantService.removeParticipant(participant);
 
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)

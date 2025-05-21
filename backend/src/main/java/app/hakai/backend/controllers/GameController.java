@@ -30,7 +30,7 @@ public class GameController {
     @RequireAuth
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> findGame(
-        @PathVariable(required = false) UUID uuid,
+        @PathVariable UUID uuid,
         @AuthenticationPrincipal User user
     ) {
         Game game = gameService.findGameById(uuid);
@@ -46,7 +46,7 @@ public class GameController {
     public ResponseEntity<List<GameResponse>> findGamesByUser(
         @AuthenticationPrincipal User user
     ) {
-        List<Game> games = gameService.findGamesByUser(user.getUuid());
+        List<Game> games = gameService.findGamesByUser(user);
         List<GameResponse> response = GameResponse.mapFromList(games);
         
         return ResponseEntity.ok(response);

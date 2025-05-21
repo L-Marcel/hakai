@@ -33,7 +33,7 @@ public class QuestionController {
         @PathVariable UUID uuid,
         @AuthenticationPrincipal User user
     ) {
-        Room room = roomService.findRoomByUser(user.getUuid());
+        Room room = roomService.findRoomByUser(user);
         Question question = questionService.findQuestionById(uuid);
         questionService.startVariantsGeneration(question, room);
 

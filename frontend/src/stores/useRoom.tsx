@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
 import { Difficulty } from "@stores/useGame";
+import { disconnect } from "../services/socket";
 
 export type Participant = {
   uuid: UUID;
@@ -39,7 +40,14 @@ type RoomStore = {
 
 const useRoom = create<RoomStore>((set, get) => ({
   setClient: (client?: Client) => set({ client }),
-  setRoom: (room?: Room) => set({ room }),
+  setRoom: (room?: Room) => {
+    set({ room });
+
+    const { participant } = get();
+    if(participant && room?.participants.every(({ uuid }) => uuid !== participant.uuid)) {
+      disconnect();
+    };
+  },
   setParticipant: (participant?: Participant) => set({ participant }),
   history: [],
   setHistory: (attempt) =>
