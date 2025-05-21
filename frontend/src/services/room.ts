@@ -11,26 +11,22 @@ export async function join(nickname: string, code?: string): Promise<void> {
       nickname,
     })
     .then((response) => {
-      connect(code, response.data.uuid);
+      connect(response.data.room, response.data.uuid);
       setParticipant(response.data);
     });
 }
 
 export async function close(): Promise<void> {
-  return await api.post("rooms/close").then(() => {
+  return await api.delete("rooms").then(() => {
     disconnect();
   });
 }
 
 export async function create(game: UUID): Promise<string> {
-  return await api
-    .post<Room>("rooms/create", {
-      game,
-    })
-    .then((response) => {
-      connect(response.data.code);
-      return response.data.code;
-    });
+  return await api.post<Room>("rooms", { game }).then((response) => {
+    connect(response.data.code);
+    return response.data.code;
+  });
 }
 
 export async function getRoom(code?: string): Promise<void> {
@@ -45,15 +41,4 @@ export async function getOpenRoom(): Promise<Room> {
   return await api.get<Room>("rooms").then((response) => {
     return response.data;
   });
-}
-
-export async function getParticipant(code?: string): Promise<void> {
-  const { setParticipant } = useRoom.getState();
-
-  return await api
-    .get<Participant>(`rooms/${code}/participant`)
-    .then((response) => {
-      connect(code, response.data.uuid);
-      setParticipant(response.data);
-    });
 }

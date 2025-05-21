@@ -1,46 +1,40 @@
-package app.hakai.backend.services;
+package app.hakai.backend.events;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import app.hakai.backend.dtos.QuestionVariantResponse;
 import app.hakai.backend.dtos.RoomResponse;
 import app.hakai.backend.transients.QuestionVariant;
 import app.hakai.backend.transients.Room;
 
-@Service
-public class MessagingService {
+@Component
+public class RoomEventPublisher {
     @Autowired
     private SimpMessagingTemplate simp;
 
-    public void sendRoomToAll(Room room) {
+    public void emitRoomUpdated(Room room) {
         simp.convertAndSend(
-            "/channel/events/rooms/" + room.getCode() + "/participants/entered", 
+            "/channel/events/rooms/" + room.getCode() + "/updated", 
             new RoomResponse(room)
         );
     };
 
-    public void closeRoomToAll(Room room) {
+    public void emitRoomClosed(Room room) {
         simp.convertAndSend(
             "/channel/events/rooms/" + room.getCode() + "/closed",
             "Sala fechada!"
         );
     };
 
-    public void sendRoomToParticipant(Room room, UUID participant) {
+    public void emitVariantsGenerated(Room room, List<QuestionVariant> list) {
         simp.convertAndSend(
-            "/channel/events/rooms/" + room.getCode() + "/" + participant.toString() + "/entered", 
-            new RoomResponse(room)
-        );
-    };
-
-    public void sendVariantsToOwner(Room room, List<QuestionVariant> list) {
-        simp.convertAndSend(
-            "/channel/events/rooms/" + room.getCode() + "/" + room.getGame().getOwner().getUuid().toString(),
+            "/channel/events/rooms/" + room.getCode() + 
+            "/" + room.getGame().getOwner().getUuid().toString() + 
+            "/variants",
             list.stream().map(
                 (QuestionVariant question) -> new QuestionVariantResponse(
                     question, 

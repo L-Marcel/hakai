@@ -1,6 +1,8 @@
 package app.hakai.backend.repositories;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -10,24 +12,28 @@ import org.springframework.stereotype.Repository;
 import app.hakai.backend.transients.Room;
 
 @Repository
-public class RoomsRepository {
-    private LinkedList<Room> rooms = new LinkedList<Room>();
+public class RoomRepository {
+    private List<Room> rooms = Collections.synchronizedList(
+        new LinkedList<Room>()
+    );
 
-    public synchronized void add(Room room) {
-        rooms.add(room);
+    public void add(Room room) {
+        this.rooms.add(room);
     };
 
-    public synchronized void remove(Room room) {
-        rooms.remove(room);
+    public void remove(Room room) {
+        this.rooms.remove(room);
     };
 
     private Optional<Room> find(Function<Room, Boolean> search) {
-        for(Room room : this.rooms) {
-            if(search.apply(room))
-                return Optional.of(room);
-        };
-
-        return Optional.empty();
+        synchronized (this.rooms) {
+            for(Room room : this.rooms) {
+                if(search.apply(room))
+                    return Optional.of(room);
+            };
+    
+            return Optional.empty();
+        }
     };
 
     public Optional<Room> findByUser(UUID user) {

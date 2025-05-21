@@ -5,6 +5,7 @@ import { Difficulty } from "@stores/useGame";
 
 export type Participant = {
   uuid: UUID;
+  room: string;
   user?: UUID;
   nickname: string;
   score: number;

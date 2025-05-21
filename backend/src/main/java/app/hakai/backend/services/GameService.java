@@ -8,19 +8,19 @@ import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Game;
-import app.hakai.backend.repositories.GamesRepository;
+import app.hakai.backend.repositories.GameRepository;
 
 @Service
 public class GameService {
     @Autowired
-    private GamesRepository repository;
+    private GameRepository repository;
 
     public Game findGameById(UUID uuid) throws GameNotFound {
-        return repository.findById(uuid)
+        return this.repository.findById(uuid)
             .orElseThrow(GameNotFound::new);
     };
 
     public List<Game> findGamesByUser(UUID uuid) {
-        return repository.findByOwnerUuid(uuid);
+        return this.repository.findByOwnerUuid(uuid);
     };
 };

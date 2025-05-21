@@ -9,10 +9,7 @@ import app.hakai.backend.models.User;
 @Service
 public class AccessControlService {
     public void checkGameOwnership(User user, Game game) {
-        if (
-            !game.getOwner().getUuid().equals(user.getUuid()) || 
-            user == null || 
-            game == null
-        ) throw new AccessDenied();
+        if (!game.getOwner().getUuid().equals(user.getUuid())) 
+            throw new AccessDenied();
     };
 };

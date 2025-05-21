@@ -11,6 +11,7 @@ import lombok.Setter;
 public class ParticipantResponse {
     private UUID uuid;
     private UUID user;
+    private String room;
     private String nickname;
     private int score = 0;
 
@@ -18,6 +19,7 @@ public class ParticipantResponse {
         this.uuid = participant.getUuid();
         this.nickname = participant.getNickname();
         this.score = participant.getScore();
+        this.room = participant.getRoom().getCode();
         if(participant.getUser().isPresent()) {
             this.user = participant.getUser().get().getUuid();
         };

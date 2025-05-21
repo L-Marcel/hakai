@@ -1,8 +1,6 @@
 package app.hakai.backend.services;
 
 import java.security.SecureRandom;
-import java.util.LinkedList;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +8,20 @@ import org.springframework.stereotype.Service;
 
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.errors.UserRoomAlreadyExists;
+import app.hakai.backend.events.RoomEventPublisher;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.RoomNotFound;
 import app.hakai.backend.models.Game;
-import app.hakai.backend.models.User;
-import app.hakai.backend.repositories.RoomsRepository;
-import app.hakai.backend.transients.Participant;
+import app.hakai.backend.repositories.RoomRepository;
 import app.hakai.backend.transients.Room;
 
 @Service
 public class RoomService {
     @Autowired
-    private RoomsRepository repository;
+    private RoomRepository repository;
+
+    @Autowired
+    private RoomEventPublisher roomEventPublisher;
 
     private String generateCode(int size) {
         SecureRandom random = new SecureRandom();
@@ -34,87 +34,52 @@ public class RoomService {
         return builder.toString();
     };
 
-
-    public synchronized Room findRoomByCode(
+    public Room findRoomByCode(
         String code
     ) throws RoomNotFound {
         return repository.findByCode(code)
             .orElseThrow(RoomNotFound::new);
     };
 
-    public synchronized Room findRoomByGame(
+    public Room findRoomByGame(
         UUID game
     ) throws RoomNotFound {
         return repository.findByGame(game)
             .orElseThrow(RoomNotFound::new);
     };
 
-
-    public synchronized Room findRoomByUser(
+    public Room findRoomByUser(
         UUID user
     ) throws RoomNotFound {
         return repository.findByUser(user)
             .orElseThrow(RoomNotFound::new);
     };
 
-    private boolean isParticipantAlreadyInRoom(
-        Room room, 
-        Participant candidate
-    ) {
-        for(Participant participant : room.getParticipants()) {
-            String nickname = participant.getNickname().toUpperCase();
-            String candidateNickname = candidate.getNickname().toUpperCase();
-            boolean nicknameAlreadyInUse = nickname.equals(candidateNickname);
-            boolean idAlreadyInUse = participant.getUuid().equals(candidate.getUuid());
-            boolean userAlreadyInUse = false;
-            Optional<User> user = participant.getUser();
-            Optional<User> candidateUser = candidate.getUser();
-            if(user.isPresent() && candidateUser.isPresent()) {
-                userAlreadyInUse = user.get().getEmail().equals(
-                    candidateUser.get().getEmail()
-                );
-            };
-
-            if(nicknameAlreadyInUse || idAlreadyInUse || userAlreadyInUse) 
-                return true;
-        };
-
-        return false;
-    };
-
-    public synchronized Room createRoom(
+    public Room createRoom(
         Game game
     ) throws GameNotFound {
-        if(game == null) throw new GameNotFound();
-        else if(repository.existsByUser(game.getOwner().getUuid())) 
+        synchronized (repository) {
+            if(repository.existsByUser(game.getOwner().getUuid())) 
             throw new UserRoomAlreadyExists();
 
-        String code = this.generateCode(6);
-        while(repository.existsByCode(code)) 
-            code.concat(this.generateCode(2));
-        
-        Room room = new Room(
-            code, 
-            game,
-            new LinkedList<Participant>()
-        );
+            String code = this.generateCode(6);
+            while(repository.existsByCode(code)) 
+                code = code.concat(this.generateCode(2));
+            
+            Room room = new Room(
+                code, 
+                game
+            );
 
-        repository.add(room);
-        return room;
+            repository.add(room);
+            return room;
+        }
     };
 
-    public synchronized void joinRoom(
-        Room room, 
-        Participant participant
-    ) throws RoomNotFound, ParticipantAlreadyInRoom {
-        boolean alreadyInRoom = this.isParticipantAlreadyInRoom(room, participant);
-        if(alreadyInRoom) throw new ParticipantAlreadyInRoom();
-        room.getParticipants().add(participant);
-    };
-
-    public synchronized void closeRoom(
+    public void closeRoom(
         Room room
     ) throws RoomNotFound, ParticipantAlreadyInRoom {
         repository.remove(room);
+        roomEventPublisher.emitRoomClosed(room);
     };
 };

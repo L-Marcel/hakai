@@ -35,12 +35,10 @@ public class GameController {
     ) {
         Game game = gameService.findGameById(uuid);
         accessControlService.checkGameOwnership(user, game);
-        
-        GameResponse response = new GameResponse(game);
 
-        return ResponseEntity
-            .ok()
-            .body(response);
+        GameResponse response = new GameResponse(game);
+        
+        return ResponseEntity.ok(response);
     };
 
     @GetMapping
