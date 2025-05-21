@@ -30,7 +30,7 @@ public class GameController {
     @RequireAuth
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> findGame(
-        @PathVariable(required = false) UUID uuid,
+        @PathVariable UUID uuid,
         @AuthenticationPrincipal User user
     ) {
         Game game = gameService.findGameById(uuid);
