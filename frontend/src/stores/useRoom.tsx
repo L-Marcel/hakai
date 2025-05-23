@@ -1,7 +1,6 @@
 import { UUID } from "crypto";
 import { create } from "zustand";
 import { Client } from "@stomp/stompjs";
-import { Difficulty } from "@stores/useGame";
 import { disconnect } from "../services/socket";
 
 export type Participant = {
@@ -38,9 +37,9 @@ const useRoom = create<RoomStore>((set, get) => ({
     if (participant) {
       const updated = room?.participants.find(p => p.uuid === participant.uuid);
       if (updated) {
-        set({ participant: updated }); // <- aqui atualiza a dificuldade
+        set({ participant: updated });
       } else {
-        disconnect(); // participante não existe mais na sala
+        disconnect();
       }
     }
   },
