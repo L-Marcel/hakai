@@ -110,6 +110,8 @@ public class ParticipantService {
         boolean isCorrect = question.getAnswer().equals(answer);
 
         synchronized(participant) {
+            participant.setNetxDifficulty(isCorrect);
+            
             if(isCorrect) {
                 participant.incrementScore();
                 participant.incrementCorrectAnswers();
