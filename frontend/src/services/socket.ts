@@ -42,22 +42,15 @@ export function connect(
         }
       );
 
-      client.subscribe(
-        "/channel/events/rooms/" + code + "/question",
-        (message) => {
-          const variants: QuestionVariant[] = JSON.parse(message.body);
-          if (variants.length > 0) {
-            const nextDifficulty = useRoom.getState().getNextDifficulty();
-            const selected = variants.find(
-              (v) => v.difficulty === nextDifficulty
-            );
-
-            if (selected) {
-              setQuestion(selected);
-            }
+      if (participant && room) {
+        client.subscribe(
+          "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
+          (message) => {
+            const variant: QuestionVariant = JSON.parse(message.body);
+            setQuestion(variant);
           }
-        }
-      );
+        );
+      }
 
       if (participant) getRoom(code);
 

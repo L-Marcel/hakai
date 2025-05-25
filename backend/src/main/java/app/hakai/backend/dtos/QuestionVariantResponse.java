@@ -6,10 +6,12 @@ import java.util.UUID;
 
 import app.hakai.backend.transients.QuestionVariant;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class QuestionVariantResponse {
     private UUID uuid;
     private String question;
@@ -25,9 +27,9 @@ public class QuestionVariantResponse {
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
         this.original = question.getOriginal().getUuid();
+        this.context = new LinkedList<>();
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
-            this.context = new LinkedList<>();
         };
     };
 };

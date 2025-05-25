@@ -30,10 +30,10 @@ export type Question = {
 
 export type QuestionVariant = {
   uuid: UUID;
-  difficulty: Difficulty;
-  context: string[];
   question: string;
+  difficulty: Difficulty;
   options: string[];
+  context: string[];
   original: UUID;
 };
 

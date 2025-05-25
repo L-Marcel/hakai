@@ -3,7 +3,7 @@ package app.hakai.backend.transients;
 import java.util.Optional;
 import java.util.UUID;
 
-import app.hakai.backend.models.Difficult;
+import app.hakai.backend.models.Difficulty;
 import app.hakai.backend.models.User;
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ public class Participant {
     private Room room;
     private Optional<User> user;
     private String nickname;
-    private Difficult currentDifficult = Difficult.NORMAL;
+    private Difficulty currentDifficulty = Difficulty.NORMAL;
     
     private int correctAnswers = 0;
     private int wrongAnswers = 0;
@@ -32,14 +32,14 @@ public class Participant {
     };
 
     public void incrementScore() {
-        switch (this.currentDifficult) {
-            case Difficult.EASY:
+        switch (this.currentDifficulty) {
+            case Difficulty.EASY:
                 this.score += 100;
                 break;
-            case Difficult.NORMAL:
+            case Difficulty.NORMAL:
                 this.score += 200;
                 break;
-            case Difficult.HARD:
+            case Difficulty.HARD:
                 this.score += 300;
                 break;
             default:
@@ -54,4 +54,18 @@ public class Participant {
     public void incrementWrongAnswers() {
         this.wrongAnswers += 1;
     };
+
+    public Difficulty setNetxDifficulty(Boolean isCorrect){
+        Difficulty[] difficulties = Difficulty.values();
+        int index = currentDifficulty.ordinal();
+
+        if (isCorrect && index < difficulties.length - 1) {
+            return currentDifficulty = difficulties[index + 1];
+        } 
+        else if (!isCorrect && index > 0) {
+            return currentDifficulty = difficulties[index - 1];
+        }
+
+        return currentDifficulty;
+    }
 };

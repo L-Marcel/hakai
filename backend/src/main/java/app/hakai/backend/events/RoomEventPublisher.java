@@ -1,6 +1,7 @@
 package app.hakai.backend.events;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -43,4 +44,11 @@ public class RoomEventPublisher {
             )
         );
     };
+
+    public void emitVariantsByDifficulty(String code, UUID participant, QuestionVariantResponse selected) {
+        simp.convertAndSend(
+            "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
+            selected
+        );
+    }
 };

@@ -1,7 +1,7 @@
 package app.hakai.backend.models;
 
-public enum Difficult {
+public enum Difficulty {
     EASY,
     NORMAL,
-    HARD
-};
+    HARD;
+}
