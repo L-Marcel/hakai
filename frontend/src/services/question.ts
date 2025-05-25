@@ -11,11 +11,16 @@ export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
   const { room } = useRoom.getState();
   if (!room) return;
 
-  console.log("Variants para envio:", variants);
+  const code = room.code;
+  const original = variants[0].original;
 
   return await api.post(
-    `questions/send-to-participants/${room.code}`,
-    variants
+    `questions/send`,
+    {
+      code,
+      original,
+      variants
+    }
   );
 }
 

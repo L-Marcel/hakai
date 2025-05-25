@@ -8,7 +8,7 @@ export type Participant = {
   room: string;
   user?: UUID;
   nickname: string;
-  currentDifficulty: String;
+  currentDifficulty: string;
   score: number;
 };
 
