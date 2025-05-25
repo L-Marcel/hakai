@@ -7,13 +7,15 @@ export async function generateVariants(question: UUID): Promise<void> {
   return await api.post(`questions/${question}/generate`);
 }
 
-export function sendQuestion(variants: QuestionVariant[]): void {
-  const { room, client } = useRoom.getState();
+export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
+  const { room } = useRoom.getState();
+  if (!room) return;
 
-  if (!room || !client) return;
+  console.log("Variants para envio:", variants);
 
-  client.publish({
-    destination: "/channel/events/rooms/" + room.code + "/question",
-    body: JSON.stringify(variants),
-  });
+  return await api.post(
+    `questions/send-to-participants/${room.code}`,
+    variants
+  );
 }
+

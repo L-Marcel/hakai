@@ -30,4 +30,6 @@ public class QuestionVariantResponse {
             this.context = new LinkedList<>();
         };
     };
+
+    public QuestionVariantResponse() {};
 };

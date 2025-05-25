@@ -42,31 +42,15 @@ export function connect(
         }
       );
 
-      client.subscribe(
-        "/channel/events/rooms/" + code + "/question",
-        (message) => {
-          const variants: QuestionVariant[] = JSON.parse(message.body);
-          if (variants.length > 0) {
-            const current = useRoom.getState().participant?.currentDifficulty;
-
-            let currentNum: number | undefined;
-            if(current === "EASY"){
-              currentNum = 1;
-            } else if (current === "NORMAL") {
-              currentNum = 2;
-            } else if (current === "HARD") {
-              currentNum = 3;
-            }
-            const selected = variants.find(
-              (v) => v.difficulty === currentNum
-            );
-
-            if (selected) {
-              setQuestion(selected);
-            }
+      if (participant && room) {
+        client.subscribe(
+          "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
+          (message) => {
+            const variant: QuestionVariant = JSON.parse(message.body);
+            setQuestion(variant);
           }
-        }
-      );
+        );
+      }
 
       if (participant) getRoom(code);
 

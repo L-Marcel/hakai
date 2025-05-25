@@ -61,7 +61,7 @@ public class ParticipantController {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build();
-    };
+    };    
 
     @RequireAuth
     @DeleteMapping
