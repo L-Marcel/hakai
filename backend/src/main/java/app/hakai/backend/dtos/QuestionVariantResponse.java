@@ -25,9 +25,9 @@ public class QuestionVariantResponse {
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
         this.original = question.getOriginal().getUuid();
+        this.context = new LinkedList<>();
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
-            this.context = new LinkedList<>();
         };
     };
 
