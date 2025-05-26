@@ -22,6 +22,7 @@ import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
 import { generateVariants, sendQuestion } from "../../services/question";
+import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
   return (
@@ -63,7 +64,9 @@ function Page() {
   const toPreviousQuestion = () => setIndex((index) => --index);
 
   return (
-    <main className={styles.main}>
+    <><StatusToast/>
+      <main className={styles.main}>
+        
       <section className={styles.panel}>
         <div className={styles.informations}>
           <h1>Sala de jogo</h1>
@@ -143,6 +146,6 @@ function Page() {
           participants={room?.participants ?? []}
         />
       </section>
-    </main>
+      </main></>
   );
 }

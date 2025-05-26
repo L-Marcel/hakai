@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import app.hakai.backend.events.RoomEventPublisher;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.transients.QuestionVariant;
 
@@ -17,7 +18,8 @@ import app.hakai.backend.transients.QuestionVariant;
 public class PedagogicalAgent {
     @Autowired
     private Chatbot chatbot;
-
+ @Autowired
+    private RoomEventPublisher publisher;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -69,39 +71,52 @@ public class PedagogicalAgent {
             Questão: %s
             Resposta certa: %s
 
+                ATENÇÃO: Se atente ao contexto da pergunta e não fuja muito disso, tente mudar as respostas erradas com base no contexto, porém a resposta certa deve aparecer exatamente igual nas opções. Segue contexto: %s
+            
             ATENÇÃO: Certifique-se que a resposta certa que estou te passando aparece EXATAMENTE igual nas opções de resposta de cada uma das questões. Podendo mudar apenas o seu índice na lista.
 
             ATENÇÃO: Não coloque prefixos de listagem nas respostas, ex: A. B. C.; I. II. III. ou 1. 2. 3.
 
             ATENÇÃO: Não coloque perguntas como opções de resposta, exceto que a resposta correta também seja uma pergunta.
+
             """, 
-            question.getQuestion(), 
+          question.getContexts() , question.getQuestion(), 
             question.getAnswer()
         );
     };
 
     public void generateRoomQuestionsVariants(
-        Question question, 
+        Question question,   String roomCode,
         PedagogicalAgentCallback callback
     ) {
         String prompt = buildPrompt(question);
 
-        chatbot.request(prompt, response -> {
-            response.ifPresent(output -> {
-                String json = output.replaceAll("(?s)```(?:json)?\\s*(.*?)\\s*```", "$1").trim();
+        System.out.println("Chegou aqui");
+    publisher.emitGenerationStatus(roomCode, "Gerando");
 
-                try {
-                    List<QuestionVariant> variants = objectMapper.readValue(json, new TypeReference<List<QuestionVariant>>() {});
+    chatbot.request(prompt, response -> {
+        publisher.emitGenerationStatus(roomCode, "Recebendo resposta da IA");
 
-                    for(QuestionVariant variant : variants) {
-                        variant.setOriginal(question);
-                    };
+        response.ifPresentOrElse(output -> {
+            publisher.emitGenerationStatus(roomCode, "Parseando JSON de variantes");
+            String json = output.replaceAll("(?s)```(?:json)?\\s*(.*?)\\s*```", "$1").trim();
+            try {
+                List<QuestionVariant> variants = objectMapper.readValue(
+                    json,
+                    new TypeReference<List<QuestionVariant>>() {}
+                );
+                variants.forEach(v -> v.setOriginal(question));
 
-                    callback.accept(variants);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+                publisher.emitGenerationStatus(roomCode, "Gerado com sucesso");
+                callback.accept(variants);
+            } catch (IOException e) {
+                publisher.emitGenerationStatus(roomCode, "Formato errado recebido");
+                e.printStackTrace();
+            }
+        }, () -> {
+            // resposta não presente
+            publisher.emitGenerationStatus(roomCode, "Falha ao gerar");
         });
-    };
+    });
+}
 };

@@ -3,6 +3,7 @@ import useGame, { QuestionVariant } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
+import useGenerationStatus from "@stores/useStatus";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
@@ -41,7 +42,12 @@ export function connect(
           setRoom(room);
         }
       );
-
+      client.subscribe(
+        `/channel/events/rooms/${code}/status`,
+        (message) => {
+          useGenerationStatus.getState().setGenerationStatus(message.body);
+        }
+      );
       if (participant && room) {
         client.subscribe(
           "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
@@ -69,3 +75,5 @@ export function connect(
   client.activate();
   setClient(client);
 }
+
+

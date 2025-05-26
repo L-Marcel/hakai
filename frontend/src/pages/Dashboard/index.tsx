@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Game } from "@stores/useGame";
 import { requestAllGames } from "../../services/game";
 import DashboardGuard from "@components/Guards/DashboardGuard";
+import GameModal from "@components/Modal";
 
 export default function DashboardPage() {
   return (
@@ -23,6 +24,7 @@ function Page() {
   const [error, setError] = useState<string | null>(null);
   const [games, setGames] = useState<Game[]>([]);
 
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     requestAllGames()
       .then((games) => {
@@ -32,12 +34,18 @@ function Page() {
         setError(error.message);
       });
   }, []);
+  function handleGameCreated(newGame: Game) {
+    setGames((prev) => [newGame, ...prev]);
+  }
 
   return (
     <main className={styles.main}>
       <header className={styles.header}>
         <div>
-          <Button theme="full-orange" disabled>
+          <Button
+            theme="full-orange"
+            onClick={() => setShowModal(true)}
+          >
             <FaPlus />
           </Button>
           <CheckRoomForm />
@@ -46,6 +54,13 @@ function Page() {
           <FaSignOutAlt />
         </Button>
       </header>
+
+      <GameModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onGameCreated={handleGameCreated}
+      />
+
       <section className={styles.dashboard}>
         <ul>
           {games.map((game) => (

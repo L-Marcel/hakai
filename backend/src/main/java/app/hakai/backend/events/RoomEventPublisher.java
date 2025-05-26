@@ -51,4 +51,11 @@ public class RoomEventPublisher {
             selected
         );
     }
+    public void emitGenerationStatus(String roomCode, String status) {
+        simp.convertAndSend(
+            "/channel/events/rooms/" + roomCode + "/status",
+            status
+        );
+    }
+    
 };
