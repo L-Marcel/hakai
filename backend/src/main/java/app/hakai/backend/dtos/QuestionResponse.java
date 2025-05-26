@@ -1,6 +1,5 @@
 package app.hakai.backend.dtos;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +19,6 @@ public class QuestionResponse {
         this.uuid = question.getUuid();
         this.question = question.getQuestion();
         this.answer = question.getAnswer();
-        this.context = new LinkedList<>();
-        // [TODO] Adicionar contexto as questões
+        this.context = question.getContexts();
     };
 };

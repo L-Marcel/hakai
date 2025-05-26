@@ -1,5 +1,7 @@
 package app.hakai.backend.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -7,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -30,4 +33,7 @@ public class Question {
 
     @Column(nullable = false, length = 200)
     private String answer;
+  @ManyToMany(mappedBy = "questions")
+    private List<Context> contexts = new ArrayList<>();
+   
 };
