@@ -23,7 +23,7 @@ public class GameService {
 
     @Autowired
     private ContextService contextService;
-    
+
     public Game findGameById(UUID uuid) throws GameNotFound {
         return this.gameRepository.findById(uuid)
             .orElseThrow(GameNotFound::new);
@@ -45,11 +45,23 @@ public class GameService {
             question.setGame(game);
             question.setQuestion(qReq.question());
             question.setAnswer(qReq.answer());
+if (qReq.context() != null && !qReq.context().isEmpty()) {
+    List<Context> contexts = new ArrayList<>();
+    
+    for (String contextName : qReq.context()) {
+        Context context = contextService.findByName(contextName);
 
-            if (qReq.context() != null && !qReq.context().isEmpty()) {
-                List<Context> contexts = contextService.findByName(qReq.context());
-                question.setContexts(contexts);
-            }
+        if (context == null) {
+            context = new Context();
+            context.setName(contextName);
+            context = contextService.save(context);
+        }
+
+        contexts.add(context);
+    }
+
+    question.setContexts(contexts);
+}
             
 
             questions.add(question);

@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -34,7 +35,12 @@ public class Question {
 
     @Column(nullable = false, length = 200)
     private String answer;
-  @ManyToMany(mappedBy = "questions")
+@ManyToMany
+@JoinTable(
+    name = "context_question",
+    joinColumns = @JoinColumn(name = "question_id"),
+    inverseJoinColumns = @JoinColumn(name = "context_id")
+)
     private List<Context> contexts = new ArrayList<>();
    
 };

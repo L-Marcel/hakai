@@ -1,7 +1,5 @@
 package app.hakai.backend.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +12,13 @@ public class ContextService {
     private ContextRepository contextRepository;
 
 
-    public List<Context> findByName(List<String> contextos) {
+    public Context findByName(String contexto) {
 
-        return contextRepository.findByNameIn(contextos);
-        
+        return contextRepository.findByName(contexto);
+
+    }
+
+    public Context save(Context context) {
+        return contextRepository.save(context);
     }
 }

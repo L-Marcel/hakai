@@ -11,8 +11,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -32,12 +30,8 @@ public class Context {
     @Column(nullable=false)
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-        name = "context_question",
-        joinColumns = @JoinColumn(name = "context_id"),
-        inverseJoinColumns = @JoinColumn(name = "question_id")
-    )  @JsonIgnore    
+    @ManyToMany(mappedBy = "contexts")
+@JsonIgnore 
     private List<Question> questions = new ArrayList<>();
 
 }
