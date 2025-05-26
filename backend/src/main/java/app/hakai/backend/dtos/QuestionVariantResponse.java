@@ -28,7 +28,7 @@ public class QuestionVariantResponse {
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
         this.original = question.getOriginal().getUuid();
-        this.context = question.getContexts().stream()
+        this.context = question.getOriginal().getContexts().stream()
             .map(Context::getName)
             .collect(Collectors.toList());
         if (hasAnswer) {
