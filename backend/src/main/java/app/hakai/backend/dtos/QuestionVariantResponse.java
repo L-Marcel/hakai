@@ -2,7 +2,9 @@ package app.hakai.backend.dtos;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import app.hakai.backend.models.Context;
 import app.hakai.backend.transients.QuestionVariant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +28,9 @@ public class QuestionVariantResponse {
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
         this.original = question.getOriginal().getUuid();
-        this.context =question.getContexts();
+        this.context = question.getContexts().stream()
+            .map(Context::getName)
+            .collect(Collectors.toList());
         if (hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
         };
