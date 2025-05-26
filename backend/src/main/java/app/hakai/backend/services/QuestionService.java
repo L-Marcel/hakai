@@ -15,7 +15,6 @@ import app.hakai.backend.models.Game;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.repositories.QuestionRepository;
 import app.hakai.backend.transients.Participant;
-import app.hakai.backend.transients.QuestionVariant;
 import app.hakai.backend.transients.Room;
 
 @Service
@@ -39,7 +38,7 @@ public class QuestionService {
     };
 
     public void startVariantsGeneration(Question question, Room room) {
-        this.pedagogicalAgent.generateRoomQuestionsVariants(question, variants -> {
+        this.pedagogicalAgent.generateRoomQuestionsVariants(question, room.getCode(), variants -> {
             this.roomEventPublisher.emitVariantsGenerated(room, variants);
         });
     };

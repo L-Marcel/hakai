@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import app.hakai.backend.dtos.GameRequest;
-import app.hakai.backend.dtos.QuestionRequest;
+import app.hakai.backend.dtos.CreateGameRequest;
+import app.hakai.backend.dtos.CreateQuestionRequest;
 import app.hakai.backend.errors.GameNotFound;
 import app.hakai.backend.models.Context;
 import app.hakai.backend.models.Game;
@@ -33,22 +33,22 @@ public class GameService {
         return this.gameRepository.findByOwnerUuid(user.getUuid());
     };
 
-      public Game createGame(GameRequest request, User user) {
+      public Game createGame(CreateGameRequest request, User user) {
         Game game = new Game();
-        game.setTitle(request.title());
+        game.setTitle(request.getTitle());
         game.setOwner(user);
 
         List<Question> questions = new ArrayList<>();
 
-        for (QuestionRequest qReq : request.questions()) {
+        for (CreateQuestionRequest qReq : request.getQuestions()) {
             Question question = new Question();
             question.setGame(game);
-            question.setQuestion(qReq.question());
-            question.setAnswer(qReq.answer());
-if (qReq.context() != null && !qReq.context().isEmpty()) {
+            question.setQuestion(qReq.getQuestion());
+            question.setAnswer(qReq.getAnswer());
+if (qReq.getContext() != null && !qReq.getContext().isEmpty()) {
     List<Context> contexts = new ArrayList<>();
     
-    for (String contextName : qReq.context()) {
+    for (String contextName : qReq.getContext()) {
         Context context = contextService.findByName(contextName);
 
         if (context == null) {

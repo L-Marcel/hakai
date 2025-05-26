@@ -57,8 +57,10 @@ public class AIChatbot implements Chatbot {
                     System.out.println("ABCD2");
                     try {
                         JsonNode root = objectMapper.readTree(responseBody);
-                        String responseText = root.path("choices").get(0).path("message").path("content").asText();
-                        callback.accept(Optional.of(responseText));
+                            String responseText = root.path("choices").get(0).path("message").path("content").asText();
+                        System.out.println("Resposta: " + responseText);
+                            callback.accept(Optional.of(responseText));
+                        
                     } catch (Exception e) {
                         System.out.println("Erro ao processar a resposta: " + e.getMessage());
                     };

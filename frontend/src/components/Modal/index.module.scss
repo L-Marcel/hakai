@@ -42,7 +42,7 @@
       margin: 0;
       font-size: 1.75rem;
       font-weight: 700;
-      color: $orange-600;
+      color: $orange-500;
     }
   
     .closeBtn {
@@ -190,7 +190,7 @@
       box-shadow: 0 4px 12px rgba($orange-600, 0.4);
   
       &:hover {
-        background: darken($orange-600, 5%);
+        background: $orange-600 ;
       }
     }
   }
