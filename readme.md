@@ -99,7 +99,7 @@ Agora, crie um arquivo `.env` na pasta `frontend` com o conteúdo idêntico ao a
 Feito isso, para executar `localmente`, uma vez dentro da pasta `frontend`, basta:
 
 ```cmd
-pnpm vite
+pnpm dev
 ```
 
 ## Tunelamento
@@ -113,11 +113,11 @@ Já deixamos uma variável de ambiente no arquivo de `.env.example` que represen
 Para executar com o `tunelamento`, use:
 
 ```cmd
-pnpm dev
+pnpm ngrok
 ```
 
 Ao invés de:
 
 ```cmd
-pnpm vite
+pnpm dev
 ```
