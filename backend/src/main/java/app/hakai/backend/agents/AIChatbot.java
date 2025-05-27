@@ -30,11 +30,19 @@ public class AIChatbot implements Chatbot {
     };
 
     @Override
-    public void request(String prompt, ChatbotCallback callback) {
+    public void request(
+        String systemPrompt, 
+        String prompt, 
+        ChatbotCallback callback
+    ) {
         try {
             Map<String, Object> requestBody = Map.of(
                 "model", "nousresearch/deephermes-3-mistral-24b-preview:free",
                 "messages", List.of(
+                    Map.of(
+                        "role", "system", 
+                        "content", systemPrompt
+                    ),
                     Map.of(
                         "role", "user", 
                         "content", prompt
@@ -53,19 +61,26 @@ public class AIChatbot implements Chatbot {
 
             httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                .thenAccept(responseBody -> {
-                    System.out.println("ABCD2");
+                .thenAccept((responseBody) -> {
                     try {
                         JsonNode root = objectMapper.readTree(responseBody);
-                            String responseText = root.path("choices").get(0).path("message").path("content").asText();
-                        System.out.println("Resposta: " + responseText);
-                            callback.accept(Optional.of(responseText));
+                        String responseText = root
+                            .path("choices")
+                            .get(0)
+                            .path("message")
+                            .path("content")
+                            .asText();
                         
+                        System.out.println("Resposta: " + responseText);
+                        callback.accept(Optional.of(responseText));
                     } catch (Exception e) {
-                        System.out.println("Erro ao processar a resposta: " + e.getMessage());
+                        System.out.println(
+                            "Erro ao processar a resposta: " + 
+                            e.getMessage()
+                        );
                     };
                 })
-                .exceptionally(e -> {
+                .exceptionally((e) -> {
                     callback.accept(Optional.empty());
                     return null;
                 });
