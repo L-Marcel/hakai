@@ -2,15 +2,15 @@ import { UUID } from "crypto";
 import { create } from "zustand";
 
 export enum Difficulty {
-  Easy = 1,
-  Medium = 2,
-  Hard = 3,
+  EASY = "EASY",
+  NORMAL = "NORMAL",
+  HARD = "HARD",
 }
 
 export const difficultyToString: Record<Difficulty, string> = {
-  [Difficulty.Easy]: "Fácil",
-  [Difficulty.Medium]: "Média",
-  [Difficulty.Hard]: "Difícil",
+  [Difficulty.EASY]: "Fácil",
+  [Difficulty.NORMAL]: "Média",
+  [Difficulty.HARD]: "Difícil",
 };
 
 export type Game = {

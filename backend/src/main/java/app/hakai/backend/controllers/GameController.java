@@ -20,16 +20,12 @@ import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
 import app.hakai.backend.services.GameService;
-import app.hakai.backend.services.QuestionService;
 
 @RestController
 @RequestMapping("/games")
 public class GameController {
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Autowired
     private AccessControlService accessControlService;
@@ -68,11 +64,6 @@ public class GameController {
         Game createdGame = gameService.createGame(
             body, 
             user
-        );
-
-        questionService.createAllQuestions(
-            createdGame, 
-            body.getQuestions()
         );
 
         GameResponse response = new GameResponse(createdGame);

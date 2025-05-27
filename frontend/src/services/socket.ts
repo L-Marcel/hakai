@@ -42,12 +42,14 @@ export function connect(
           setRoom(room);
         }
       );
+
       client.subscribe(
         `/channel/events/rooms/${code}/status`,
         (message) => {
           useGenerationStatus.getState().setGenerationStatus(message.body);
         }
       );
+
       if(participant && room) {
         client.subscribe(
           "/channel/events/rooms/" + code + "/participants/" + participant + "/question",

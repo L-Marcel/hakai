@@ -24,5 +24,5 @@ export default function OwnerGuard({ children }: Props) {
     else if(room) navigate("/home");
   }, [isOwner, code, room, game, navigate, user]);
 
-  return isOwner ? children : null;
+  return isOwner? children : null;
 }
