@@ -71,9 +71,9 @@ public class AIChatbot implements Chatbot {
                             .path("content")
                             .asText();
                         
-                        System.out.println("Resposta: " + responseText);
                         callback.accept(Optional.of(responseText));
                     } catch (Exception e) {
+                        callback.accept(Optional.empty());
                         System.out.println(
                             "Erro ao processar a resposta: " + 
                             e.getMessage()

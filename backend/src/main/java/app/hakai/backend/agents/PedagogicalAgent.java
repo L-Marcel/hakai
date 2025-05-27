@@ -72,7 +72,7 @@ public class PedagogicalAgent {
             }
         ]
 
-        REGRA 2: A resposta certa informada pelo professor SEMPRE deve aparecer EXATAMENTE igual nas opções de resposta de cada uma das variações geradas.
+        REGRA 2: A resposta certa informada pelo professor SEMPRE deve aparecer EXATAMENTE igual nas opções de resposta de cada uma das variações geradas. Sem nenhuma palavra ou símbolo a mais. Repito: EXATAMENTE igual.
 
         REGRA 3: Não coloque prefixos de listagem nas respostas, ex: A. B. C.; I. II. III. ou 1. 2. 3.
 

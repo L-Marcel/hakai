@@ -8,9 +8,9 @@ export enum Difficulty {
 }
 
 export const difficultyToString: Record<Difficulty, string> = {
-  [Difficulty.EASY]: "Fácil",
-  [Difficulty.NORMAL]: "Média",
-  [Difficulty.HARD]: "Difícil",
+  [Difficulty.EASY]: "fácil",
+  [Difficulty.NORMAL]: "média",
+  [Difficulty.HARD]: "difícil",
 };
 
 export type Game = {
