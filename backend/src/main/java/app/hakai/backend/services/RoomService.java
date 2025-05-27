@@ -1,7 +1,6 @@
 package app.hakai.backend.services;
 
 import java.security.SecureRandom;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class RoomService {
     public Room createRoom(
         Game game
     ) throws GameNotFound {
-        synchronized (repository) {
+        synchronized(repository) {
             if(repository.existsByUser(game.getOwner())) 
             throw new UserRoomAlreadyExists();
 

@@ -1,4 +1,4 @@
-package app.hakai.backend.dtos;
+package app.hakai.backend.dtos.response;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +21,9 @@ public class QuestionResponse {
         this.uuid = question.getUuid();
         this.question = question.getQuestion();
         this.answer = question.getAnswer();
-          this.context = question.getContexts().stream()
+        this.context = question.getContexts()
+            .stream()
             .map(Context::getName)
             .collect(Collectors.toList());
-    
     };
 };

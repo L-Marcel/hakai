@@ -20,7 +20,7 @@ export default function QuestionView({
   className,
   ...props
 }: Props) {
-  if (variant) {
+  if(variant) {
     const { difficulty, context, options, question, uuid } = variant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
@@ -62,7 +62,7 @@ export default function QuestionView({
         </ol>
       </article>
     );
-  } else if (question) {
+  } else if(question) {
     const { answer, question: content, uuid } = question;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");

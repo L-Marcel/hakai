@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.LoginRequestBody;
-import app.hakai.backend.dtos.RegisterRequestBody;
-import app.hakai.backend.dtos.UserResponse;
+import app.hakai.backend.dtos.request.RegisterRequestBody;
+import app.hakai.backend.dtos.response.LoginRequestBody;
+import app.hakai.backend.dtos.response.UserResponse;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.UserService;
 
@@ -39,11 +39,7 @@ public class UserController {
     public ResponseEntity<Void> createUser(
         @RequestBody RegisterRequestBody body
     ) {
-        service.createUser(
-            body.getEmail(),
-            body.getPassword(),
-            body.getName()
-        );
+        service.createUser(body);
 
         return ResponseEntity
             .status(HttpStatus.CREATED)

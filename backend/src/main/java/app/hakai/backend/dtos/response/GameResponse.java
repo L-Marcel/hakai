@@ -1,4 +1,4 @@
-package app.hakai.backend.dtos;
+package app.hakai.backend.dtos.response;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,8 +23,7 @@ public class GameResponse {
         this.questions = game.getQuestions()
             .stream()
             .map(QuestionResponse::new)
-            .collect(Collectors.toList()
-        );
+            .collect(Collectors.toList());
     };
 
     public static List<GameResponse> mapFromList(List<Game> games) {

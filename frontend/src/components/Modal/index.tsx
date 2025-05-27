@@ -27,7 +27,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
 
     function handleQuestionChange(idx: number, field: keyof QuestionRequest, value: string) {
         const copy = [...questions];
-        if (field === "context") {
+        if(field === "context") {
             copy[idx][field] = value.split(",").map((c) => c.trim());
         } else {
             (copy[idx] as any)[field] = value;
@@ -50,7 +50,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         }
     }
 
-    if (!isOpen) return null;
+    if(!isOpen) return null;
     return (
         <div className={styles.backdrop}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>

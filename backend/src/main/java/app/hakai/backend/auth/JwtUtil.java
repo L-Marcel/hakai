@@ -30,7 +30,7 @@ public class JwtUtil {
             .setExpiration(expirationDate)
             .signWith(key, SignatureAlgorithm.HS512)
             .compact();
-    }
+    };
 
     public UUID validateTokenAndGetUserId(String token) {
         Claims claims = Jwts
@@ -42,5 +42,5 @@ public class JwtUtil {
 
         String userId = claims.getSubject();
         return UUID.fromString(userId);
-    }
+    };
 };

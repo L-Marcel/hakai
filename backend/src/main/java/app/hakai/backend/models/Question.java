@@ -35,12 +35,12 @@ public class Question {
 
     @Column(nullable = false, length = 200)
     private String answer;
-@ManyToMany
-@JoinTable(
-    name = "context_question",
-    joinColumns = @JoinColumn(name = "question_id"),
-    inverseJoinColumns = @JoinColumn(name = "context_id")
-)
+
+    @ManyToMany
+    @JoinTable(
+        name = "context_question",
+        joinColumns = @JoinColumn(name = "question_id"),
+        inverseJoinColumns = @JoinColumn(name = "context_id")
+    )
     private List<Context> contexts = new ArrayList<>();
-   
 };

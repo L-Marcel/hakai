@@ -22,7 +22,6 @@ import app.hakai.backend.auth.JwtAuthFilter;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
@@ -36,14 +35,21 @@ public class SecurityConfig {
         HttpSecurity http
     ) throws Exception {
         return http
-                .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest()
-                        .permitAll())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+            .cors(Customizer.withDefaults())
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(
+                (auth) -> auth
+                    .anyRequest()
+                    .permitAll()
+            ).sessionManagement(
+                (session) -> session
+                    .sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS
+                    )
+            ).addFilterBefore(
+                jwtAuthFilter, 
+                UsernamePasswordAuthenticationFilter.class
+            ).build();
     };
 
     @Bean
@@ -59,10 +65,18 @@ public class SecurityConfig {
             "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
         
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(
+            Arrays.asList(
+                "Authorization", 
+                "Content-Type"
+            )
+        );
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration(
+            "/**", 
+            configuration
+        );
         return source;
     };
 };

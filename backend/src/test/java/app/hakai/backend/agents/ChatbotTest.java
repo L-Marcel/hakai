@@ -15,12 +15,13 @@ public class ChatbotTest {
     private Chatbot chatbot;
 
     @Test
-    void shouldSendResponse(){
+    void shouldSendResponse() {
         ChatbotCallback callback = Mockito.mock(ChatbotCallback.class);
 
         chatbot.request(
             "Você faz parte de um teste unitário de conexão.\n" + 
-            "Responda em menos de 20 segundos EXATAMENTE: Funciona!", 
+            "Responda em menos de 20 segundos EXATAMENTE: Funciona!",
+            "Rápido! Responda!",
             callback
         );
         

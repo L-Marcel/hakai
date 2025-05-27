@@ -5,7 +5,7 @@ export default function StatusToast() {
     const { generationStatus, setGenerationStatus } = useGenerationStatus();
 
     useEffect(() => {
-        if (!generationStatus) return;
+        if(!generationStatus) return;
         const timer = setTimeout(() => {
             setGenerationStatus(undefined);
         }, 4000);
@@ -13,7 +13,7 @@ export default function StatusToast() {
         return () => clearTimeout(timer);
     }, [generationStatus, setGenerationStatus]);
 
-    if (!generationStatus) return null;
+    if(!generationStatus) return null;
 
     return <div className={styles.toast}>{generationStatus}</div>;
   };

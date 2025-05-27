@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import app.hakai.backend.models.Context;
 
 @Repository
-public interface ContextRepository extends  JpaRepository<Context, UUID>{
-    Context findByName(String name);
-}
+public interface ContextRepository extends JpaRepository<Context, UUID> {
+    Boolean existsByName(String name);
+};

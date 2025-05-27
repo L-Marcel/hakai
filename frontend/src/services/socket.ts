@@ -25,7 +25,7 @@ export function connect(
   const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
   const { setVariants, setQuestion } = useGame.getState();
 
-  if (oldClient && oldClient.connected) return;
+  if(oldClient && oldClient.connected) return;
 
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
@@ -48,7 +48,7 @@ export function connect(
           useGenerationStatus.getState().setGenerationStatus(message.body);
         }
       );
-      if (participant && room) {
+      if(participant && room) {
         client.subscribe(
           "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
           (message) => {
@@ -58,9 +58,9 @@ export function connect(
         );
       }
 
-      if (participant) getRoom(code);
+      if(participant) getRoom(code);
 
-      if (isOwner) {
+      if(isOwner) {
         client.subscribe(
           "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {

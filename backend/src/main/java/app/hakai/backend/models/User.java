@@ -13,10 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -36,7 +38,6 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)@JsonIgnore      
     private List<Game> games;
 
-    public User() {};
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;

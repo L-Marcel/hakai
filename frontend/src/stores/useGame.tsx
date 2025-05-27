@@ -50,10 +50,10 @@ const useGame = create<GameStore>((set) => ({
   setGame: (game?: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
-      if (variants.length === 0 || !state.game) return state;
+      if(variants.length === 0 || !state.game) return state;
 
       const questions = state.game.questions.map((question) => {
-        if (question.uuid === variants[0].original) {
+        if(question.uuid === variants[0].original) {
           return {
             ...question,
             variants,

@@ -1,4 +1,4 @@
-package app.hakai.backend.dtos;
+package app.hakai.backend.dtos.response;
 
 import java.util.List;
 import java.util.UUID;

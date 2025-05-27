@@ -13,7 +13,7 @@ public class KeySourceTest {
     private KeySource keySource;
 
     @Test
-    void shouldReturnSomeKey(){
+    void shouldReturnSomeKey() {
         assertNotEquals(keySource.getKeys().length, 0);
         for(int i = 1; i < keySource.getKeys().length * 2; i++) {
             String key = keySource.getKey();

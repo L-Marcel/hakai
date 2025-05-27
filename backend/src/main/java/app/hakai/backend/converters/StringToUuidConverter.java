@@ -6,7 +6,9 @@ import org.springframework.core.convert.converter.Converter;
 
 public class StringToUuidConverter implements Converter<String, UUID> {
     @Override
-    public UUID convert(@SuppressWarnings("null") String source){
+    public UUID convert(
+        @SuppressWarnings("null") String source
+    ) {
         try {
             return UUID.fromString(source);
         } catch (IllegalArgumentException e) {

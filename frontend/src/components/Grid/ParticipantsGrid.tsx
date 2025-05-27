@@ -32,7 +32,7 @@ export default function ParticipantsMansoryGrid({
           return acc;
         }, [] as RankedParticipant[])
         .map(({ nickname, uuid, score, rank }) => {
-          if (ranked) {
+          if(ranked) {
             return (
               <li id="ranked" key={uuid}>
                 {userIsRoomOwner && <button onClick={() => kick(uuid)}><FaX/></button> }
