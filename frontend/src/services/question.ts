@@ -19,7 +19,10 @@ export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
     {
       code,
       original,
-      variants
+      variants: variants.map((variant) => ({
+        ...variant,
+        original: undefined
+      }))
     }
   );
 }

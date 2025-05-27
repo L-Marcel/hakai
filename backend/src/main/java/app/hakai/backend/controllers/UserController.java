@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.annotations.RequireAuth;
+import app.hakai.backend.dtos.request.LoginRequestBody;
 import app.hakai.backend.dtos.request.RegisterRequestBody;
-import app.hakai.backend.dtos.response.LoginRequestBody;
 import app.hakai.backend.dtos.response.UserResponse;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.UserService;

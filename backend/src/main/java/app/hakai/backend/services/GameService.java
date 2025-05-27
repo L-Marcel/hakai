@@ -1,9 +1,9 @@
 package app.hakai.backend.services;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +15,12 @@ import app.hakai.backend.models.Context;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.models.User;
-import app.hakai.backend.repositories.ContextRepository;
 import app.hakai.backend.repositories.GameRepository;
 
 @Service
 public class GameService {
     @Autowired
     private GameRepository gameRepository;
-
-    @Autowired
-    private ContextRepository contextRepository;
 
     public Game findGameById(UUID uuid) throws GameNotFound {
         return this.gameRepository.findById(uuid)
@@ -39,10 +35,8 @@ public class GameService {
         CreateGameRequestBody body,
         User user
     ) {
-        String title = body.getTitle();
-        
         Game game = new Game();
-        game.setTitle(title);
+        game.setTitle(body.getTitle());
         game.setOwner(user);
 
         List<Question> questions = new ArrayList<>();
@@ -53,20 +47,18 @@ public class GameService {
             question.setQuestion(questionBody.getQuestion());
             question.setAnswer(questionBody.getAnswer());
 
+            List<Context> contexts = new LinkedList<>();
             List<String> contextNames = questionBody.getContext();
             if (contextNames != null && !contextNames.isEmpty()) {
-                List<Context> contexts = contextNames
-                    .stream()
-                    .map(Context::new)
-                    .map(
-                        (context) -> contextRepository
-                            .findByName(context.getName())
-                            .orElse(contextRepository.save(context))
-                    ).collect(Collectors.toList());
-
-                question.setContexts(contexts);
+                for(String contextName : contextNames) {
+                    Context context = new Context();
+                    context.setName(contextName);
+                    context.setQuestion(question);
+                    contexts.add(context);
+                };
             };
 
+            question.setContexts(contexts);
             questions.add(question);
         };
 
