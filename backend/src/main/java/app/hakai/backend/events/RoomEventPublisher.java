@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import app.hakai.backend.dtos.QuestionVariantResponse;
-import app.hakai.backend.dtos.RoomResponse;
+import app.hakai.backend.dtos.response.QuestionVariantResponse;
+import app.hakai.backend.dtos.response.RoomResponse;
 import app.hakai.backend.transients.QuestionVariant;
 import app.hakai.backend.transients.Room;
 
@@ -31,31 +31,45 @@ public class RoomEventPublisher {
         );
     };
 
-    public void emitVariantsGenerated(Room room, List<QuestionVariant> list) {
+    public void emitVariantsGenerated(
+        Room room, 
+        List<QuestionVariant> variants
+    ) {
         simp.convertAndSend(
             "/channel/events/rooms/" + room.getCode() + 
             "/" + room.getGame().getOwner().getUuid().toString() + 
             "/variants",
-            list.stream().map(
-                (QuestionVariant question) -> new QuestionVariantResponse(
-                    question, 
+            variants.stream().map(
+                (variant) -> new QuestionVariantResponse(
+                    variant, 
                     true
                 )
             )
         );
     };
 
-    public void emitVariantsByDifficulty(String code, UUID participant, QuestionVariantResponse selected) {
+    public void emitVariantIntended(
+        Room room, 
+        UUID participant, 
+        QuestionVariant variant
+    ) {
         simp.convertAndSend(
-            "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
-            selected
+            "/channel/events/rooms/" + room.getCode() + 
+            "/participants/" + participant + "/question",
+            new QuestionVariantResponse(
+                variant, 
+                false
+            )
         );
-    }
-    public void emitGenerationStatus(String roomCode, String status) {
+    };
+    
+    public void emitGenerationStatus(
+        Room room, 
+        String status
+    ) {
         simp.convertAndSend(
-            "/channel/events/rooms/" + roomCode + "/status",
+            "/channel/events/rooms/" + room.getCode() + "/status",
             status
         );
-    }
-    
+    };
 };

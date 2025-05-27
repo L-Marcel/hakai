@@ -45,7 +45,7 @@ function Page() {
 
   const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
-    if (questions.length === 0) return undefined;
+    if(questions.length === 0) return undefined;
     const questionIndex = index % questions.length;
     return questions[questionIndex];
   }, [index, questions]);

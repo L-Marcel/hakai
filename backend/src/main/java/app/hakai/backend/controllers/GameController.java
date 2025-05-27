@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.CreateGameRequest;
-import app.hakai.backend.dtos.GameResponse;
+import app.hakai.backend.dtos.request.CreateGameRequestBody;
+import app.hakai.backend.dtos.response.GameResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
@@ -56,10 +56,18 @@ public class GameController {
     };
 
     @PostMapping
-      @RequireAuth
-    public ResponseEntity<?> createGame(@RequestBody CreateGameRequest request, @AuthenticationPrincipal User user) {
-        Game saved = gameService.createGame(request, user);
+    @RequireAuth
+    public ResponseEntity<?> createGame(
+        @RequestBody CreateGameRequestBody body, 
+        @AuthenticationPrincipal User user
+    ) {
+        Game createdGame = gameService.createGame(
+            body, 
+            user
+        );
 
-        return ResponseEntity.ok(new GameResponse(saved));
-    }
+        GameResponse response = new GameResponse(createdGame);
+        
+        return ResponseEntity.ok(response);
+    };
 };

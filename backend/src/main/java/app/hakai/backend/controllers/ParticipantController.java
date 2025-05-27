@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.AnswerQuestionRequestBody;
-import app.hakai.backend.dtos.ParticipantResponse;
+import app.hakai.backend.dtos.request.AnswerQuestionRequestBody;
+import app.hakai.backend.dtos.response.ParticipantResponse;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.ParticipantService;
@@ -33,7 +33,7 @@ public class ParticipantController {
     @GetMapping("/me")
     public ResponseEntity<ParticipantResponse> findParticipantByUser(
         @AuthenticationPrincipal User user
-    ){
+    ) {
         Participant participant = participantService.findParticipantByUser(user);
         ParticipantResponse response = new ParticipantResponse(participant);
 

@@ -41,7 +41,7 @@ export async function load(
     })
     .then((response) => setUser(response.data))
     .catch((error: HttpError) => {
-      if (error.status === 401) logout(store);
+      if(error.status === 401) logout(store);
       throw error;
     });
 }

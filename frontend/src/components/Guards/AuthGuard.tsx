@@ -15,7 +15,7 @@ export default function AuthGuard({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!!user === onlyUnauthenticated)
+    if(!!user === onlyUnauthenticated)
       navigate(onlyUnauthenticated ? "/dashboard" : "/home");
   }, [user, onlyUnauthenticated, navigate]);
 

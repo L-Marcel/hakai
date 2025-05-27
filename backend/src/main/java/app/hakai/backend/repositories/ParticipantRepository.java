@@ -27,7 +27,7 @@ public class ParticipantRepository {
     };
 
     private Optional<Participant> find(Function<Participant, Boolean> search) {
-        synchronized (this.participants) {
+        synchronized(this.participants) {
             for(Participant participant : this.participants) {
                 if(search.apply(participant))
                     return Optional.of(participant);
@@ -38,14 +38,14 @@ public class ParticipantRepository {
     };
 
     public Optional<Participant> findByUser(User user) {
-        return this.find((Participant participant) -> {
+        return this.find((participant) -> {
             return participant.getUser().isPresent() && 
                 participant.getUser().get().getUuid().equals(user.getUuid());
         });
     };
 
     public Optional<Participant> findByUuid(UUID uuid) {
-        return this.find((Participant participant) -> {
+        return this.find((participant) -> {
             return participant.getUuid().equals(uuid);
         });
     };

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.stereotype.Repository;
@@ -28,7 +27,7 @@ public class RoomRepository {
     };
 
     private Optional<Room> find(Function<Room, Boolean> search) {
-        synchronized (this.rooms) {
+        synchronized(this.rooms) {
             for(Room room : this.rooms) {
                 if(search.apply(room))
                     return Optional.of(room);
@@ -39,19 +38,24 @@ public class RoomRepository {
     };
 
     public Optional<Room> findByUser(User user) {
-        return this.find((Room room) -> {
-            return room.getGame().getOwner().getUuid().equals(user.getUuid());
+        return this.find((room) -> {
+            return room.getGame()
+                .getOwner()
+                .getUuid()
+                .equals(user.getUuid());
         });
     };
 
     public Optional<Room> findByGame(Game game) {
-        return this.find((Room room) -> {
-            return room.getGame().getUuid().equals(game.getUuid());
+        return this.find((room) -> {
+            return room.getGame()
+                .getUuid()
+                .equals(game.getUuid());
         });
     };
 
     public Optional<Room> findByCode(String code) {
-        return this.find((Room room) -> {
+        return this.find((room) -> {
             return room.getCode().equals(code);
         });
     };

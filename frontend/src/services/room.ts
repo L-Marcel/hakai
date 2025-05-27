@@ -28,7 +28,6 @@ export async function close(): Promise<void> {
 
 export async function create(game: UUID): Promise<string> {
   return await api.post<Room>("rooms", { game }).then((response) => {
-    connect(response.data.code);
     return response.data.code;
   });
 }

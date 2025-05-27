@@ -10,7 +10,7 @@ import app.hakai.backend.transients.Room;
 @Service
 public class AccessControlService {
     public void checkGameOwnership(User user, Game game) {
-        if (!game.getOwner().getUuid().equals(user.getUuid())) 
+        if(!game.getOwner().getUuid().equals(user.getUuid())) 
             throw new AccessDenied();
     };
 

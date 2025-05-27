@@ -1,4 +1,4 @@
-package app.hakai.backend.dtos;
+package app.hakai.backend.dtos.request;
 
 import lombok.Getter;
 import lombok.Setter;

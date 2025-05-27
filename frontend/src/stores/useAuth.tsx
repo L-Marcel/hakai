@@ -27,7 +27,7 @@ const useAuth = create<AuthStore>()(
       partialize: (state: AuthStore) => ({ token: state.token }),
       onRehydrateStorage: () => {
         return (state?: AuthStore, error?: unknown) => {
-          if (state?.token && !error) load(state);
+          if(state?.token && !error) load(state);
         };
       },
     }

@@ -1,20 +1,21 @@
 package app.hakai.backend.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.hakai.backend.agents.PedagogicalAgent;
-import app.hakai.backend.dtos.QuestionVariantResponse;
+import app.hakai.backend.dtos.request.SendQuestionVariantsRequestBody;
 import app.hakai.backend.errors.QuestionNotFound;
 import app.hakai.backend.events.RoomEventPublisher;
-import app.hakai.backend.models.Difficulty;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.Question;
 import app.hakai.backend.repositories.QuestionRepository;
 import app.hakai.backend.transients.Participant;
+import app.hakai.backend.transients.QuestionVariant;
 import app.hakai.backend.transients.Room;
 
 @Service
@@ -38,28 +39,39 @@ public class QuestionService {
     };
 
     public void startVariantsGeneration(Question question, Room room) {
-        this.pedagogicalAgent.generateRoomQuestionsVariants(question, room.getCode(), variants -> {
-            this.roomEventPublisher.emitVariantsGenerated(room, variants);
-        });
+        this.pedagogicalAgent.generateRoomQuestionsVariants(
+            question,
+            room, 
+            (variants) -> {
+                this.roomEventPublisher.emitVariantsGenerated(room, variants);
+            }
+        );
     };
 
     public void sendVariantByDifficulty( 
-        List<Participant> participants, 
-        String roomCode, 
-        UUID originaluUuid, 
-        List<QuestionVariantResponse> variants
+        SendQuestionVariantsRequestBody body,
+        Question original,
+        Room room
     ) {
-        for (Participant p : participants) {
-            Difficulty currentDifficulty = p.getCurrentDifficulty();
+        List<Participant> participants = room.getParticipants();
+        List<QuestionVariant> variants = body.getVariants();
 
-            QuestionVariantResponse selected = variants.stream()
-                .filter(v -> Difficulty.values()[v.getDifficulty() - 1] == currentDifficulty)
-                .findFirst()
-                .orElse(null);
-
-            if (selected == null) continue;
-
-            roomEventPublisher.emitVariantsByDifficulty(roomCode, p.getUuid(), selected);
+        synchronized(participants) {
+            for (Participant participant : participants) {
+                Optional<QuestionVariant> selected = variants.stream()
+                    .filter(
+                        (variant) -> variant.getDifficulty() == participant.getCurrentDifficulty()
+                    ).findFirst();
+    
+                if(selected.isEmpty()) continue;
+                
+                selected.get().setOriginal(original);
+                roomEventPublisher.emitVariantIntended(
+                    room, 
+                    participant.getUuid(),
+                    selected.get()
+                );
+            };
         }
-    }
+    };
 };

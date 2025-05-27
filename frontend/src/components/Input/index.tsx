@@ -12,7 +12,7 @@ export default function Input({
   const classes = [styles.input, className];
   const isPassword = type === "password";
   const finalType = isPassword && show ? "text" : type;
-  if (isPassword) classes.push(styles.passwordInput);
+  if(isPassword) classes.push(styles.passwordInput);
   const finalClassName = classes.join(" ");
 
   const onClickShowButton = () => {

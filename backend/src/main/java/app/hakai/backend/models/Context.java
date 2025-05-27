@@ -14,15 +14,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "contexts")
 public class Context {
-
-
     @Id
     @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
@@ -31,7 +31,10 @@ public class Context {
     private String name;
 
     @ManyToMany(mappedBy = "contexts")
-@JsonIgnore 
+    @JsonIgnore 
     private List<Question> questions = new ArrayList<>();
 
-}
+    public Context(String name) {
+        this.name = name;
+    };
+};

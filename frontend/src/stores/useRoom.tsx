@@ -34,9 +34,9 @@ const useRoom = create<RoomStore>((set, get) => ({
     set({ room });
     
     const { participant } = get();
-    if (participant) {
+    if(participant) {
       const updated = room?.participants.find(p => p.uuid === participant.uuid);
-      if (updated) {
+      if(updated) {
         set({ participant: updated });
       } else {
         disconnect();

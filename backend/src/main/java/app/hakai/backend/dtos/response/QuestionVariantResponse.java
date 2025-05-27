@@ -1,10 +1,11 @@
-package app.hakai.backend.dtos;
+package app.hakai.backend.dtos.response;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import app.hakai.backend.models.Context;
+import app.hakai.backend.models.Difficulty;
 import app.hakai.backend.transients.QuestionVariant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +17,25 @@ import lombok.Setter;
 public class QuestionVariantResponse {
     private UUID uuid;
     private String question;
-    private int difficulty = 0;
+    private Difficulty difficulty = Difficulty.NORMAL;
     private List<String> options;
     private List<String> context;
     private UUID original;
     private String answer;
 
-    public QuestionVariantResponse(QuestionVariant question, boolean hasAnswer){
+    public QuestionVariantResponse(QuestionVariant question, boolean hasAnswer) {
         this.uuid = question.getUuid();
         this.question = question.getQuestion();
         this.difficulty = question.getDifficulty();
         this.options = question.getOptions();
         this.original = question.getOriginal().getUuid();
-        this.context = question.getOriginal().getContexts().stream()
+        this.context = question.getOriginal()
+            .getContexts()
+            .stream()
             .map(Context::getName)
             .collect(Collectors.toList());
-        if (hasAnswer) {
+
+        if(hasAnswer) {
             this.answer = question.getOriginal().getAnswer();
         };
     };

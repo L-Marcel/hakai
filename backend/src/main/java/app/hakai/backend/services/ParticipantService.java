@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.hakai.backend.dtos.request.JoinRoomRequestBody;
 import app.hakai.backend.errors.ParticipantAlreadyInRoom;
 import app.hakai.backend.errors.ParticipantNotFound;
 import app.hakai.backend.events.RoomEventPublisher;
@@ -49,16 +50,17 @@ public class ParticipantService {
     };
     
     public Participant createParticipant(
-        String nickname, 
+        JoinRoomRequestBody body, 
         Room room, 
         User user
     ) throws ParticipantAlreadyInRoom {
+        String nickname = body.getNickname();
         Participant participant;
 
         if(user != null) participant = new Participant(nickname, room, user);
         else participant = new Participant(nickname, room);
 
-        synchronized (room.getParticipants()) {
+        synchronized(room.getParticipants()) {
             boolean alreadyInRoom = this.isParticipantAlreadyInRoom(room, participant);
             if(alreadyInRoom) throw new ParticipantAlreadyInRoom();
 
@@ -86,7 +88,7 @@ public class ParticipantService {
     };
 
     public void removeAllByRoom(Room room) {
-        synchronized (room.getParticipants()) {
+        synchronized(room.getParticipants()) {
             for (Participant participant : room.getParticipants()) {
                 this.repository.remove(participant);
             };
@@ -94,7 +96,7 @@ public class ParticipantService {
     };
 
     public void removeParticipant(Participant participant) {
-        synchronized (participant.getRoom().getParticipants()) {
+        synchronized(participant.getRoom().getParticipants()) {
             participant.getRoom().getParticipants().remove(participant);
             this.repository.remove(participant);
         };

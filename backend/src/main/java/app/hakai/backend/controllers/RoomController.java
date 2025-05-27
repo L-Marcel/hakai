@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.dtos.RoomResponse;
+import app.hakai.backend.dtos.request.CreateRoomRequestBody;
+import app.hakai.backend.dtos.request.JoinRoomRequestBody;
+import app.hakai.backend.dtos.response.ParticipantResponse;
+import app.hakai.backend.dtos.response.RoomResponse;
 import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.CreateRoomRequestBody;
-import app.hakai.backend.dtos.JoinRoomRequestBody;
-import app.hakai.backend.dtos.ParticipantResponse;
 import app.hakai.backend.models.Game;
 import app.hakai.backend.models.User;
 import app.hakai.backend.services.AccessControlService;
@@ -93,7 +93,7 @@ public class RoomController {
     @GetMapping
     public ResponseEntity<RoomResponse> findRoomByUser(
         @AuthenticationPrincipal User user
-    ){
+    ) {
         Room room = roomService.findRoomByUser(user);
         RoomResponse response = new RoomResponse(room);
 
@@ -103,7 +103,7 @@ public class RoomController {
     @GetMapping("/{code}")
     public ResponseEntity<RoomResponse> findRoomByCode(
         @PathVariable String code
-    ){
+    ) {
         Room room = roomService.findRoomByCode(code);
         RoomResponse response = new RoomResponse(room);
 
@@ -118,7 +118,7 @@ public class RoomController {
     ) {
         Room room = roomService.findRoomByCode(code);
         Participant participant = participantService.createParticipant(
-            body.getNickname(), 
+            body, 
             room,
             user
         );

@@ -14,7 +14,7 @@ export default function DashboardGuard({ children }: Props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!room) {
+    if(!room) {
       getOpenRoom()
         .then((room) => {
           navigate("/room/panel/" + room.code);

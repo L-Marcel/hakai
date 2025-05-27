@@ -55,17 +55,18 @@ public class Participant {
         this.wrongAnswers += 1;
     };
 
-    public Difficulty setNetxDifficulty(Boolean isCorrect){
+    public Difficulty setNetxDifficulty(
+        Boolean isCorrect
+    ) {
         Difficulty[] difficulties = Difficulty.values();
         int index = currentDifficulty.ordinal();
 
-        if (isCorrect && index < difficulties.length - 1) {
+        if(isCorrect && index < difficulties.length - 1) {
             return currentDifficulty = difficulties[index + 1];
-        } 
-        else if (!isCorrect && index > 0) {
+        } else if(!isCorrect && index > 0) {
             return currentDifficulty = difficulties[index - 1];
-        }
+        };
 
         return currentDifficulty;
-    }
+    };
 };

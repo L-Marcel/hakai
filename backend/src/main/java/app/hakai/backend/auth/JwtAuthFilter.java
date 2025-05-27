@@ -33,22 +33,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException, java.io.IOException {
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if(authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
             try {
                 UUID uuid = jwtUtil.validateTokenAndGetUserId(token);
                 User user = usersRepository.findById(uuid)
                     .orElseThrow(
                         () -> new RuntimeException("User not found")
                     );
+                
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, 
                     null,
                     List.of()
                 );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                
+                SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(authentication);
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+                response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, 
+                    "Token inválido"
+                );
+                
                 return;
             }
         };
