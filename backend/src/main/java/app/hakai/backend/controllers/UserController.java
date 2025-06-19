@@ -1,5 +1,11 @@
 package app.hakai.backend.controllers;
 
+import org.kahai.framework.annotations.RequireAuth;
+import org.kahai.framework.dtos.request.LoginRequestBody;
+import org.kahai.framework.dtos.request.RegisterRequestBody;
+import org.kahai.framework.dtos.response.UserResponse;
+import org.kahai.framework.models.User;
+import org.kahai.framework.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.request.LoginRequestBody;
-import app.hakai.backend.dtos.request.RegisterRequestBody;
-import app.hakai.backend.dtos.response.UserResponse;
-import app.hakai.backend.models.User;
-import app.hakai.backend.services.UserService;
 
 @RestController
 @RequestMapping("/users")
