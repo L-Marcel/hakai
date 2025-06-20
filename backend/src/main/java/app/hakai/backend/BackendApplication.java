@@ -1,11 +1,11 @@
 package app.hakai.backend;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.kahai.framework.Kahai;
+import org.kahai.framework.KahaiApplication;
 
-@SpringBootApplication
+@Kahai
 public class BackendApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		KahaiApplication.run(BackendApplication.class, args);
 	};
 };

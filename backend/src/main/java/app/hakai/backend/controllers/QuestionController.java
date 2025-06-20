@@ -2,6 +2,14 @@ package app.hakai.backend.controllers;
 
 import java.util.UUID;
 
+import org.kahai.framework.annotations.RequireAuth;
+import org.kahai.framework.dtos.request.SendQuestionVariantsRequestBody;
+import org.kahai.framework.models.Question;
+import org.kahai.framework.models.User;
+import org.kahai.framework.services.QuestionService;
+import org.kahai.framework.services.RoomService;
+import org.kahai.framework.services.strategies.VariantsDistributionByDifficulty;
+import org.kahai.framework.transients.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.request.SendQuestionVariantsRequestBody;
-import app.hakai.backend.models.Question;
-import app.hakai.backend.models.User;
-import app.hakai.backend.services.QuestionService;
-import app.hakai.backend.services.RoomService;
-import app.hakai.backend.transients.Room;
+import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/questions")
@@ -28,6 +30,13 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
+
+    @PostConstruct
+    public void setUpStrategies() {
+        this.questionService.setDistributionStrategy(
+            new VariantsDistributionByDifficulty()
+        );
+    };
 
     @RequireAuth
     @PostMapping("/{uuid}/generate")
@@ -49,10 +58,9 @@ public class QuestionController {
         @RequestBody SendQuestionVariantsRequestBody body
     ) {
         Room room = roomService.findRoomByCode(body.getCode());
-        Question original = questionService.findQuestionById(body.getOriginal());
-        questionService.sendVariantByDifficulty(
-            body,
-            original,
+        questionService.sendVariant(
+            body.getVariants(),
+            body.getOriginal(),
             room
         );
 

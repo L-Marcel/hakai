@@ -3,6 +3,13 @@ package app.hakai.backend.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.kahai.framework.annotations.RequireAuth;
+import org.kahai.framework.dtos.request.CreateGameRequestBody;
+import org.kahai.framework.dtos.response.GameResponse;
+import org.kahai.framework.models.Game;
+import org.kahai.framework.models.User;
+import org.kahai.framework.services.AccessControlService;
+import org.kahai.framework.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,14 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.request.CreateGameRequestBody;
-import app.hakai.backend.dtos.response.GameResponse;
-import app.hakai.backend.models.Game;
-import app.hakai.backend.models.User;
-import app.hakai.backend.services.AccessControlService;
-import app.hakai.backend.services.GameService;
 
 @RestController
 @RequestMapping("/games")

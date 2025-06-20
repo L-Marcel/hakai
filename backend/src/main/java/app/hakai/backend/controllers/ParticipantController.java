@@ -1,5 +1,13 @@
 package app.hakai.backend.controllers;
 
+import org.kahai.framework.annotations.RequireAuth;
+import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
+import org.kahai.framework.dtos.response.ParticipantResponse;
+import org.kahai.framework.models.Question;
+import org.kahai.framework.models.User;
+import org.kahai.framework.services.ParticipantService;
+import org.kahai.framework.services.QuestionService;
+import org.kahai.framework.transients.Participant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import app.hakai.backend.annotations.RequireAuth;
-import app.hakai.backend.dtos.request.AnswerQuestionRequestBody;
-import app.hakai.backend.dtos.response.ParticipantResponse;
-import app.hakai.backend.models.Question;
-import app.hakai.backend.models.User;
-import app.hakai.backend.services.ParticipantService;
-import app.hakai.backend.services.QuestionService;
-import app.hakai.backend.transients.Participant;
 
 @RestController
 @RequestMapping("/participants")
