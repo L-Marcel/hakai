@@ -48,10 +48,9 @@ public class QuestionController {
         @RequestBody SendQuestionVariantsRequestBody body
     ) {
         Room room = roomService.findRoomByCode(body.getCode());
-        Question original = questionService.findQuestionById(body.getOriginal());
-        questionService.sendVariantByDifficulty(
-            body,
-            original,
+        questionService.sendVariant(
+            body.getVariants(),
+            body.getOriginal(),
             room
         );
 
