@@ -8,7 +8,6 @@ import org.kahai.framework.models.Question;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
-import org.kahai.framework.services.strategies.VariantsDistributionByDifficulty;
 import org.kahai.framework.transients.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.strategies.VariantsDistributionByDifficulty;
 import jakarta.annotation.PostConstruct;
 
 @RestController
