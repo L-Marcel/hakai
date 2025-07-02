@@ -38,7 +38,16 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError(null);
-        const payload: GameRequest = { title, questions };
+
+        const questionsWithType = questions.map(q => ({
+            type: q.type ?? "CreateConcreteQuestionRequestBody",
+            question: q.question,
+            answer: q.answer,
+            context: q.context,
+        }));
+
+        const payload: GameRequest = { title, questions: questionsWithType };
+
         try {
             const created = await createGame(payload);
             onGameCreated(created);
@@ -48,7 +57,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         } catch (err: any) {
             setError(err.message || "Erro ao criar o jogo");
         }
-    }
+      }
 
     if(!isOpen) return null;
     return (

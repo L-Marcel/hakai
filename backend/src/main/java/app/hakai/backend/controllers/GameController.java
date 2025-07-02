@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/games")
 public class GameController {
+
     @Autowired
     private GameService gameService;
 
@@ -32,41 +33,46 @@ public class GameController {
     @RequireAuth
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> findGame(
-        @PathVariable UUID uuid,
-        @AuthenticationPrincipal User user
+            @PathVariable UUID uuid,
+            @AuthenticationPrincipal User user
     ) {
         Game game = gameService.findGameById(uuid);
         accessControlService.checkGameOwnership(user, game);
 
         GameResponse response = new GameResponse(game);
-        
+
         return ResponseEntity.ok(response);
-    };
+    }
+
+    ;
 
     @GetMapping
     @RequireAuth
     public ResponseEntity<List<GameResponse>> findGamesByUser(
-        @AuthenticationPrincipal User user
+            @AuthenticationPrincipal User user
     ) {
         List<Game> games = gameService.findGamesByUser(user);
         List<GameResponse> response = GameResponse.mapFromList(games);
-        
+
         return ResponseEntity.ok(response);
-    };
+    }
+
+    ;
 
     @PostMapping
     @RequireAuth
-    public ResponseEntity<?> createGame(
-        @RequestBody CreateGameRequestBody body, 
-        @AuthenticationPrincipal User user
+    public ResponseEntity<GameResponse> createGame(
+            @RequestBody CreateGameRequestBody body,
+            @AuthenticationPrincipal User user
     ) {
         Game createdGame = gameService.createGame(
-            body, 
-            user
+                body,
+                user
         );
 
         GameResponse response = new GameResponse(createdGame);
-        
+
         return ResponseEntity.ok(response);
-    };
+    }
+;
 };
