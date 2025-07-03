@@ -1,10 +1,16 @@
 package app.hakai.backend.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
+import org.kahai.framework.models.Answer;
+import org.kahai.framework.models.Game;
 import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.models.User;
+import org.kahai.framework.services.ParticipantAnswerService;
 import org.kahai.framework.services.ParticipantService;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.transients.Participant;
@@ -26,6 +32,9 @@ public class ParticipantController {
     private ParticipantService participantService;
 
     @Autowired
+    private ParticipantAnswerService answerService;
+
+    @Autowired
     private QuestionService questionService;
     
     @RequireAuth
@@ -41,6 +50,7 @@ public class ParticipantController {
 
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
+        @AuthenticationPrincipal User user,
         @RequestBody AnswerQuestionRequestBody body
     ) {
         Question question = questionService.findQuestionById(
@@ -50,11 +60,28 @@ public class ParticipantController {
         Participant participant = participantService.findParticipantByUuid(
             body.getParticipant()
         );
-
+        
         participantService.answerQuestion(
             question, 
             participant, 
-            body.getAnswer()
+            body.getAnswers()
+        );
+
+        UUID session = participant.getRoom().getSession();
+        Game game = participant.getRoom().getGame();
+        String nickname = participant.getNickname();
+        
+        List<Answer> answers = Answer.fromList(
+            body.getAnswers()
+        );
+
+        answerService.createParticipantAnswer(
+            session, 
+            game, 
+            user,
+            question, 
+            nickname,
+            answers
         );
 
         return ResponseEntity

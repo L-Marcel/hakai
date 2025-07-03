@@ -4,7 +4,7 @@ import api from "./axios";
 export interface QuestionRequest {
   type?: string,
   question: string;
-  answer: string;
+  answers: string[];
   context: string[]; 
 }
 
@@ -13,7 +13,7 @@ export interface GameRequest {
   questions: QuestionRequest[];
 }
 
-export async function request(uuid?: UUID): Promise<void> {
+export async function getGame(uuid?: UUID): Promise<void> {
   const { setGame } = useGame.getState();
 
   return await api.get<Game>(`games/${uuid}`).then((response) => {
@@ -21,7 +21,7 @@ export async function request(uuid?: UUID): Promise<void> {
   });
 }
 
-export async function requestAllGames(): Promise<Game[]> {
+export async function getAllGames(): Promise<Game[]> {
   return await api.get<Game[]>("games").then((response) => {
     return response.data;
   });

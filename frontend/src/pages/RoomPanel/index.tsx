@@ -49,12 +49,14 @@ function Page() {
     const questionIndex = index % questions.length;
     return questions[questionIndex];
   }, [index, questions]);
-  const correctAnswerText = useMemo(() => {
 
+  const correctAnswerText = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const questionWithAnswers = question as any;
     if (questionWithAnswers?.answers && questionWithAnswers.answers.length > 0) {
       return questionWithAnswers.answers[0].text;
-    }
+    };
+
     return undefined;
   }, [question]);
   const variants: QuestionVariant[] = useMemo(
@@ -74,7 +76,6 @@ function Page() {
   return (
     <><StatusToast />
       <main className={styles.main}>
-
         <section className={styles.panel}>
           <div className={styles.informations}>
             <h1>Sala de jogo</h1>
@@ -85,6 +86,8 @@ function Page() {
               </span>
             </p>
           </div>
+        </section>
+        <section>
           <div className={styles.controllers}>
             <div className={styles.buttons}>
               <Button
@@ -127,7 +130,7 @@ function Page() {
           </div>
         </section>
         <section>
-          <QuestionView highlight={correctAnswerText} question={question} />
+          <QuestionView highlight={question?.answers} question={question} />
           {variants && variants.length > 0 && (
             <QuestionVariantsCarousel
               items={variants}
@@ -136,7 +139,7 @@ function Page() {
               render={(item) => {
                 return (
                   <li>
-                    <QuestionView highlight={correctAnswerText} variant={item} />
+                    <QuestionView highlight={question?.answers} variant={item} />
                   </li>
                 );
               }}

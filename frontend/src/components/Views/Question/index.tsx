@@ -9,7 +9,7 @@ interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   question?: Question;
   variant?: QuestionVariant;
-  highlight?: string;
+  highlight?: string[];
   editable?: boolean;
 }
 
@@ -43,12 +43,12 @@ export default function QuestionView({
         <ol className={styles.options}>
           {options.map((option) => {
             const id =
-              highlight && option === highlight ? "highlight" : "option";
+              highlight && highlight.includes(option) ? "highlight" : "option";
 
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => sendParticipantAnswer(option)}
+                onClick={() => sendParticipantAnswer([option])}
                 id={id}
                 theme="partial-orange"
                 key={uuid + "-" + option}
@@ -60,8 +60,9 @@ export default function QuestionView({
         </ol>
       </article>
     );
-  } else if (question) {
-    const { question: content, uuid, context } = question as any;
+  } else if(question) {
+    const { answers, question: content, uuid } = question;
+
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
     return (
@@ -80,9 +81,18 @@ export default function QuestionView({
           <h1>{content}</h1>
         </header>
         <ol className={styles.options}>
-          <Button disabled id="highlight" theme="partial-orange">
-            {highlight}
-          </Button>
+          {answers.map((option) => {
+            return (
+              <Button
+                disabled
+                id="highlight"
+                theme="partial-orange"
+                key={uuid + "-" + option + "-answer"}
+              >
+                {option}
+              </Button>
+            );
+          })}
         </ol>
       </article>
     );

@@ -13,12 +13,12 @@ interface GameModalProps {
 export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalProps) {
     const [title, setTitle] = useState("");
     const [questions, setQuestions] = useState<QuestionRequest[]>([
-        { question: "", answer: "", context: [] },
+        { question: "", answers: [""], context: [] },
     ]);
     const [error, setError] = useState<string | null>(null);
 
     function handleAddQuestion() {
-        setQuestions([...questions, { question: "", answer: "", context: [] }]);
+        setQuestions([...questions, { question: "", answers: [""], context: [] }]);
     } function handleRemoveQuestion(idx: number) {
         const updated = [...questions];
         updated.splice(idx, 1);
@@ -26,14 +26,21 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
     }
 
     function handleQuestionChange(idx: number, field: keyof QuestionRequest, value: string) {
-        const copy = [...questions];
-        if (field === "context") {
-            copy[idx][field] = value.split(",").map((c) => c.trim());
+        const _questions = [...questions];
+
+        if(field === "context") {
+            _questions[idx][field] = value.split(",").map((c) => c.trim());
+        } else if(field === "answers") {
+            _questions[idx][field][0] = value;
         } else {
-            (copy[idx] as any)[field] = value;
-        }
-        setQuestions(copy);
-    }
+            _questions[idx] = {
+                ..._questions[idx],
+                [field]: value
+            };
+        };
+
+        setQuestions(_questions);
+    };
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -42,7 +49,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         const questionsWithType = questions.map(q => ({
             type: q.type ?? "BaseQuestion",
             question: q.question,
-            answer: q.answer,
+            answers: q.answers,
             context: q.context,
         }));
 
@@ -53,9 +60,10 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
             onGameCreated(created);
             onClose();
             setTitle("");
-            setQuestions([{ question: "", answer: "", context: [] }]);
-        } catch (err: any) {
-            setError(err.message || "Erro ao criar o jogo");
+            setQuestions([{ question: "", answers: [""], context: [] }]);
+        } catch (error) {
+            const _error = error as Error;
+            setError(_error.message ?? "Erro ao criar o jogo");
         }
     }
 
@@ -96,8 +104,8 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                                 Resposta
                                 <input
                                     type="text"
-                                    value={q.answer}
-                                    onChange={(e) => handleQuestionChange(i, "answer", e.target.value)}
+                                    value={q.answers[0]}
+                                    onChange={(e) => handleQuestionChange(i, "answers", e.target.value)}
                                     required
                                 />
                             </label>

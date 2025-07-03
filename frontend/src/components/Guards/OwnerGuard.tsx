@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { connect } from "../../services/socket";
 import useGame from "@stores/useGame";
 import useAuth from "@stores/useAuth";
-import { request } from "../../services/game";
+import { getGame } from "../../services/game";
 
 interface Props {
   children: ReactNode;
@@ -19,7 +19,7 @@ export default function OwnerGuard({ children }: Props) {
   const isOwner = user?.uuid === game?.owner;
 
   useEffect(() => {
-    if(!game?.owner && !isOwner && room) request(room?.game);
+    if(!game?.owner && !isOwner && room) getGame(room?.game);
     else if(isOwner) connect(code, undefined, true);
     else if(room) navigate("/home");
   }, [isOwner, code, room, game, navigate, user]);
