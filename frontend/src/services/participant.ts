@@ -2,23 +2,27 @@ import useRoom, { Participant } from "@stores/useRoom";
 import api from "./axios";
 import useGame from "@stores/useGame";
 import { connect } from "./socket";
+import { saveParticipantAnswer } from "./answers";
 
 export async function exit(): Promise<void> {
   return await api.delete("participants");
 }
 
-export async function sendParticipantAnswer(answer: string): Promise<void> {
+export async function sendParticipantAnswer(answers: string[]): Promise<void> {
   const { participant } = useRoom.getState();
   const { question, setQuestion } = useGame.getState();
 
   return api
     .post("participants/answer", {
-      answer,
+      answers,
       question: question?.original,
       participant: participant?.uuid,
     })
     .then(() => {
-      setQuestion(undefined);
+      if(question){
+        saveParticipantAnswer(answers, question?.original);
+        setQuestion(undefined);
+      }
     });
 }
 

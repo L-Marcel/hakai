@@ -1,10 +1,17 @@
 package app.hakai.backend.controllers;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
+import org.kahai.framework.models.Answer;
+import org.kahai.framework.models.Game;
+import org.kahai.framework.models.ParticipantAnswer;
 import org.kahai.framework.models.Question;
 import org.kahai.framework.models.User;
+import org.kahai.framework.services.ParticipantAnswerService;
 import org.kahai.framework.services.ParticipantService;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.transients.Participant;
@@ -24,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ParticipantController {
     @Autowired
     private ParticipantService participantService;
+
+    @Autowired
+    private ParticipantAnswerService answerService;
 
     @Autowired
     private QuestionService questionService;
@@ -54,8 +64,15 @@ public class ParticipantController {
         participantService.answerQuestion(
             question, 
             participant, 
-            body.getAnswer()
+            body.getAnswers().get(0) //alterar para o List<Answer>
         );
+
+        UUID session = participant.getRoom().getSession();
+        Game game = question.getGame();
+        String nickname = participant.getNickname();
+        List<Answer> answers = ParticipantAnswer.convertStringsToAnswers(body.getAnswers());
+        ParticipantAnswer participantAnswer = new ParticipantAnswer(session, game, question, nickname, answers);
+        answerService.saveParticipantAnswer(participantAnswer);
 
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)

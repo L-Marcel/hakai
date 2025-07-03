@@ -50,7 +50,7 @@ export default function QuestionView({
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => sendParticipantAnswer(option)}
+                onClick={() => sendParticipantAnswer([option])}
                 id={id}
                 theme="partial-orange"
                 key={uuid + "-" + option}

@@ -6,6 +6,7 @@ import DashboardPage from "@pages/Dashboard";
 import RoomPage from "@pages/Room";
 import RoomPanelPage from "@pages/RoomPanel";
 import { useEffect } from "react";
+import Results from "@pages/Results";
 
 function App() {
   useEffect(() => {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/home" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/room/:code" element={<RoomPage />} />
+        <Route path="/game-results/:code" element={<Results />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </>
