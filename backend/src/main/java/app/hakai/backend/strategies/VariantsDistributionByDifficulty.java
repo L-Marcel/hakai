@@ -30,4 +30,4 @@ public class VariantsDistributionByDifficulty implements VariantsDistributionStr
                 (variant) -> variant.getDifficulty() == participant.getCurrentDifficulty()
             ).collect(Collectors.toList());
     };
-};;
+};

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.CreateGameRequestBody;
+import org.kahai.framework.dtos.request.GameRequestBody;
 import org.kahai.framework.dtos.response.GameResponse;
 import org.kahai.framework.models.Game;
 import org.kahai.framework.models.User;
@@ -62,7 +62,7 @@ public class GameController {
     @PostMapping
     @RequireAuth
     public ResponseEntity<GameResponse> createGame(
-            @RequestBody CreateGameRequestBody body,
+            @RequestBody GameRequestBody body,
             @AuthenticationPrincipal User user
     ) {
         Game createdGame = gameService.createGame(

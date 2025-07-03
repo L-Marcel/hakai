@@ -1,29 +1,30 @@
 package app.hakai.backend.models;
 
-import java.util.List;
-
 import org.kahai.framework.annotations.QuestionType;
-import org.kahai.framework.dtos.request.CreateQuestionRequestBody;
+import org.kahai.framework.dtos.request.QuestionRequestBody;
 import org.kahai.framework.models.questions.BaseQuestion;
 import org.kahai.framework.models.questions.Question;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @QuestionType("multipleChoice")
-public class MultipleChoiceQuestion extends BaseQuestion implements CreateQuestionRequestBody {
-
-    private List<String> options;
-
-    public MultipleChoiceQuestion(Question wrappee, List<String> options) {
+public class MultipleChoiceQuestion extends BaseQuestion implements QuestionRequestBody {
+    public MultipleChoiceQuestion(Question wrappee) {
         super(wrappee);
-        this.options = options;
-    }
+    };
 
     @Override
     public String getPromptFormat() {
+        // TODO - Conceito errado do promptFormat,
+        // olhar os outros TODO e depois voltar aqui
         return "[Múltipla escolha] " + super.getPromptFormat();
-    }
+    };
 
     @Override
     public Question toQuestion() {
         return this;
-    }
-}
+    };
+};
