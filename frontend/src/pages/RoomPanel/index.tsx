@@ -86,8 +86,6 @@ function Page() {
               </span>
             </p>
           </div>
-        </section>
-        <section>
           <div className={styles.controllers}>
             <div className={styles.buttons}>
               <Button
