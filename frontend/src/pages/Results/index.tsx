@@ -8,7 +8,7 @@ import useGame from "@stores/useGame";
 import AuthGuard from "@components/Guards/AuthGuard";
 import { getGameAnswers } from "../../services/answers";
 import { getGame } from "../../services/game";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UUID } from "crypto";
 
 export default function Results() {
@@ -20,6 +20,7 @@ export default function Results() {
 }
 
 export function Page() {
+    const navigate = useNavigate();
     const { uuid } = useParams();
 
     const history = useGame((state) => state.history);
@@ -42,7 +43,7 @@ export function Page() {
     return (
         <main className={styles.main}>
             <div className={styles.header}>
-                <Button theme="full-orange">
+                <Button theme="full-orange" onClick={() => navigate("/dashboard")}>
                     <FaArrowLeft /> Voltar
                 </Button>
             </div>
