@@ -16,11 +16,11 @@ export const groupAnswers = (
   const grouped: GroupedByQuestion = {};
 
   if (answers?.length === 0) return {};
-
+  
   answers?.forEach((answer) => {
     if (!grouped[answer.question]) {
       grouped[answer.question] = {
-        question: answer.question, // nome de questão
+        question: answer.question,
         answers: [],
         groupedByNickname: {},
       };

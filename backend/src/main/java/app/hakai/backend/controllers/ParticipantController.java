@@ -8,7 +8,6 @@ import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
 import org.kahai.framework.models.Answer;
 import org.kahai.framework.models.Game;
-import org.kahai.framework.models.ParticipantAnswer;
 import org.kahai.framework.models.Question;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.ParticipantAnswerService;
@@ -51,6 +50,7 @@ public class ParticipantController {
 
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
+        @AuthenticationPrincipal User user,
         @RequestBody AnswerQuestionRequestBody body
     ) {
         Question question = questionService.findQuestionById(
@@ -60,19 +60,29 @@ public class ParticipantController {
         Participant participant = participantService.findParticipantByUuid(
             body.getParticipant()
         );
-
+        
         participantService.answerQuestion(
             question, 
             participant, 
-            body.getAnswers().get(0) //alterar para o List<Answer>
+            body.getAnswers()
         );
 
         UUID session = participant.getRoom().getSession();
         Game game = question.getGame();
         String nickname = participant.getNickname();
-        List<Answer> answers = ParticipantAnswer.convertStringsToAnswers(body.getAnswers());
-        ParticipantAnswer participantAnswer = new ParticipantAnswer(session, game, question, nickname, answers);
-        answerService.saveParticipantAnswer(participantAnswer);
+        
+        List<Answer> answers = Answer.fromList(
+            body.getAnswers()
+        );
+
+        answerService.createParticipantAnswer(
+            session, 
+            game, 
+            user,
+            question, 
+            nickname,
+            answers
+        );
 
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)

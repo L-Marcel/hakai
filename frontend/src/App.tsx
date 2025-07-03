@@ -32,7 +32,7 @@ function App() {
         <Route path="/home" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/room/:code" element={<RoomPage />} />
-        <Route path="/game-results/:code" element={<Results />} />
+        <Route path="/game-results/:uuid" element={<Results />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </>

@@ -119,7 +119,7 @@ function Page() {
         </div>
       </section>
       <section>
-        <QuestionView highlight={question?.answer} question={question} />
+        <QuestionView highlight={question?.answers} question={question} />
         {variants && variants.length > 0 && (
           <QuestionVariantsCarousel
             items={variants}
@@ -128,7 +128,7 @@ function Page() {
             render={(item) => {
               return (
                 <li>
-                  <QuestionView highlight={question?.answer} variant={item} />
+                  <QuestionView highlight={question?.answers} variant={item} />
                 </li>
               );
             }}

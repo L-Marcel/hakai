@@ -1,32 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@components/Button";
 import styles from "./index.module.scss";
 import { FaArrowLeft, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { groupAnswers } from "@components/Views/Answers";
 import useGame from "@stores/useGame";
 import AuthGuard from "@components/Guards/AuthGuard";
-import RoomGuard from "@components/Guards/RoomGuard";
-import OwnerGuard from "@components/Guards/OwnerGuard";
-
+import { getGameAnswers } from "../../services/answers";
+import { getGame } from "../../services/game";
+import { useParams } from "react-router-dom";
+import { UUID } from "crypto";
 
 export default function Results() {
   return (
     <AuthGuard>
-          <RoomGuard>
-            <OwnerGuard>
-                <Page />
-            </OwnerGuard>
-        </RoomGuard>
+        <Page />
     </AuthGuard>
   );
 }
 
 export function Page() {
-    const { game } = useGame.getState();
+    const { uuid } = useParams();
+
+    const history = useGame((state) => state.history);
 
     const [showByPerson, setShowByPerson] = useState<Record<string, boolean>>({});
-    const groupedResults = groupAnswers(game?.history);
+    const groupedResults = groupAnswers(history);
 
     const toggleShowByPerson = (questionId: string) => {
         setShowByPerson((prev) => ({
@@ -34,6 +33,11 @@ export function Page() {
             [questionId]: !prev[questionId],
         }));
     };
+
+    useEffect(() => {
+        getGame(uuid as UUID);
+        getGameAnswers(uuid as UUID);
+    }, [uuid]);
 
     return (
         <main className={styles.main}>
@@ -90,7 +94,7 @@ export function Page() {
                                                             <ul>
                                                                 {answers.map((answer) => (
                                                                     <li key={answer.uuid}>
-                                                                        &quot;{answer.answer}&quot;
+                                                                        {answer.answers}
                                                                     </li>
                                                                 ))}
                                                             </ul>

@@ -28,9 +28,8 @@ export async function sendParticipantAnswer(answers: string[]): Promise<void> {
 
 export async function getParticipant(): Promise<void> {
   const { setParticipant } = useRoom.getState();
-
+  
   return await api.get<Participant>("participants/me").then((response) => {
-    console.log(response);
     connect(response.data.room, response.data.uuid);
     setParticipant(response.data);
   });

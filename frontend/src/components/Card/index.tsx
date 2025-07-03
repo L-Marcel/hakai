@@ -19,7 +19,7 @@ export default function Card({ game }: CardProps) {
   };
   
   const seeResults = () => {
-    navigate("/room/panel/" + game.uuid);
+    navigate("/game-results/" + game.uuid);
   };
 
   return (

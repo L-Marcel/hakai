@@ -18,13 +18,12 @@ export type Game = {
   owner: UUID;
   title: string;
   questions: Question[];
-  history: AnswersHistory[];
 };
 
 export type Question = {
   uuid: UUID;
   question: string;
-  answer: string;
+  answers: string[];
   variants?: QuestionVariant[];
   context: string[];
 };
@@ -42,16 +41,17 @@ export type AnswersHistory = {
   uuid: UUID;
   question: UUID;
   nickname: string;
-  answer: string[];
+  answers: string[];
 }
 
 type GameStore = {
   question?: QuestionVariant;
   game?: Game;
+  history?: AnswersHistory[];
   setQuestion: (current?: QuestionVariant) => void;
   setGame: (game?: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
-  setHistory: (answer: AnswersHistory) => void;
+  setHistory: (answers: AnswersHistory[]) => void;
 };
 
 const useGame = create<GameStore>((set) => ({
@@ -78,20 +78,8 @@ const useGame = create<GameStore>((set) => ({
         },
       };
     }),
-  setHistory: (answer: AnswersHistory) =>
-    set((state) => {
-      if (!state.game || !state.game.history) 
-        return state;
-
-      const updatedHistory = [...state.game.history, answer];
-
-      return {
-        game: {
-          ...state.game,
-          history: updatedHistory,
-        },
-      };
-  }),
+  setHistory: (history: AnswersHistory[]) =>
+    set({ history }),
 }));
 
 export default useGame;

@@ -7,7 +7,7 @@ import CheckRoomForm from "@components/Forms/CheckRoomForm";
 import { logout } from "../../services/user";
 import { useEffect, useState } from "react";
 import { Game } from "@stores/useGame";
-import { requestAllGames } from "../../services/game";
+import { getAllGames } from "../../services/game";
 import DashboardGuard from "@components/Guards/DashboardGuard";
 import GameModal from "@components/Modal";
 
@@ -26,7 +26,7 @@ function Page() {
 
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    requestAllGames()
+    getAllGames()
       .then((games) => {
         setGames(games);
       })
