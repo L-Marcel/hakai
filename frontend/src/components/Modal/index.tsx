@@ -27,7 +27,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
 
     function handleQuestionChange(idx: number, field: keyof QuestionRequest, value: string) {
         const copy = [...questions];
-        if(field === "context") {
+        if (field === "context") {
             copy[idx][field] = value.split(",").map((c) => c.trim());
         } else {
             (copy[idx] as any)[field] = value;
@@ -40,7 +40,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         setError(null);
 
         const questionsWithType = questions.map(q => ({
-            type: q.type ?? "CreateConcreteQuestionRequestBody",
+            type: q.type ?? "BaseQuestion",
             question: q.question,
             answer: q.answer,
             context: q.context,
@@ -57,9 +57,9 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         } catch (err: any) {
             setError(err.message || "Erro ao criar o jogo");
         }
-      }
+    }
 
-    if(!isOpen) return null;
+    if (!isOpen) return null;
     return (
         <div className={styles.backdrop}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -78,7 +78,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                         />
                     </label>
 
-                   {questions.map((q, i) => (
+                    {questions.map((q, i) => (
                         <fieldset key={i} className={styles.questionBlock}>
                             <legend>Pergunta {i + 1}</legend>
 
@@ -122,7 +122,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                             )}
                         </fieldset>
                     ))}
-                    
+
 
                     <button type="button" onClick={handleAddQuestion} className={styles.addQuestionBtn}>
                         + Adicionar Pergunta
