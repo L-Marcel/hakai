@@ -7,7 +7,7 @@ import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.response.ParticipantAnswerResponse;
 import org.kahai.framework.models.Game;
 import org.kahai.framework.models.ParticipantAnswer;
-import org.kahai.framework.models.Question;
+import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.GameService;
 import org.kahai.framework.services.ParticipantAnswerService;

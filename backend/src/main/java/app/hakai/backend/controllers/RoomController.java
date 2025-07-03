@@ -3,7 +3,7 @@ package app.hakai.backend.controllers;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.RoomRequestBody;
+import org.kahai.framework.dtos.request.CreateRoomRequestBody;
 import org.kahai.framework.dtos.request.JoinRoomRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
 import org.kahai.framework.dtos.response.RoomResponse;
@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.strategies.RoomEventStrategyKahoot;
+import jakarta.annotation.PostConstruct;
+
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -42,10 +45,18 @@ public class RoomController {
     @Autowired
     private AccessControlService accessControlService;
 
+    
+    @PostConstruct
+    public void setUpStrategies() {
+        this.roomService.setRoomEventStrategy(
+            new RoomEventStrategyKahoot()
+        );
+    };
+
     @RequireAuth
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(
-        @RequestBody RoomRequestBody body,
+        @RequestBody CreateRoomRequestBody body,
         @AuthenticationPrincipal User user
     ) {
         Game game = gameService.findGameById(body.getGame());
