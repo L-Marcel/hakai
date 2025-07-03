@@ -64,7 +64,7 @@ export function Page() {
                             ([questionId, questionData]) => (
                                 <tr key={questionId} className={styles.questionRow}>
                                     <td>
-                                        <strong>{questionId}</strong>{" "}{}
+                                        <strong>{questionData.question}</strong>{" "}{}
                                     </td>
                                     <td>{questionData.answers.length}</td>
                                     <td>
