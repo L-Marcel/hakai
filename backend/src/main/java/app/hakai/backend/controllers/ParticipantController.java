@@ -8,7 +8,7 @@ import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
 import org.kahai.framework.models.Answer;
 import org.kahai.framework.models.Game;
-import org.kahai.framework.models.Question;
+import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.ParticipantAnswerService;
 import org.kahai.framework.services.ParticipantService;
@@ -68,7 +68,7 @@ public class ParticipantController {
         );
 
         UUID session = participant.getRoom().getSession();
-        Game game = question.getGame();
+        Game game = participant.getRoom().getGame();
         String nickname = participant.getNickname();
         
         List<Answer> answers = Answer.fromList(

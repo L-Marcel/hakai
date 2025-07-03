@@ -20,7 +20,7 @@ export default function QuestionView({
   className,
   ...props
 }: Props) {
-  if(variant) {
+  if (variant) {
     const { difficulty, context, options, question, uuid } = variant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
@@ -30,15 +30,13 @@ export default function QuestionView({
         <header className={styles.header}>
           <p className={styles.tags}>
             <Tag theme="full-orange" value={difficultyToString[difficulty]} />
-            {context.map((value) => {
-              return (
-                <Tag
-                  theme="light-orange"
-                  key={uuid + "-" + value}
-                  value={value}
-                />
-              );
-            })}
+            {(context || []).map((value) => (
+              <Tag
+                theme="light-orange"
+                key={uuid + "-" + value}
+                value={value}
+              />
+            ))}
           </p>
           <h1>{question}</h1>
         </header>
@@ -64,6 +62,7 @@ export default function QuestionView({
     );
   } else if(question) {
     const { answers, question: content, uuid } = question;
+
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
     return (
@@ -71,15 +70,13 @@ export default function QuestionView({
         <header className={styles.header}>
           <p className={styles.tags}>
             <Tag theme="full-orange" value="base" />
-            {question.context.map((value) => {
-              return (
-                <Tag
-                  theme="light-orange"
-                  key={uuid + "-" + value}
-                  value={value}
-                />
-              );
-            })}
+            {(question.context || []).map((value) => (
+              <Tag
+                theme="light-orange"
+                key={uuid + "-" + value}
+                value={value}
+              />
+            ))}
           </p>
           <h1>{content}</h1>
         </header>

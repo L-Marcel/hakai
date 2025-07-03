@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequestBody;
-import org.kahai.framework.models.Question;
 import org.kahai.framework.models.User;
+import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.transients.Room;

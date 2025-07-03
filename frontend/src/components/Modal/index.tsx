@@ -45,8 +45,15 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError(null);
-        
-        const payload: GameRequest = { title, questions };
+
+        const questionsWithType = questions.map(q => ({
+            type: q.type ?? "BaseQuestion",
+            question: q.question,
+            answers: q.answers,
+            context: q.context,
+        }));
+
+        const payload: GameRequest = { title, questions: questionsWithType };
 
         try {
             const created = await createGame(payload);
@@ -60,7 +67,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         }
     }
 
-    if(!isOpen) return null;
+    if (!isOpen) return null;
     return (
         <div className={styles.backdrop}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
@@ -79,7 +86,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                         />
                     </label>
 
-                   {questions.map((q, i) => (
+                    {questions.map((q, i) => (
                         <fieldset key={i} className={styles.questionBlock}>
                             <legend>Pergunta {i + 1}</legend>
 
@@ -123,7 +130,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                             )}
                         </fieldset>
                     ))}
-                    
+
 
                     <button type="button" onClick={handleAddQuestion} className={styles.addQuestionBtn}>
                         + Adicionar Pergunta

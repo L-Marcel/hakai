@@ -1,8 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.debug.settings.onBuildFailureProceed": true,
+    "java.configuration.updateBuildConfiguration": "interactive",
     "java.compile.nullAnalysis.mode": "automatic",
-    "editor.wordWrap": "on",
-    "editor.formatOnSave": false,
-    "java.format.enabled": false
+    "java.debug.settings.onBuildFailureProceed": true
 }

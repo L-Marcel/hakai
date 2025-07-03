@@ -45,11 +45,20 @@ function Page() {
 
   const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
-    if(questions.length === 0) return undefined;
+    if (questions.length === 0) return undefined;
     const questionIndex = index % questions.length;
     return questions[questionIndex];
   }, [index, questions]);
 
+  const correctAnswerText = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const questionWithAnswers = question as any;
+    if (questionWithAnswers?.answers && questionWithAnswers.answers.length > 0) {
+      return questionWithAnswers.answers[0].text;
+    };
+
+    return undefined;
+  }, [question]);
   const variants: QuestionVariant[] = useMemo(
     () => question?.variants ?? [],
     [question]
@@ -59,93 +68,95 @@ function Page() {
     () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
     [variants]
   );
+  console.log("Resposta Correta Calculada:", correctAnswerText);
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
 
   return (
-    <><StatusToast/>
+    <><StatusToast />
       <main className={styles.main}>
-        
-      <section className={styles.panel}>
-        <div className={styles.informations}>
-          <h1>Sala de jogo</h1>
-          <p>
-            Código:{" "}
-            <span data-selectable className={styles.code}>
-              {code}
-            </span>
-          </p>
-        </div>
-        <div className={styles.controllers}>
-          <div className={styles.buttons}>
-            <Button
-              disabled={variants.length === 0}
-              onClick={() => sendQuestion(variants as QuestionVariant[])}
-              theme="full-orange"
-            >
-              <FaPlay />
-              Lançar
-            </Button>
-            <Button
-              disabled={!question}
-              onClick={() => generateVariants(question?.uuid as UUID)}
-              theme="light-orange"
-            >
-              <FaSync />
-              Gerar
-            </Button>
-            <Button
-              disabled={index <= 0}
-              onClick={toPreviousQuestion}
-              theme="light-orange"
-            >
-              <FaArrowLeft />
-              Anterior
-            </Button>
-            <Button
-              disabled={index >= questions.length - 1}
-              onClick={toNextQuestion}
-              theme="light-orange"
-            >
-              <FaArrowRight />
-              Próxima
-            </Button>
-            <Button onClick={close} theme="light-orange">
-              <FaSignOutAlt />
-              Finalizar
-            </Button>
+        <section className={styles.panel}>
+          <div className={styles.informations}>
+            <h1>Sala de jogo</h1>
+            <p>
+              Código:{" "}
+              <span data-selectable className={styles.code}>
+                {code}
+              </span>
+            </p>
           </div>
-        </div>
-      </section>
-      <section>
-        <QuestionView highlight={question?.answers} question={question} />
-        {variants && variants.length > 0 && (
-          <QuestionVariantsCarousel
-            items={variants}
-            start={hardestVariant}
-            identifier={(item) => item.uuid}
-            render={(item) => {
-              return (
-                <li>
-                  <QuestionView highlight={question?.answers} variant={item} />
-                </li>
-              );
-            }}
+        </section>
+        <section>
+          <div className={styles.controllers}>
+            <div className={styles.buttons}>
+              <Button
+                disabled={variants.length === 0}
+                onClick={() => sendQuestion(variants as QuestionVariant[])}
+                theme="full-orange"
+              >
+                <FaPlay />
+                Lançar
+              </Button>
+              <Button
+                disabled={!question}
+                onClick={() => generateVariants(question?.uuid as UUID)}
+                theme="light-orange"
+              >
+                <FaSync />
+                Gerar
+              </Button>
+              <Button
+                disabled={index <= 0}
+                onClick={toPreviousQuestion}
+                theme="light-orange"
+              >
+                <FaArrowLeft />
+                Anterior
+              </Button>
+              <Button
+                disabled={index >= questions.length - 1}
+                onClick={toNextQuestion}
+                theme="light-orange"
+              >
+                <FaArrowRight />
+                Próxima
+              </Button>
+              <Button onClick={close} theme="light-orange">
+                <FaSignOutAlt />
+                Finalizar
+              </Button>
+            </div>
+          </div>
+        </section>
+        <section>
+          <QuestionView highlight={question?.answers} question={question} />
+          {variants && variants.length > 0 && (
+            <QuestionVariantsCarousel
+              items={variants}
+              start={hardestVariant}
+              identifier={(item) => item.uuid}
+              render={(item) => {
+                return (
+                  <li>
+                    <QuestionView highlight={question?.answers} variant={item} />
+                  </li>
+                );
+              }}
+            />
+          )}
+        </section>
+        <section className={styles.participants}>
+          <h4>
+            <FaBomb /> Perguntas: 4<span>/</span>
+            <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
+          </h4>
+          <ParticipantsMansoryGrid
+            ranked
+            userIsRoomOwner
+            participants={room?.participants ?? []}
           />
-        )}
-      </section>
-      <section className={styles.participants}>
-        <h4>
-          <FaBomb /> Perguntas: 4<span>/</span>
-          <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
-        </h4>
-        <ParticipantsMansoryGrid
-          ranked
-          userIsRoomOwner
-          participants={room?.participants ?? []}
-        />
-      </section>
+        </section>
       </main></>
   );
 }

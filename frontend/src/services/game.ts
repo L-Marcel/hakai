@@ -2,6 +2,7 @@ import useGame, { Game } from "@stores/useGame";
 import { UUID } from "crypto";
 import api from "./axios";
 export interface QuestionRequest {
+  type?: string,
   question: string;
   answers: string[];
   context: string[]; 
