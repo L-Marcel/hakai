@@ -3,7 +3,7 @@ package app.hakai.backend.controllers;
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
 import org.kahai.framework.dtos.response.ParticipantResponse;
-import org.kahai.framework.models.Question;
+import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.ParticipantService;
 import org.kahai.framework.services.QuestionService;
