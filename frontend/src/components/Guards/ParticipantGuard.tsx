@@ -15,5 +15,7 @@ export default function ParticipantGuard({ children }: Props) {
     getParticipant().finally(() => setChecked(true));
   }, [setChecked]);
 
+  console.log(participant);
+
   return participant ? children : checked ? <JoinPage /> : null;
 }

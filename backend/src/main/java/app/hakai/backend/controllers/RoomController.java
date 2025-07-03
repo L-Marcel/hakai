@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.strategies.RoomEventStrategyJustClose;
+import jakarta.annotation.PostConstruct;
+
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
@@ -41,6 +44,13 @@ public class RoomController {
 
     @Autowired
     private AccessControlService accessControlService;
+
+    @PostConstruct
+    public void setUpStrategies() {
+        this.roomService.setRoomEventStrategy(
+            new RoomEventStrategyJustClose()
+        );
+    };
 
     @RequireAuth
     @PostMapping

@@ -5,7 +5,11 @@ import { connect } from "./socket";
 import { saveParticipantAnswer } from "./answers";
 
 export async function exit(): Promise<void> {
-  return await api.delete("participants");
+  const { setParticipant } = useRoom.getState();
+
+  return await api.delete("participants").then(() => {
+    setParticipant(undefined);
+  });
 }
 
 export async function sendParticipantAnswer(answers: string[]): Promise<void> {
