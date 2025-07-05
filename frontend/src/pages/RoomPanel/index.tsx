@@ -49,16 +49,7 @@ function Page() {
     const questionIndex = index % questions.length;
     return questions[questionIndex];
   }, [index, questions]);
-
-  const correctAnswerText = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const questionWithAnswers = question as any;
-    if (questionWithAnswers?.answers && questionWithAnswers.answers.length > 0) {
-      return questionWithAnswers.answers[0].text;
-    };
-
-    return undefined;
-  }, [question]);
+  
   const variants: QuestionVariant[] = useMemo(
     () => question?.variants ?? [],
     [question]
@@ -68,7 +59,6 @@ function Page() {
     () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
     [variants]
   );
-  console.log("Resposta Correta Calculada:", correctAnswerText);
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);

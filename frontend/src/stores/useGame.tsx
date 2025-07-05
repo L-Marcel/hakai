@@ -25,15 +25,16 @@ export type Question = {
   question: string;
   answers: string[];
   variants?: QuestionVariant[];
-  context: string[];
+  contexts: string[];
 };
 
 export type QuestionVariant = {
+  type: string;
   uuid: UUID;
   question: string;
   difficulty: Difficulty;
   options: string[];
-  context: string[];
+  contexts: string[];
   original: UUID;
 };
 

@@ -21,6 +21,8 @@ export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
       original,
       variants: variants.map((variant) => ({
         ...variant,
+        answers: undefined,
+        contexts: undefined,
         original: undefined
       }))
     }

@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "e78758fe-7600-494d-849f-6d0d9b3e8a8f",
+  "question" : "sda",
+  "answers" : [ {
+    "uuid" : "bf08d13e-d420-404d-bbca-3588d3d28d94",
+    "answer" : "asdas"
+  } ],
+  "contexts" : [ {
+    "id" : "8b8876de-2290-4f24-a446-28cbbce3272a",
+    "name" : ""
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

@@ -13,12 +13,12 @@ interface GameModalProps {
 export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalProps) {
     const [title, setTitle] = useState("");
     const [questions, setQuestions] = useState<QuestionRequest[]>([
-        { question: "", answers: [""], context: [] },
+        { question: "", answers: [""], contexts: [] },
     ]);
     const [error, setError] = useState<string | null>(null);
 
     function handleAddQuestion() {
-        setQuestions([...questions, { question: "", answers: [""], context: [] }]);
+        setQuestions([...questions, { question: "", answers: [""], contexts: [] }]);
     } function handleRemoveQuestion(idx: number) {
         const updated = [...questions];
         updated.splice(idx, 1);
@@ -28,7 +28,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
     function handleQuestionChange(idx: number, field: keyof QuestionRequest, value: string) {
         const _questions = [...questions];
 
-        if(field === "context") {
+        if(field === "contexts") {
             _questions[idx][field] = value.split(",").map((c) => c.trim());
         } else if(field === "answers") {
             _questions[idx][field][0] = value;
@@ -47,10 +47,10 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
         setError(null);
 
         const questionsWithType = questions.map(q => ({
-            type: q.type ?? "BaseQuestion",
+            type: q.type ?? "ConcreteQuestionRequest",
             question: q.question,
             answers: q.answers,
-            context: q.context,
+            contexts: q.contexts,
         }));
 
         const payload: GameRequest = { title, questions: questionsWithType };
@@ -60,7 +60,7 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
             onGameCreated(created);
             onClose();
             setTitle("");
-            setQuestions([{ question: "", answers: [""], context: [] }]);
+            setQuestions([{ question: "", answers: [""], contexts: [] }]);
         } catch (error) {
             const _error = error as Error;
             setError(_error.message ?? "Erro ao criar o jogo");
@@ -82,7 +82,6 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            required
                         />
                     </label>
 
@@ -96,7 +95,6 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                                     type="text"
                                     value={q.question}
                                     onChange={(e) => handleQuestionChange(i, "question", e.target.value)}
-                                    required
                                 />
                             </label>
 
@@ -106,7 +104,6 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                                     type="text"
                                     value={q.answers[0]}
                                     onChange={(e) => handleQuestionChange(i, "answers", e.target.value)}
-                                    required
                                 />
                             </label>
 
@@ -114,8 +111,8 @@ export default function GameModal({ isOpen, onClose, onGameCreated }: GameModalP
                                 Contextos (vírgula-separados)
                                 <input
                                     type="text"
-                                    value={q.context.join(", ")}
-                                    onChange={(e) => handleQuestionChange(i, "context", e.target.value)}
+                                    value={q.contexts.join(", ")}
+                                    onChange={(e) => handleQuestionChange(i, "contexts", e.target.value)}
                                 />
                             </label>
 

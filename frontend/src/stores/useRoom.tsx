@@ -39,6 +39,7 @@ const useRoom = create<RoomStore>((set, get) => ({
       if(updated) {
         set({ participant: updated });
       } else {
+        set({ participant: undefined });
         disconnect();
       }
     }

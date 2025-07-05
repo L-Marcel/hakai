@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "d672513a-3f51-4089-8f08-b8fc393c9e53",
+  "question" : "Quanto é 2 + 2?",
+  "answers" : [ {
+    "uuid" : "cbb35374-e73a-45cb-ae2e-2ce19ae65541",
+    "answer" : "0"
+  } ],
+  "contexts" : [ {
+    "id" : "15bc53a5-0194-42c5-9057-0dd298db3fec",
+    "name" : "matemática"
+  }, {
+    "id" : "1137e954-4033-49fc-a3a2-569c998dbd20",
+    "name" : "soma"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

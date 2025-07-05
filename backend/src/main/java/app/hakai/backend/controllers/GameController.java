@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.GameRequestBody;
+import org.kahai.framework.dtos.request.GameRequest;
 import org.kahai.framework.dtos.response.GameResponse;
 import org.kahai.framework.models.Game;
 import org.kahai.framework.models.User;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/games")
 public class GameController {
-
     @Autowired
     private GameService gameService;
 
@@ -33,8 +32,8 @@ public class GameController {
     @RequireAuth
     @GetMapping("/{uuid}")
     public ResponseEntity<GameResponse> findGame(
-            @PathVariable UUID uuid,
-            @AuthenticationPrincipal User user
+        @PathVariable UUID uuid,
+        @AuthenticationPrincipal User user
     ) {
         Game game = gameService.findGameById(uuid);
         accessControlService.checkGameOwnership(user, game);
@@ -42,28 +41,24 @@ public class GameController {
         GameResponse response = new GameResponse(game);
 
         return ResponseEntity.ok(response);
-    }
-
-    ;
+    };
 
     @GetMapping
     @RequireAuth
     public ResponseEntity<List<GameResponse>> findGamesByUser(
-            @AuthenticationPrincipal User user
+        @AuthenticationPrincipal User user
     ) {
         List<Game> games = gameService.findGamesByUser(user);
         List<GameResponse> response = GameResponse.mapFromList(games);
 
         return ResponseEntity.ok(response);
-    }
-
-    ;
+    };
 
     @PostMapping
     @RequireAuth
     public ResponseEntity<GameResponse> createGame(
-            @RequestBody GameRequestBody body,
-            @AuthenticationPrincipal User user
+        @RequestBody GameRequest body,
+        @AuthenticationPrincipal User user
     ) {
         Game createdGame = gameService.createGame(
                 body,
@@ -73,6 +68,5 @@ public class GameController {
         GameResponse response = new GameResponse(createdGame);
 
         return ResponseEntity.ok(response);
-    }
-;
+    };
 };

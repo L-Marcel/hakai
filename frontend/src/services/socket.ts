@@ -55,7 +55,10 @@ export function connect(
           "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
           (message) => {
             const variant: QuestionVariant = JSON.parse(message.body);
-            setQuestion(variant);
+            setQuestion({
+              ...variant,
+              type: variant.type.replace("Response", "")
+            });
           }
         );
       }
@@ -67,7 +70,13 @@ export function connect(
           "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
-            setVariants(variants);
+            const formattedVariants = variants.map((variant) => ({
+              ...variant,
+              type: variant.type.replace("Response", "")
+            }));
+
+            setVariants(formattedVariants);
+            console.log(formattedVariants);
           }
         );
       }
