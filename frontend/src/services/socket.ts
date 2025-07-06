@@ -77,7 +77,6 @@ export function connect(
             }));
 
             setVariants(formattedVariants);
-            console.log(formattedVariants);
           }
         );
       }

@@ -3,6 +3,10 @@ import { useState } from "react";
 import styles from "./index.module.scss";
 import { Game } from "@stores/useGame";
 import { createGame, GameRequest, QuestionRequest } from "../../services/game";
+import Input from "@components/Input";
+import ErrorLabel from "@components/Forms/ErrorsLabel";
+import { FaX } from "react-icons/fa6";
+import Button from "@components/Button";
 
 interface GameModalProps {
   isOpen: boolean;
@@ -17,17 +21,21 @@ export default function GameModal({
 }: GameModalProps) {
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<QuestionRequest[]>([
-    { question: "", answers: [""], contexts: [] },
+    { question: "", answers: [""], contexts: "" },
   ]);
-  const [error, setError] = useState<string | null>(null);
+
+  const [error, setError] = useState<string>("");
+  const [errors, setErrors] = useState<ValidationError[]>([]);
 
   function handleAddQuestion() {
-    setQuestions([...questions, { question: "", answers: [""], contexts: [] }]);
+    setQuestions([...questions, { question: "", answers: [""], contexts: "" }]);
   }
+
   function handleRemoveQuestion(idx: number) {
     const updated = [...questions];
     updated.splice(idx, 1);
     setQuestions(updated);
+    setErrors([]);
   }
 
   function handleQuestionChange(
@@ -37,9 +45,7 @@ export default function GameModal({
   ) {
     const _questions = [...questions];
 
-    if (field === "contexts") {
-      _questions[idx][field] = value.split(",").map((c) => c.trim());
-    } else if (field === "answers") {
+    if (field === "answers") {
       _questions[idx][field][0] = value;
     } else {
       _questions[idx] = {
@@ -53,115 +59,127 @@ export default function GameModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setError("");
+    setErrors([]);
 
     const questionsWithType = questions.map((q) => ({
       type: q.type ?? "ConcreteQuestionRequest",
       question: q.question,
       answers: q.answers,
-      contexts: q.contexts,
+      contexts: (q.contexts as string)
+        .split(",")
+        .map((c) => c.trim().toLowerCase())
+        .filter((c) => c),
     }));
 
     const payload: GameRequest = { title, questions: questionsWithType };
 
-    try {
-      const created = await createGame(payload);
-      onGameCreated(created);
-      onClose();
-      setTitle("");
-      setQuestions([{ question: "", answers: [""], contexts: [] }]);
-    } catch (error) {
-      const _error = error as Error;
-      setError(_error.message ?? "Erro ao criar o jogo");
-    }
+    createGame(payload)
+      .then((createdGame) => {
+        onGameCreated(createdGame);
+        onClose();
+        setTitle("");
+        setQuestions([{ question: "", answers: [""], contexts: [] }]);
+      })
+      .catch((error: HttpError | ValidationErrors) => {
+        if (error.status === 400 && "errors" in error) {
+          setErrors((error as ValidationErrors).errors);
+        } else {
+          setError((error as HttpError).message);
+        }
+      });
   }
 
   if (!isOpen) return null;
+
   return (
     <div className={styles.backdrop}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <header className={styles.header}>
           <h2>Novo Jogo</h2>
-          <button onClick={onClose} className={styles.closeBtn}>
-            ×
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              setErrors([]);
+              setError("");
+            }}
+            className={styles.closeBtn}
+          >
+            <FaX />
           </button>
         </header>
         <form className={styles.form} onSubmit={handleSubmit}>
-          <label>
-            Título
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </label>
-
+          <Input
+            autoComplete="off"
+            type="text"
+            value={title}
+            placeholder="Título"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <ErrorLabel field="title" errors={errors} />
           {questions.map((q, i) => (
             <fieldset key={i} className={styles.questionBlock}>
               <legend>Pergunta {i + 1}</legend>
-
-              <label>
-                Pergunta
-                <input
-                  type="text"
-                  value={q.question}
-                  onChange={(e) =>
-                    handleQuestionChange(i, "question", e.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                Resposta
-                <input
-                  type="text"
-                  value={q.answers[0]}
-                  onChange={(e) =>
-                    handleQuestionChange(i, "answers", e.target.value)
-                  }
-                />
-              </label>
-
-              <label>
-                Contextos (vírgula-separados)
-                <input
-                  type="text"
-                  value={q.contexts.join(", ")}
-                  onChange={(e) =>
-                    handleQuestionChange(i, "contexts", e.target.value)
-                  }
-                />
-              </label>
+              <Input
+                autoComplete="off"
+                type="text"
+                placeholder="Pergunta"
+                value={q.question}
+                onChange={(e) =>
+                  handleQuestionChange(i, "question", e.target.value)
+                }
+              />
+              <ErrorLabel field={`questions.${i}.question`} errors={errors} />
+              <Input
+                autoComplete="off"
+                type="text"
+                placeholder="Resposta"
+                value={q.answers[0]}
+                onChange={(e) =>
+                  handleQuestionChange(i, "answers", e.target.value)
+                }
+              />
+              <ErrorLabel field={`questions.${i}.answers.0`} errors={errors} />
+              <Input
+                autoComplete="off"
+                type="text"
+                placeholder="Contextos separados por vírgula"
+                value={q.contexts}
+                onChange={(e) =>
+                  handleQuestionChange(i, "contexts", e.target.value)
+                }
+              />
+              <ErrorLabel field={`questions.${i}.contexts`} errors={errors} />
 
               {questions.length > 1 && (
-                <button
+                <Button
                   type="button"
+                  theme="partial-orange"
                   onClick={() => handleRemoveQuestion(i)}
-                  className={styles.removeQuestionBtn}
                 >
-                  Remover Pergunta
-                </button>
+                  Remover
+                </Button>
               )}
             </fieldset>
           ))}
-
-          <button
+          <Button
             type="button"
+            theme="light-orange"
             onClick={handleAddQuestion}
-            className={styles.addQuestionBtn}
           >
-            + Adicionar Pergunta
-          </button>
+            Adicionar pergunta
+          </Button>
 
           {error && <p className={styles.error}>{error}</p>}
 
           <div className={styles.actions}>
-            <button type="button" onClick={onClose}>
+            <Button theme="partial-orange" type="button" onClick={onClose}>
               Cancelar
-            </button>
-            <button type="submit" className={styles.submitBtn}>
+            </Button>
+            <Button theme="full-orange" type="submit">
               Criar
-            </button>
+            </Button>
           </div>
         </form>
       </div>

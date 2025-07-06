@@ -2,9 +2,7 @@ import AuthGuard from "@components/Guards/AuthGuard";
 import styles from "./index.module.scss";
 
 import Button from "@components/Button";
-import {
-  FaArrowLeft,
-} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionView from "@components/Views/Question";
 import useGame from "@stores/useGame";
@@ -28,11 +26,11 @@ export function Page() {
 
   const game = useGame((state) => state.game);
   const history = useGame((state) => state.history);
-  
+
   const onClose = () => {
     navigate("/dashboard");
   };
-  
+
   useEffect(() => {
     getGame(uuid as UUID);
     getGameAnswers(uuid as UUID);
@@ -54,7 +52,7 @@ export function Page() {
           <div className={styles.informations}>
             <h1>{game?.title}</h1>
             <p>
-              Questões: {" "}
+              Questões:{" "}
               <span data-selectable className={styles.code}>
                 {game?.questions.length}
               </span>
@@ -63,13 +61,14 @@ export function Page() {
         </section>
         <section>
           {game?.questions.map((question) => {
-            const answers = (history ?? [])
-              .filter((answer) => answer.question === question.uuid);
+            const answers = (history ?? []).filter(
+              (answer) => answer.question === question.uuid
+            );
 
             return (
               <div className={styles.history} key={question.uuid}>
-                <QuestionView 
-                  highlight={question?.answers} 
+                <QuestionView
+                  highlight={question?.answers}
                   question={question}
                 />
                 {answers.map((answer) => {
@@ -81,7 +80,7 @@ export function Page() {
                       <ol className={styles.options}>
                         <Button
                           disabled
-                          id={isCorrect? "highlight":""}
+                          id={isCorrect ? "highlight" : ""}
                           theme="partial-orange"
                         >
                           {answer.answer}

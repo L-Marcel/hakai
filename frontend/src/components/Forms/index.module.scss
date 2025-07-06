@@ -4,6 +4,14 @@
   color: $orange-600;
 }
 
+.errors {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  margin: 0 12px;
+  margin-top: -8px;
+}
+
 .form {
   width: 100%;
   display: flex;

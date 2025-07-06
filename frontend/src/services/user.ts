@@ -9,6 +9,7 @@ export type LoginData = {
 
 export type RegisterUserData = LoginData & {
   name: string;
+  confirmPassword: string;
 };
 
 export function logout(store: AuthStore = useAuth.getState()): void {
