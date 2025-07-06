@@ -4,44 +4,39 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Button from "@components/Button";
 import { register, RegisterUserData } from "../../services/user";
+import ErrorLabel from "./ErrorsLabel";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<ValidationError[]>([]);
   const [data, setData] = useState<RegisterUserData>({
     email: "",
     password: "",
+    confirmPassword: "",
     name: "",
   });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    if (name === "confirmPassword") {
-      setConfirmPassword(value);
-    } else {
-      const updatedData = { ...data, [name]: value };
-      setData(updatedData);
-    }
-
-    setError("");
+    const updatedData = { ...data, [name]: value };
+    setData(updatedData);
   };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (data.password !== confirmPassword) {
-      setError("As senhas não coincidem.");
-      return;
-    }
-
+    setError("");
+    setErrors([]);
     register(data)
       .then(() => {
         navigate("/login");
       })
-      .catch((error: HttpError) => {
-        setError(error.message);
+      .catch((error: HttpError | ValidationErrors) => {
+        if (error.status === 400 && "errors" in error) {
+          setErrors((error as ValidationErrors).errors);
+        } else {
+          setError((error as HttpError).message);
+        }
       });
   };
 
@@ -54,13 +49,14 @@ export default function RegisterForm() {
         placeholder="Nome"
         onChange={onChange}
       />
+      <ErrorLabel field="name" errors={errors} />
       <Input
         autoComplete="off"
-        type="email"
         name="email"
         placeholder="Email"
         onChange={onChange}
       />
+      <ErrorLabel field="email" errors={errors} />
       <Input
         autoComplete="off"
         type="password"
@@ -68,6 +64,7 @@ export default function RegisterForm() {
         placeholder="Senha"
         onChange={onChange}
       />
+      <ErrorLabel field="password" errors={errors} />
       <Input
         autoComplete="off"
         type="password"
@@ -75,6 +72,7 @@ export default function RegisterForm() {
         placeholder="Confirme a senha"
         onChange={onChange}
       />
+      <ErrorLabel field="confirmPassword" errors={errors} />
       {error && <p className={styles.error}>{error}</p>}
       <Button theme="full-orange" type="submit">
         Registrar

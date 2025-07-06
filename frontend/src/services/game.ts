@@ -5,7 +5,7 @@ export interface QuestionRequest {
   type?: string;
   question: string;
   answers: string[];
-  contexts: string[];
+  contexts: string | string[];
 }
 
 export interface GameRequest {
