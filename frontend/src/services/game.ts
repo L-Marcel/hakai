@@ -2,10 +2,10 @@ import useGame, { Game } from "@stores/useGame";
 import { UUID } from "crypto";
 import api from "./axios";
 export interface QuestionRequest {
-  type?: string,
+  type?: string;
   question: string;
   answers: string[];
-  context: string[]; 
+  contexts: string[];
 }
 
 export interface GameRequest {
@@ -25,9 +25,7 @@ export async function getAllGames(): Promise<Game[]> {
   return await api.get<Game[]>("games").then((response) => {
     return response.data;
   });
-
 }
 export async function createGame(payload: GameRequest): Promise<Game> {
-  return api.post<Game>("games", payload)
-    .then((response) => response.data);
+  return api.post<Game>("games", payload).then((response) => response.data);
 }

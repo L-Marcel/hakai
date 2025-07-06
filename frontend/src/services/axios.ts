@@ -12,14 +12,14 @@ const api = axios.create({
 api.interceptors.request.use((request) => {
   const token = useAuth.getState().token;
 
-  if(token) {
+  if (token) {
     request.headers["Authorization"] = "Bearer " + token;
   } else {
     const storage = localStorage.getItem("hakai@auth");
-    if(storage) {
+    if (storage) {
       const parsed = JSON.parse(storage);
       const storedToken = parsed?.state?.token;
-      if(storedToken) {
+      if (storedToken) {
         useAuth.getState().setToken(storedToken);
         request.headers["Authorization"] = "Bearer " + storedToken;
       }
@@ -32,9 +32,9 @@ api.interceptors.request.use((request) => {
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if(error.response?.status === 401) logout();
+    if (error.response?.status === 401) logout();
 
-    if(error.response?.data) {
+    if (error.response?.data) {
       const apiError = error.response?.data as HttpError;
       return Promise.reject(apiError);
     }

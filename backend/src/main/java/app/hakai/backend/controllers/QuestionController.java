@@ -3,9 +3,9 @@ package app.hakai.backend.controllers;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.SendQuestionVariantsRequestBody;
+import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
 import org.kahai.framework.models.User;
-import org.kahai.framework.models.questions.Question;
+import org.kahai.framework.questions.Question;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.transients.Room;
@@ -55,7 +55,7 @@ public class QuestionController {
 
     @PostMapping("/send")
     public ResponseEntity<Void> sendVariantToParticipant(
-        @RequestBody SendQuestionVariantsRequestBody body
+        @RequestBody SendQuestionVariantsRequest body
     ) {
         Room room = roomService.findRoomByCode(body.getCode());
         questionService.sendVariant(

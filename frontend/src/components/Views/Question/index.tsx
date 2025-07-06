@@ -21,7 +21,7 @@ export default function QuestionView({
   ...props
 }: Props) {
   if (variant) {
-    const { difficulty, context, options, question, uuid } = variant;
+    const { difficulty, contexts, options, question, uuid } = variant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
 
@@ -30,7 +30,7 @@ export default function QuestionView({
         <header className={styles.header}>
           <p className={styles.tags}>
             <Tag theme="full-orange" value={difficultyToString[difficulty]} />
-            {(context || []).map((value) => (
+            {(contexts || []).map((value) => (
               <Tag
                 theme="light-orange"
                 key={uuid + "-" + value}
@@ -60,7 +60,7 @@ export default function QuestionView({
         </ol>
       </article>
     );
-  } else if(question) {
+  } else if (question) {
     const { answers, question: content, uuid } = question;
 
     const classes = [styles.question, className];
@@ -70,7 +70,7 @@ export default function QuestionView({
         <header className={styles.header}>
           <p className={styles.tags}>
             <Tag theme="full-orange" value="base" />
-            {(question.context || []).map((value) => (
+            {(question.contexts || []).map((value) => (
               <Tag
                 theme="light-orange"
                 key={uuid + "-" + value}

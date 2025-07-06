@@ -50,15 +50,6 @@ function Page() {
     return questions[questionIndex];
   }, [index, questions]);
 
-  const correctAnswerText = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const questionWithAnswers = question as any;
-    if (questionWithAnswers?.answers && questionWithAnswers.answers.length > 0) {
-      return questionWithAnswers.answers[0].text;
-    };
-
-    return undefined;
-  }, [question]);
   const variants: QuestionVariant[] = useMemo(
     () => question?.variants ?? [],
     [question]
@@ -68,13 +59,13 @@ function Page() {
     () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
     [variants]
   );
-  console.log("Resposta Correta Calculada:", correctAnswerText);
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
 
   return (
-    <><StatusToast />
+    <>
+      <StatusToast />
       <main className={styles.main}>
         <section className={styles.panel}>
           <div className={styles.informations}>
@@ -137,7 +128,10 @@ function Page() {
               render={(item) => {
                 return (
                   <li>
-                    <QuestionView highlight={question?.answers} variant={item} />
+                    <QuestionView
+                      highlight={question?.answers}
+                      variant={item}
+                    />
                   </li>
                 );
               }}
@@ -155,6 +149,7 @@ function Page() {
             participants={room?.participants ?? []}
           />
         </section>
-      </main></>
+      </main>
+    </>
   );
 }

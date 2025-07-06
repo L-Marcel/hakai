@@ -13,7 +13,7 @@ export default function CheckRoomForm() {
 
   const onChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^\d]*/g, "");
-    if(value !== e.target.value) setError("Use apenas dígitos!");
+    if (value !== e.target.value) setError("Use apenas dígitos!");
     else setError("");
     setCode(value);
   };

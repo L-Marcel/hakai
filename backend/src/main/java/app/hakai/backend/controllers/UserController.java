@@ -1,8 +1,8 @@
 package app.hakai.backend.controllers;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.LoginRequestBody;
-import org.kahai.framework.dtos.request.RegisterRequestBody;
+import org.kahai.framework.dtos.request.LoginRequest;
+import org.kahai.framework.dtos.request.RegisterRequest;
 import org.kahai.framework.dtos.response.UserResponse;
 import org.kahai.framework.models.User;
 import org.kahai.framework.services.UserService;
@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(
-        @RequestBody LoginRequestBody body
+        @RequestBody LoginRequest body
     ) {
         String token = service.login(
             body.getEmail(),
@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Void> createUser(
-        @RequestBody RegisterRequestBody body
+        @RequestBody RegisterRequest body
     ) {
         service.createUser(body);
 

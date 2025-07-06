@@ -25,7 +25,7 @@ export function connect(
   const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
   const { setVariants, setQuestion } = useGame.getState();
 
-  if(oldClient && oldClient.connected) return;
+  if (oldClient && oldClient.connected) return;
 
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
@@ -43,31 +43,41 @@ export function connect(
         }
       );
 
-      client.subscribe(
-        `/channel/events/rooms/${code}/status`,
-        (message) => {
-          useGenerationStatus.getState().setGenerationStatus(message.body);
-        }
-      );
+      client.subscribe(`/channel/events/rooms/${code}/status`, (message) => {
+        useGenerationStatus.getState().setGenerationStatus(message.body);
+      });
 
-      if(participant && room) {
+      if (participant && room) {
         client.subscribe(
-          "/channel/events/rooms/" + code + "/participants/" + participant + "/question",
+          "/channel/events/rooms/" +
+            code +
+            "/participants/" +
+            participant +
+            "/question",
           (message) => {
             const variant: QuestionVariant = JSON.parse(message.body);
-            setQuestion(variant);
+            setQuestion({
+              ...variant,
+              type: variant.type.replace("Response", ""),
+            });
           }
         );
       }
 
-      if(participant) getRoom(code);
+      if (participant) getRoom(code);
 
-      if(isOwner) {
+      if (isOwner) {
         client.subscribe(
           "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
-            setVariants(variants);
+            const formattedVariants = variants.map((variant) => ({
+              ...variant,
+              type: variant.type.replace("Response", ""),
+            }));
+
+            setVariants(formattedVariants);
+            console.log(formattedVariants);
           }
         );
       }
@@ -77,5 +87,3 @@ export function connect(
   client.activate();
   setClient(client);
 }
-
-

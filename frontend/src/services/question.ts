@@ -9,21 +9,19 @@ export async function generateVariants(question: UUID): Promise<void> {
 
 export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
   const { room } = useRoom.getState();
-  if(!room) return;
+  if (!room) return;
 
   const code = room.code;
   const original = variants[0].original;
 
-  return await api.post(
-    `questions/send`,
-    {
-      code,
-      original,
-      variants: variants.map((variant) => ({
-        ...variant,
-        original: undefined
-      }))
-    }
-  );
+  return await api.post(`questions/send`, {
+    code,
+    original,
+    variants: variants.map((variant) => ({
+      ...variant,
+      answers: undefined,
+      contexts: undefined,
+      original: undefined,
+    })),
+  });
 }
-

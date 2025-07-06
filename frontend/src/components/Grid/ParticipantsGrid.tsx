@@ -32,10 +32,14 @@ export default function ParticipantsMansoryGrid({
           return acc;
         }, [] as RankedParticipant[])
         .map(({ nickname, uuid, score, rank }) => {
-          if(ranked) {
+          if (ranked) {
             return (
               <li id="ranked" key={uuid}>
-                {userIsRoomOwner && <button onClick={() => kick(uuid)}><FaX/></button> }
+                {userIsRoomOwner && (
+                  <button onClick={() => kick(uuid)}>
+                    <FaX />
+                  </button>
+                )}
                 <h2 role={rank.toString()} className={styles.rank}>
                   {rank}°
                 </h2>
@@ -51,7 +55,11 @@ export default function ParticipantsMansoryGrid({
 
           return (
             <li key={uuid}>
-              {userIsRoomOwner && <button onClick={() => kick(uuid)}><FaX/></button> }
+              {userIsRoomOwner && (
+                <button onClick={() => kick(uuid)}>
+                  <FaX />
+                </button>
+              )}
               <h3 data-selectable className={styles.nickname}>
                 {nickname}
               </h3>

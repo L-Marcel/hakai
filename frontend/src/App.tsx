@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if(!target.closest("[data-selectable]")) {
+      if (!target.closest("[data-selectable]")) {
         window.getSelection()?.removeAllRanges();
       }
     };

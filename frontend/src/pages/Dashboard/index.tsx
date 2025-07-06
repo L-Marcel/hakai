@@ -20,6 +20,7 @@ export default function DashboardPage() {
     </AuthGuard>
   );
 }
+
 function Page() {
   const [error, setError] = useState<string | null>(null);
   const [games, setGames] = useState<Game[]>([]);
@@ -42,10 +43,7 @@ function Page() {
     <main className={styles.main}>
       <header className={styles.header}>
         <div>
-          <Button
-            theme="full-orange"
-            onClick={() => setShowModal(true)}
-          >
+          <Button theme="full-orange" onClick={() => setShowModal(true)}>
             <FaPlus />
           </Button>
           <CheckRoomForm />

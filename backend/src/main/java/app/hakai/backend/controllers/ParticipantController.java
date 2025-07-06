@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.AnswerQuestionRequestBody;
+import org.kahai.framework.dtos.request.AnswerQuestionRequest;
 import org.kahai.framework.dtos.response.ParticipantResponse;
 import org.kahai.framework.models.Answer;
 import org.kahai.framework.models.Game;
-import org.kahai.framework.models.questions.Question;
 import org.kahai.framework.models.User;
+import org.kahai.framework.questions.Question;
 import org.kahai.framework.services.ParticipantAnswerService;
 import org.kahai.framework.services.ParticipantService;
 import org.kahai.framework.services.QuestionService;
@@ -51,7 +51,7 @@ public class ParticipantController {
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
         @AuthenticationPrincipal User user,
-        @RequestBody AnswerQuestionRequestBody body
+        @RequestBody AnswerQuestionRequest body
     ) {
         Question question = questionService.findQuestionById(
             body.getQuestion()
