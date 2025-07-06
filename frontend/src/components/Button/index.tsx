@@ -17,7 +17,7 @@ export default function Button({
   ...props
 }: Props) {
   const classes = [styles.button, className];
-  if(rounded === "full") classes.push(styles.fullRounded);
+  if (rounded === "full") classes.push(styles.fullRounded);
 
   switch (theme) {
     case "light-orange":

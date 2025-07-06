@@ -32,11 +32,13 @@ const useRoom = create<RoomStore>((set, get) => ({
   setClient: (client?: Client) => set({ client }),
   setRoom: (room?: Room) => {
     set({ room });
-    
+
     const { participant } = get();
-    if(participant) {
-      const updated = room?.participants.find(p => p.uuid === participant.uuid);
-      if(updated) {
+    if (participant) {
+      const updated = room?.participants.find(
+        (p) => p.uuid === participant.uuid
+      );
+      if (updated) {
         set({ participant: updated });
       } else {
         set({ participant: undefined });

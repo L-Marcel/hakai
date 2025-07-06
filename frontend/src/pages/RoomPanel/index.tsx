@@ -49,7 +49,7 @@ function Page() {
     const questionIndex = index % questions.length;
     return questions[questionIndex];
   }, [index, questions]);
-  
+
   const variants: QuestionVariant[] = useMemo(
     () => question?.variants ?? [],
     [question]
@@ -64,7 +64,8 @@ function Page() {
   const toPreviousQuestion = () => setIndex((index) => --index);
 
   return (
-    <><StatusToast />
+    <>
+      <StatusToast />
       <main className={styles.main}>
         <section className={styles.panel}>
           <div className={styles.informations}>
@@ -127,7 +128,10 @@ function Page() {
               render={(item) => {
                 return (
                   <li>
-                    <QuestionView highlight={question?.answers} variant={item} />
+                    <QuestionView
+                      highlight={question?.answers}
+                      variant={item}
+                    />
                   </li>
                 );
               }}
@@ -145,6 +149,7 @@ function Page() {
             participants={room?.participants ?? []}
           />
         </section>
-      </main></>
+      </main>
+    </>
   );
 }

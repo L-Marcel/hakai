@@ -60,7 +60,7 @@ export default function QuestionView({
         </ol>
       </article>
     );
-  } else if(question) {
+  } else if (question) {
     const { answers, question: content, uuid } = question;
 
     const classes = [styles.question, className];

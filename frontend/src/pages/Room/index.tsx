@@ -27,7 +27,9 @@ function Page() {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
-        <Button theme="full-orange" onClick={() => exit()}><FaArrowLeft/> Sair</Button>
+        <Button theme="full-orange" onClick={() => exit()}>
+          <FaArrowLeft /> Sair
+        </Button>
         <div className={styles.participants}>
           <h3>Aguardando dono da sala...</h3>
           <h4>

@@ -1,116 +1,100 @@
-"use client";
-import { useEffect, useState } from "react";
-import Button from "@components/Button";
-import styles from "./index.module.scss";
-import { FaArrowLeft, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { groupAnswers } from "@components/Views/Answers";
-import useGame from "@stores/useGame";
 import AuthGuard from "@components/Guards/AuthGuard";
-import { getGameAnswers } from "../../services/answers";
-import { getGame } from "../../services/game";
+import styles from "./index.module.scss";
+
+import Button from "@components/Button";
+import {
+  FaArrowLeft,
+} from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import QuestionView from "@components/Views/Question";
+import useGame from "@stores/useGame";
+import { useEffect } from "react";
 import { UUID } from "crypto";
+import StatusToast from "@components/Toast";
+import { getGame } from "../../services/game";
+import { getGameAnswers } from "../../services/answers";
 
 export default function Results() {
   return (
     <AuthGuard>
-        <Page />
+      <Page />
     </AuthGuard>
   );
 }
 
 export function Page() {
-    const navigate = useNavigate();
-    const { uuid } = useParams();
+  const navigate = useNavigate();
+  const { uuid } = useParams();
 
-    const history = useGame((state) => state.history);
+  const game = useGame((state) => state.game);
+  const history = useGame((state) => state.history);
+  
+  const onClose = () => {
+    navigate("/dashboard");
+  };
+  
+  useEffect(() => {
+    getGame(uuid as UUID);
+    getGameAnswers(uuid as UUID);
+  }, [uuid]);
 
-    const [showByPerson, setShowByPerson] = useState<Record<string, boolean>>({});
-    const groupedResults = groupAnswers(history);
-
-    const toggleShowByPerson = (questionId: string) => {
-        setShowByPerson((prev) => ({
-            ...prev,
-            [questionId]: !prev[questionId],
-        }));
-    };
-
-    useEffect(() => {
-        getGame(uuid as UUID);
-        getGameAnswers(uuid as UUID);
-    }, [uuid]);
-
-    return (
-        <main className={styles.main}>
-            <div className={styles.header}>
-                <Button theme="full-orange" onClick={() => navigate("/dashboard")}>
-                    <FaArrowLeft /> Voltar
-                </Button>
+  return (
+    <>
+      <StatusToast />
+      <main className={styles.main}>
+        <section className={styles.panel}>
+          <div className={styles.controllers}>
+            <div className={styles.buttons}>
+              <Button onClick={onClose} theme="light-orange">
+                <FaArrowLeft />
+                Voltar
+              </Button>
             </div>
-            <div className={styles.section}>
+          </div>
+          <div className={styles.informations}>
+            <h1>{game?.title}</h1>
+            <p>
+              Questões: {" "}
+              <span data-selectable className={styles.code}>
+                {game?.questions.length}
+              </span>
+            </p>
+          </div>
+        </section>
+        <section>
+          {game?.questions.map((question) => {
+            const answers = (history ?? [])
+              .filter((answer) => answer.question === question.uuid);
 
-                <h2>Resultados</h2>
+            return (
+              <div className={styles.history} key={question.uuid}>
+                <QuestionView 
+                  highlight={question?.answers} 
+                  question={question}
+                />
+                {answers.map((answer) => {
+                  const isCorrect = question?.answers.includes(answer.answer);
 
-                <table className={styles.resultsTable}>
-                    <thead>
-                        <tr>
-                            <th>Questão</th>
-                            <th>Total de Respostas</th>
-                            <th>Detalhes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.entries(groupedResults).map(
-                            ([questionId, questionData]) => (
-                                <tr key={questionId} className={styles.questionRow}>
-                                    <td>
-                                        <strong>{questionData.question}</strong>{" "}{}
-                                    </td>
-                                    <td>{questionData.answers.length}</td>
-                                    <td>
-                                        <Button
-                                            theme="partial-orange"
-                                            onClick={() => toggleShowByPerson(questionId)}
-                                            className={styles.toggleButton}
-                                        >
-                                            {showByPerson[questionId] ? (
-                                                <>
-                                                    <FaChevronUp /> Esconder por Pessoa
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <FaChevronDown /> Ver por Pessoa
-                                                </>
-                                            )}
-                                        </Button>
-                                    </td>
-                                    {showByPerson[questionId] && (
-                                        <td colSpan={3} className={styles.answersByPerson}>
-                                            <h3>Respostas por Pessoa:</h3>
-                                            <ul>
-                                                {Object.entries(questionData.groupedByNickname).map(
-                                                    ([nickname, answers]) => (
-                                                        <li key={nickname}>
-                                                            <strong>{nickname}:</strong>
-                                                            <ul>
-                                                                {answers.map((answer) => (
-                                                                    <li key={answer.uuid}>
-                                                                        {answer.answers}
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        </li>
-                                                    )
-                                                )}
-                                            </ul>
-                                        </td>
-                                    )}
-                                </tr>
-                            )
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    );
+                  return (
+                    <article className={styles.question} key={answer.uuid}>
+                      <h4>{answer.nickname}</h4>
+                      <ol className={styles.options}>
+                        <Button
+                          disabled
+                          id={isCorrect? "highlight":""}
+                          theme="partial-orange"
+                        >
+                          {answer.answer}
+                        </Button>
+                      </ol>
+                    </article>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </section>
+      </main>
+    </>
+  );
 }

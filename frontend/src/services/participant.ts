@@ -23,7 +23,7 @@ export async function sendParticipantAnswer(answers: string[]): Promise<void> {
       participant: participant?.uuid,
     })
     .then(() => {
-      if(question){
+      if (question) {
         saveParticipantAnswer(answers, question?.original);
         setQuestion(undefined);
       }
@@ -32,7 +32,7 @@ export async function sendParticipantAnswer(answers: string[]): Promise<void> {
 
 export async function getParticipant(): Promise<void> {
   const { setParticipant } = useRoom.getState();
-  
+
   return await api.get<Participant>("participants/me").then((response) => {
     connect(response.data.room, response.data.uuid);
     setParticipant(response.data);

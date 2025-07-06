@@ -18,7 +18,7 @@ export default function RegisterForm() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if(name === "confirmPassword") {
+    if (name === "confirmPassword") {
       setConfirmPassword(value);
     } else {
       const updatedData = { ...data, [name]: value };
@@ -31,7 +31,7 @@ export default function RegisterForm() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(data.password !== confirmPassword) {
+    if (data.password !== confirmPassword) {
       setError("As senhas não coincidem.");
       return;
     }
