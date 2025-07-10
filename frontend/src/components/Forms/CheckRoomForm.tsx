@@ -40,7 +40,7 @@ export default function CheckRoomForm() {
           onChange={onChangeCode}
           value={code}
         />
-        <Button theme="full-orange" type="submit" tabIndex={-1}>
+        <Button theme="full-purple" type="submit" tabIndex={-1}>
           <FaArrowRight />
         </Button>
       </div>

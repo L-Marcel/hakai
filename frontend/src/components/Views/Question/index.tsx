@@ -29,10 +29,10 @@ export default function QuestionView({
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
           <p className={styles.tags}>
-            <Tag theme="full-orange" value={difficultyToString[difficulty]} />
+            <Tag theme="full-purple" value={difficultyToString[difficulty]} />
             {(contexts || []).map((value) => (
               <Tag
-                theme="light-orange"
+                theme="light-purple"
                 key={uuid + "-" + value}
                 value={value}
               />
@@ -50,7 +50,7 @@ export default function QuestionView({
                 disabled={!!highlight}
                 onClick={() => sendParticipantAnswer([option])}
                 id={id}
-                theme="partial-orange"
+                theme="partial-purple"
                 key={uuid + "-" + option}
               >
                 {option}
@@ -69,10 +69,10 @@ export default function QuestionView({
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
           <p className={styles.tags}>
-            <Tag theme="full-orange" value="base" />
+            <Tag theme="full-purple" value="base" />
             {(question.contexts || []).map((value) => (
               <Tag
-                theme="light-orange"
+                theme="light-purple"
                 key={uuid + "-" + value}
                 value={value}
               />
@@ -86,7 +86,7 @@ export default function QuestionView({
               <Button
                 disabled
                 id="highlight"
-                theme="partial-orange"
+                theme="partial-purple"
                 key={uuid + "-" + option + "-answer"}
               >
                 {option}

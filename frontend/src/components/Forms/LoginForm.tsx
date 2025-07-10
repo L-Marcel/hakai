@@ -42,7 +42,7 @@ export default function LoginForm() {
         value={data.password}
       />
       {error && <p className={styles.error}>{error}</p>}
-      <Button theme="full-orange" type="submit">
+      <Button theme="full-purple" type="submit">
         Entrar
       </Button>
     </form>

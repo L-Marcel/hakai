@@ -155,7 +155,7 @@ export default function GameModal({
               {questions.length > 1 && (
                 <Button
                   type="button"
-                  theme="partial-orange"
+                  theme="partial-purple"
                   onClick={() => handleRemoveQuestion(i)}
                 >
                   Remover
@@ -165,7 +165,7 @@ export default function GameModal({
           ))}
           <Button
             type="button"
-            theme="light-orange"
+            theme="light-purple"
             onClick={handleAddQuestion}
           >
             Adicionar pergunta
@@ -174,10 +174,10 @@ export default function GameModal({
           {error && <p className={styles.error}>{error}</p>}
 
           <div className={styles.actions}>
-            <Button theme="partial-orange" type="button" onClick={onClose}>
+            <Button theme="partial-purple" type="button" onClick={onClose}>
               Cancelar
             </Button>
-            <Button theme="full-orange" type="submit">
+            <Button theme="full-purple" type="submit">
               Criar
             </Button>
           </div>

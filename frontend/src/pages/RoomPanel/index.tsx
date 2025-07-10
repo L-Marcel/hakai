@@ -82,15 +82,15 @@ function Page() {
               <Button
                 disabled={variants.length === 0}
                 onClick={() => sendQuestion(variants as QuestionVariant[])}
-                theme="full-orange"
+                theme="full-purple"
               >
                 <FaPlay />
                 Lançar
               </Button>
               <Button
                 disabled={!question}
-                onClick={() => generateVariants(question?.uuid as UUID)}
-                theme="light-orange"
+                //onClick={() => generateVariants(question?.uuid as UUID)}
+                theme="light-purple"
               >
                 <FaSync />
                 Gerar
@@ -98,7 +98,7 @@ function Page() {
               <Button
                 disabled={index <= 0}
                 onClick={toPreviousQuestion}
-                theme="light-orange"
+                theme="light-purple"
               >
                 <FaArrowLeft />
                 Anterior
@@ -106,12 +106,12 @@ function Page() {
               <Button
                 disabled={index >= questions.length - 1}
                 onClick={toNextQuestion}
-                theme="light-orange"
+                theme="light-purple"
               >
                 <FaArrowRight />
                 Próxima
               </Button>
-              <Button onClick={close} theme="light-orange">
+              <Button onClick={close} theme="light-purple">
                 <FaSignOutAlt />
                 Finalizar
               </Button>
