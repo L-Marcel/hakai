@@ -22,12 +22,12 @@
   &:hover,
   &:focus {
     &:not(:disabled) {
-      box-shadow: $ring-background, $ring-orange-500;
+      box-shadow: $ring-background, $ring-red-500;
     }
   }
 
   &:focus {
-    border-color: $orange-500;
+    border-color: $red-500;
     outline: none;
   }
 }

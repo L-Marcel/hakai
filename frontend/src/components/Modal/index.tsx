@@ -12,8 +12,7 @@ interface GameModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGameCreated: (newGame: Game) => void;
-}
-
+}type QuestionType = "base" | "multiple-choice" | "true-false";
 export default function GameModal({
   isOpen,
   onClose,
@@ -21,16 +20,68 @@ export default function GameModal({
 }: GameModalProps) {
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<QuestionRequest[]>([
-    { question: "", answers: [""], contexts: "" },
+    { question: "", answers: [""], contexts: "", type: "base" },
   ]);
-
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
+  const [exitingAnswers, setExitingAnswers] = useState<{ id: number, text: string }[]>([]);
 
   function handleAddQuestion() {
-    setQuestions([...questions, { question: "", answers: [""], contexts: "" }]);
+    setQuestions([
+      ...questions,
+      { question: "", answers: [""], contexts: "", type: "simple" },
+    ]);
   }
+  function handleTypeChange(idx: number, newType: QuestionType) {
+    const updated = questions.map((q, i) => {
+      if (i === idx) {
+        return { ...q, type: newType, answers: [""] };
+      }
+      return q;
+    });
+    setQuestions(updated);
+  }
+  function handleAnswerChange(questionIdx: number, answerIdx: number, value: string) {
+    setQuestions(prevQuestions =>
+      prevQuestions.map((question, qIdx) => {
+        if (qIdx === questionIdx) {
+          const newAnswers = [...question.answers];
+          newAnswers[answerIdx] = value;
+          return { ...question, answers: newAnswers };
+        } return question;
+      })
+    );
+  }
+  function handleAddAnswer(questionIdx: number) {
+    setQuestions(prevQuestions =>
+      prevQuestions.map((question, qIdx) => {
+        if (qIdx === questionIdx) {
+          return {
+            ...question,
+            answers: [...question.answers, ""],
+          };
+        } return question;
+      })
+    );
+  }
+  function handleRemoveAnswer(questionIdx: number, answerIdx: number) {
+    const ANIMATION_DURATION = 350;
 
+    const answerToRemove = questions[questionIdx].answers[answerIdx];
+    const exitingItem = { id: Date.now(), text: answerToRemove };
+    setExitingAnswers(prev => [...prev, exitingItem]);
+    setQuestions(prevQuestions =>
+      prevQuestions.map((q, i) => {
+        if (i === questionIdx) {
+          return { ...q, answers: q.answers.filter((_, i) => i !== answerIdx) };
+        }
+        return q;
+      })
+    );
+    setTimeout(() => {
+      setExitingAnswers(prev => prev.filter(item => item.id !== exitingItem.id));
+    }, ANIMATION_DURATION);
+  }
   function handleRemoveQuestion(idx: number) {
     const updated = [...questions];
     updated.splice(idx, 1);
@@ -57,21 +108,35 @@ export default function GameModal({
     setQuestions(_questions);
   }
 
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setErrors([]);
 
-    const questionsWithType = questions.map((q) => ({
-      type: q.type ?? "ConcreteQuestionRequest",
-      question: q.question,
-      answers: q.answers,
-      contexts: (q.contexts as string)
-        .split(",")
-        .map((c) => c.trim().toLowerCase())
-        .filter((c) => c),
-    }));
+    const questionsWithType = questions.map((q) => {
+      let type;
+      switch (q.type) {
+        case "multiple-choice":
+          type = "MultipleChoiceQuestionRequest";
+          break;
+        case "true-false":
+          type = "TrueOrFalseQuestionRequest";
+          break;
+        default:
+          type = "ConcreteQuestionRequest";
+      }
 
+      return {
+        type: type,
+        question: q.question,
+        answers: q.answers,
+        contexts: (q.contexts as string)
+          .split(",")
+          .map((c) => c.trim().toLowerCase())
+          .filter((c) => c),
+      };
+    });
     const payload: GameRequest = { title, questions: questionsWithType };
 
     createGame(payload)
@@ -79,7 +144,7 @@ export default function GameModal({
         onGameCreated(createdGame);
         onClose();
         setTitle("");
-        setQuestions([{ question: "", answers: [""], contexts: [] }]);
+        setQuestions([{ question: "", answers: [""], contexts: "", type: "base" }]);
       })
       .catch((error: HttpError | ValidationErrors) => {
         if (error.status === 400 && "errors" in error) {
@@ -121,63 +186,104 @@ export default function GameModal({
           {questions.map((q, i) => (
             <fieldset key={i} className={styles.questionBlock}>
               <legend>Pergunta {i + 1}</legend>
+              <select
+                value={q.type}
+                onChange={(e) => handleTypeChange(i, e.target.value as QuestionType)}
+                className={styles.select}
+              >
+                <option value="simple">Simples</option>
+                <option value="multiple-choice">Múltipla Escolha</option>
+                <option value="true-false">Verdadeiro ou Falso</option>
+              </select>
               <Input
                 autoComplete="off"
                 type="text"
                 placeholder="Pergunta"
                 value={q.question}
-                onChange={(e) =>
-                  handleQuestionChange(i, "question", e.target.value)
-                }
+                onChange={(e) => handleQuestionChange(i, "question", e.target.value)}
               />
               <ErrorLabel field={`questions.${i}.question`} errors={errors} />
-              <Input
-                autoComplete="off"
-                type="text"
-                placeholder="Resposta"
-                value={q.answers[0]}
-                onChange={(e) =>
-                  handleQuestionChange(i, "answers", e.target.value)
-                }
-              />
-              <ErrorLabel field={`questions.${i}.answers.0`} errors={errors} />
+              {q.answers.map((answer, ansIdx) => (
+                <div key={`answer-${ansIdx}`} className={styles.answerRow}>
+                  <Input
+                    autoComplete="off"
+                    type="text"
+                    placeholder={`Resposta ${ansIdx + 1}`}
+                    value={answer}
+                    onChange={(e) => handleAnswerChange(i, ansIdx, e.target.value)}
+                  />
+                  {q.answers.length > 1 && (
+                    <Button
+                      type="button"
+                      theme="full-red"
+                      className={styles.deleteButton}
+                      onClick={() => handleRemoveAnswer(i, ansIdx)}
+                    >
+                      <FaX size={12} />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              {exitingAnswers.map((exitingItem) => (
+                <div
+                  key={exitingItem.id}
+                  className={`${styles.answerRow} ${styles.answerRowExiting}`}
+                >
+                  <Input
+                    autoComplete="off"
+                    type="text"
+                    value={exitingItem.text}
+                    readOnly
+                  />
+                </div>
+              ))}
+              <ErrorLabel field={`questions.${i}.answers`} errors={errors} />
+              <div className={
+                q.type === "multiple-choice" || q.type === "true-false"
+                  ? `${styles.collapsible} ${styles.expanded}`
+                  : styles.collapsible
+              }>
+                <Button
+                  type="button"
+                  theme="partial-red"
+                  onClick={() => handleAddAnswer(i)}
+                >
+                  Adicionar Resposta
+                </Button>
+              </div>
               <Input
                 autoComplete="off"
                 type="text"
                 placeholder="Contextos separados por vírgula"
                 value={q.contexts}
-                onChange={(e) =>
-                  handleQuestionChange(i, "contexts", e.target.value)
-                }
+                onChange={(e) => handleQuestionChange(i, "contexts", e.target.value)}
               />
               <ErrorLabel field={`questions.${i}.contexts`} errors={errors} />
-
               {questions.length > 1 && (
                 <Button
                   type="button"
-                  theme="partial-orange"
+                  theme="partial-red"
                   onClick={() => handleRemoveQuestion(i)}
+                  style={{ 'marginTop': '16px' }}
                 >
-                  Remover
+                  Remover Pergunta
                 </Button>
               )}
             </fieldset>
           ))}
           <Button
             type="button"
-            theme="light-orange"
+            theme="full-red"
             onClick={handleAddQuestion}
           >
-            Adicionar pergunta
+            Adicionar Pergunta
           </Button>
-
           {error && <p className={styles.error}>{error}</p>}
-
           <div className={styles.actions}>
-            <Button theme="partial-orange" type="button" onClick={onClose}>
+            <Button theme="partial-red" type="button" onClick={onClose}>
               Cancelar
             </Button>
-            <Button theme="full-orange" type="submit">
+            <Button theme="full-red" type="submit">
               Criar
             </Button>
           </div>

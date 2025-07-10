@@ -55,7 +55,7 @@
     }
 
     .rank {
-      background-color: $orange-900;
+      background-color: $red-900;
       color: $gray-100;
       aspect-ratio: 1 / 1;
       height: 3rem;
@@ -65,19 +65,19 @@
       border-radius: 100%;
 
       &[role="1"] {
-        background-color: $orange-500;
+        background-color: $red-500;
       }
 
       &[role="2"] {
-        background-color: $orange-600;
+        background-color: $red-600;
       }
 
       &[role="3"] {
-        background-color: $orange-700;
+        background-color: $red-700;
       }
 
       &[role="4"] {
-        background-color: $orange-800;
+        background-color: $red-800;
       }
     }
   }

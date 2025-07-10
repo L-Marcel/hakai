@@ -42,7 +42,7 @@
     margin: 0;
     font-size: 1.75rem;
     font-weight: 700;
-    color: $orange-500;
+    color: $red-500;
   }
 
   .closeBtn {
@@ -88,8 +88,8 @@
 
       &:focus {
         outline: none;
-        border-color: $orange-600;
-        box-shadow: $ring-background, $ring-orange-500;
+        border-color: $red-600;
+        box-shadow: $ring-background, $ring-red-500;
       }
     }
 
@@ -155,10 +155,27 @@
 
         &:focus {
           outline: none;
-          border-color: $orange-600;
-          box-shadow: $ring-background, $ring-orange-500;
+          border-color: $red-600;
+          box-shadow: $ring-background, $ring-red-500;
         }
       }
+    }
+  }
+  select {
+    margin-top: 0.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid $gray-200;
+    border-radius: $border-radius;
+    background: $red-50;
+    font-size: 1rem;
+    transition:
+      border-color 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
+
+    &:focus {
+      outline: none;
+      border-color: $red-600;
+      box-shadow: $ring-background, $ring-red-500;
     }
   }
 }
@@ -179,4 +196,71 @@
       color 0.2s ease-in-out;
     min-width: 100px;
   }
+}
+@keyframes slideInInput {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Define a animação para o botão de excluir
+@keyframes slideInButton {
+  from {
+    opacity: 0;
+    transform: scale(0) translateX(0px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+.answerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  transition: all 2s ease-out;
+  padding: 0.3rem;
+  margin: -0.3rem;
+  max-height: 60px;
+  input {
+    animation: slideInInput 1s ease-in-out forwards;
+  }
+}
+.answerRowExiting {
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+}
+.collapsible {
+  display: flex;
+  flex-direction: column;
+
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  overflow: hidden;
+
+  transition: all 3s ease-in-out;
+  margin: -0.5rem 0;
+}
+.expanded {
+  max-height: 100px;
+  opacity: 1;
+  padding: 5px;
+  margin: -0.3rem 0;
+}
+.deleteButton {
+  margin: 0 0 0 10px;
+  transform: scale(0) translateX(0px);
+  animation: slideInButton 2s ease-in-out 2s forwards;
 }

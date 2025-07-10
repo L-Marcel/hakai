@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.strategies.VariantsDistributionByDifficulty;
+import app.hakai.backend.strategies.VariantsDistributionAllByPercentage;
 import jakarta.annotation.PostConstruct;
 
 @RestController
@@ -34,35 +34,31 @@ public class QuestionController {
     @PostConstruct
     public void setUpStrategies() {
         this.questionService.setDistributionStrategy(
-            new VariantsDistributionByDifficulty()
-        );
+                new VariantsDistributionAllByPercentage());
     };
 
     @RequireAuth
     @PostMapping("/{uuid}/generate")
     public ResponseEntity<Void> startVariantsGeneration(
-        @PathVariable UUID uuid,
-        @AuthenticationPrincipal User user
-    ) {
+            @PathVariable UUID uuid,
+            @AuthenticationPrincipal User user) {
         Room room = roomService.findRoomByUser(user);
         Question question = questionService.findQuestionById(uuid);
         questionService.startVariantsGeneration(question, room);
 
         return ResponseEntity
-            .status(HttpStatus.ACCEPTED)
-            .build();
+                .status(HttpStatus.ACCEPTED)
+                .build();
     };
 
     @PostMapping("/send")
     public ResponseEntity<Void> sendVariantToParticipant(
-        @RequestBody SendQuestionVariantsRequest body
-    ) {
+            @RequestBody SendQuestionVariantsRequest body) {
         Room room = roomService.findRoomByCode(body.getCode());
         questionService.sendVariant(
-            body.getVariants(),
-            body.getOriginal(),
-            room
-        );
+                body.getVariants(),
+                body.getOriginal(),
+                room);
 
         return ResponseEntity.ok().build();
     };

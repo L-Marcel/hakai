@@ -11,14 +11,14 @@
   border-width: 0px;
   border-style: solid;
   background-color: $gray-300;
-  color: $orange-500;
+  color: $red-500;
   border-radius: $border-radius;
   transition: background-color 0.3s ease;
 
   &:hover,
   &:focus {
     &:not(:disabled) {
-      box-shadow: $ring-background, $ring-orange-500;
+      box-shadow: $ring-background, $ring-red-500;
     }
   }
 
@@ -44,27 +44,27 @@
   border-radius: 100%;
 }
 
-.lightOrange {
+.lightRed {
   padding-left: calc(0.75rem + 4px);
-  background-color: $orange-200;
+  background-color: $red-200;
   padding: 0.75rem 1rem 0.75rem 0.75rem;
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    color: $orange-700;
+    color: $red-700;
   }
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    background: $orange-300;
+    background: $red-300;
   }
 
   &[id="highlight"] {
-    box-shadow: $ring-background, $ring-orange-500;
+    box-shadow: $ring-background, $ring-red-500;
   }
 }
 
-.partialOrange {
+.partialRed {
   padding-left: calc(0.75rem + 4px);
   background-color: $gray-300;
   color: $gray-600;
@@ -72,26 +72,26 @@
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    color: $orange-700;
+    color: $red-700;
   }
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    background: $orange-300;
+    background: $red-300;
   }
 
   &[id="highlight"] {
-    box-shadow: $ring-background, $ring-orange-500;
+    box-shadow: $ring-background, $ring-red-500;
   }
 }
 
-.fullOrange {
-  background-color: $orange-500;
+.fullRed {
+  background-color: $red-500;
   color: white;
-  box-shadow: $shadow-orange-500;
+  box-shadow: $shadow-red-500;
 
   &:hover,
   &:focus {
-    background-color: $orange-600;
+    background-color: $red-600;
   }
 }

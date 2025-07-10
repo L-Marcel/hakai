@@ -38,7 +38,7 @@ export default function Card({ game }: CardProps) {
         <Button rounded="full" onClick={seeResults}>
           <FaArrowUpRightDots />
         </Button>
-        <Button theme="light-orange" onClick={onStart}>
+        <Button theme="light-red" onClick={onStart}>
           <FaPlay />
           Iniciar
         </Button>

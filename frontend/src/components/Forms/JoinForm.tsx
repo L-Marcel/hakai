@@ -33,7 +33,7 @@ export default function JoinForm() {
           onChange={onChangeNickname}
           value={nickname}
         />
-        <Button theme="full-orange" type="submit" tabIndex={-1}>
+        <Button theme="full-red" type="submit" tabIndex={-1}>
           <FaArrowRight />
         </Button>
       </div>
