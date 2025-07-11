@@ -1,0 +1,21 @@
+{
+  "type" : "MultipleChoiceQuestion",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "fbfe4bb8-243c-4775-9e23-3406e2a300a3",
+    "question" : "Quais das opções abaixo são linguagens de programação?",
+    "answers" : [ {
+      "uuid" : "cfaf65fc-6588-4f8d-a92f-e0c3e9a9c2cc",
+      "answer" : "Java"
+    }, {
+      "uuid" : "ca2a85ef-bd5b-41da-a690-9262573d5dac",
+      "answer" : "Python"
+    } ],
+    "contexts" : [ {
+      "id" : "41a10d60-c397-4912-a4a4-481c25c21ed5",
+      "name" : "programação"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 0
+  }
+}

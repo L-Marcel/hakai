@@ -1,7 +1,5 @@
 package app.hakai.backend.dtos;
 
-import java.util.List;
-
 import org.kahai.framework.questions.response.BaseQuestionResponse;
 import org.kahai.framework.questions.response.QuestionResponse;
 

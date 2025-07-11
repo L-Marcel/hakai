@@ -114,45 +114,37 @@ export default function GameModal({
     setError("");
     setErrors([]);
 
-    const questionsWithType = questions.map((q) => {
-      let type;
-      switch (q.type) {
-        case "multiple-choice":
-          type = "MultipleChoiceQuestionRequest";
-          break;
-        case "true-false":
-          type = "TrueOrFalseQuestionRequest";
-          break;
-        default:
-          type = "ConcreteQuestionRequest";
-      }
-
-      return {
-        type: type,
+    const questionsForPayload = questions.map((q) => {
+      const baseRequest = {
+        type: "ConcreteQuestionRequest",
         question: q.question,
-        answers: q.answers,
+        answers: q.answers.filter((a) => a),
         contexts: (q.contexts as string)
           .split(",")
           .map((c) => c.trim().toLowerCase())
           .filter((c) => c),
       };
+      if (q.type === "multiple-choice") {
+        return {
+          type: "MultipleChoiceQuestionRequest",
+          wrappee: baseRequest,
+        };
+      }
+      return baseRequest;
     });
-    const payload: GameRequest = { title, questions: questionsWithType };
+    const payload = { title, questions: questionsForPayload as any };
 
-    createGame(payload)
-      .then((createdGame) => {
-        onGameCreated(createdGame);
-        onClose();
-        setTitle("");
-        setQuestions([{ question: "", answers: [""], contexts: "", type: "base" }]);
-      })
-      .catch((error: HttpError | ValidationErrors) => {
-        if (error.status === 400 && "errors" in error) {
-          setErrors((error as ValidationErrors).errors);
-        } else {
-          setError((error as HttpError).message);
-        }
-      });
+    try {
+      const createdGame = await createGame(payload);
+      onGameCreated(createdGame);
+      onClose();
+    } catch (error: any) {
+      if (error.status === 400 && "errors" in error) {
+        setErrors(error.errors);
+      } else {
+        setError(error.message || "Ocorreu um erro desconhecido.");
+      }
+    }
   }
 
   if (!isOpen) return null;

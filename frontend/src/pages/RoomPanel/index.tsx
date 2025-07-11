@@ -17,7 +17,7 @@ import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
 import { close } from "../../services/room";
 import useRoom from "@stores/useRoom";
-import useGame, { QuestionVariant } from "@stores/useGame";
+import useGame, { getVariantData, QuestionVariant } from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
@@ -55,10 +55,11 @@ function Page() {
     [question]
   );
 
-  const hardestVariant = useMemo(
-    () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
-    [variants]
-  );
+  const hardestVariant = useMemo(() => {
+    if (variants.length === 0) return "";
+    const lastVariant = variants[variants.length - 1];
+    return getVariantData(lastVariant).uuid;
+  }, [variants]);
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
@@ -124,7 +125,7 @@ function Page() {
             <QuestionVariantsCarousel
               items={variants}
               start={hardestVariant}
-              identifier={(item) => item.uuid}
+              identifier={(item) => getVariantData(item).uuid}
               render={(item) => {
                 return (
                   <li>

@@ -9,10 +9,10 @@ import org.kahai.framework.utils.Examples;
 import app.hakai.backend.dtos.LanguageQuestionResponse;
 import app.hakai.backend.dtos.MultipleChoiceQuestionResponse;
 
-import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
 import org.kahai.framework.models.Difficulty;
 import org.kahai.framework.questions.BaseQuestion;
 import org.kahai.framework.questions.ConcreteQuestion;
+import org.kahai.framework.questions.Question;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
