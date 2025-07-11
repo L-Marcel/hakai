@@ -7,12 +7,14 @@ import org.kahai.framework.questions.variants.response.QuestionVariantResponse;
 import lombok.Getter;
 
 @Getter
-public class MultipleChoiceQuestionVariantResponse implements QuestionVariantResponse {
+public class LanguageQuestionVariantResponse implements QuestionVariantResponse {
 
     private final QuestionVariantResponse wrappee;
+    private String language;
 
-    public MultipleChoiceQuestionVariantResponse(QuestionVariantResponse wrappee) {
+    public LanguageQuestionVariantResponse(QuestionVariantResponse wrappee, String language) {
         this.wrappee = wrappee;
+        this.language = language;
 
     }
 }

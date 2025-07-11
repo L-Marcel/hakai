@@ -6,6 +6,7 @@ import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.utils.Examples;
 
+import app.hakai.backend.dtos.LanguageQuestionResponse;
 import app.hakai.backend.dtos.MultipleChoiceQuestionResponse;
 
 import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
@@ -20,17 +21,19 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MultipleChoiceQuestion extends BaseQuestion {
+public class LanguageQuestion extends BaseQuestion {
+    private final String language;
 
-    public MultipleChoiceQuestion(Question wrappee) {
+    public LanguageQuestion(Question wrappee, String language) {
         super(wrappee);
+        this.language = language;
     }
 
     @Override
     public QuestionResponse toResponse() {
         QuestionResponse originalResponse = this.wrappee.toResponse();
 
-        return new MultipleChoiceQuestionResponse(originalResponse);
+        return new LanguageQuestionResponse(originalResponse, this.language);
     }
 
     @Override

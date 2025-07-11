@@ -7,14 +7,16 @@ import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.questions.variants.response.QuestionVariantResponse;
 
-import app.hakai.backend.dtos.MultipleChoiceQuestionVariantResponse;
+import app.hakai.backend.dtos.LanguageQuestionVariantResponse;
 import lombok.Getter;
 
 @Getter
-public class MultipleChoiceQuestionVariant extends BaseQuestionVariant {
+public class LanguageQuestionVariant extends BaseQuestionVariant {
+    private String language;
 
-    public MultipleChoiceQuestionVariant(QuestionVariant wrappee) {
+    public LanguageQuestionVariant(QuestionVariant wrappee, String language) {
         super(wrappee);
+        this.language = language;
     }
 
     @Override
@@ -25,6 +27,6 @@ public class MultipleChoiceQuestionVariant extends BaseQuestionVariant {
     @Override
     public QuestionVariantResponse toResponse(Boolean hasAnswer) {
         QuestionVariantResponse baseResponse = this.wrappee.toResponse(hasAnswer);
-        return new MultipleChoiceQuestionVariantResponse(baseResponse);
+        return new LanguageQuestionVariantResponse(baseResponse, this.language);
     }
 }

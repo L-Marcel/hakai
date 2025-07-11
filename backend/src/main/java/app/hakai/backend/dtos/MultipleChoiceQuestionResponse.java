@@ -10,11 +10,8 @@ import lombok.Getter;
 @Getter
 public class MultipleChoiceQuestionResponse extends BaseQuestionResponse {
 
-    private final List<String> options;
-
-    public MultipleChoiceQuestionResponse(QuestionResponse wrappee, List<String> options) {
+    public MultipleChoiceQuestionResponse(QuestionResponse wrappee) {
         super(wrappee);
-        this.options = options;
     }
 
 }
