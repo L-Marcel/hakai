@@ -207,8 +207,6 @@
     transform: translateX(0);
   }
 }
-
-// Define a animação para o botão de excluir
 @keyframes slideInButton {
   from {
     opacity: 0;
@@ -219,7 +217,6 @@
     transform: scale(0.9) translateX(0);
   }
 }
-
 .answerRow {
   display: flex;
   align-items: center;
@@ -244,12 +241,10 @@
 .collapsible {
   display: flex;
   flex-direction: column;
-
   max-height: 0;
   opacity: 0;
   margin: 0;
   overflow: hidden;
-
   transition: all 1.5s ease-in-out;
   margin: -0.5rem 0;
 }
