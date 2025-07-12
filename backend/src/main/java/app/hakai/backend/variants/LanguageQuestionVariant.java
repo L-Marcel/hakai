@@ -7,14 +7,21 @@ import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.questions.variants.response.QuestionVariantResponse;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import app.hakai.backend.dtos.LanguageQuestionVariantResponse;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public class LanguageQuestionVariant extends BaseQuestionVariant {
     private String language;
 
-    public LanguageQuestionVariant(QuestionVariant wrappee, String language) {
+    @JsonCreator
+    public LanguageQuestionVariant(
+            @JsonProperty("wrappee") QuestionVariant wrappee,
+            @JsonProperty("language") String language) {
         super(wrappee);
         this.language = language;
     }

@@ -6,8 +6,13 @@ import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.utils.Examples;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import app.hakai.backend.dtos.LanguageQuestionResponse;
 import app.hakai.backend.dtos.MultipleChoiceQuestionResponse;
+import app.hakai.backend.variants.LanguageQuestionVariant;
+import app.hakai.backend.variants.MultipleChoiceQuestionVariant;
 
 import org.kahai.framework.models.Difficulty;
 import org.kahai.framework.questions.BaseQuestion;
@@ -24,7 +29,10 @@ import lombok.Setter;
 public class LanguageQuestion extends BaseQuestion {
     private final String language;
 
-    public LanguageQuestion(Question wrappee, String language) {
+    @JsonCreator
+    public LanguageQuestion(
+            @JsonProperty("wrappee") Question wrappee,
+            @JsonProperty("language") String language) {
         super(wrappee);
         this.language = language;
     }
@@ -49,17 +57,26 @@ public class LanguageQuestion extends BaseQuestion {
     @Override
     public Examples<? extends QuestionVariant> getPromptExamples() {
         return new Examples<>(
-                new ConcreteQuestionVariant(
-                        "Marque todos os animais da lista que são mamíferos.",
-                        Difficulty.EASY,
-                        List.of("Cachorro", "Gato", "Pássaro")),
-                new ConcreteQuestionVariant(
-                        "Selecione todos os países listados que são membros da União Europeia.",
-                        Difficulty.NORMAL,
-                        List.of("Alemanha", "França", "Brasil", "Japão", "Itália")),
-                new ConcreteQuestionVariant(
-                        "Dentre os elementos a seguir, indique todos que pertencem ao grupo dos gases nobres.",
-                        Difficulty.HARD,
-                        List.of("Hélio", "Neônio", "Oxigênio", "Hidrogênio", "Carbono", "Argônio")));
+                new LanguageQuestionVariant(
+                        new ConcreteQuestionVariant(
+                                "Qual é a capital do Brasil?",
+                                Difficulty.EASY,
+                                List.of("Brasília", "Rio de Janeiro", "São Paulo")),
+                        "Portugues"),
+
+                new LanguageQuestionVariant(
+                        new ConcreteQuestionVariant(
+                                "What is the main ingredient in guacamole?",
+                                Difficulty.NORMAL,
+                                List.of("Avocado", "Tomato", "Onion")),
+                        "Inglês"),
+
+                new LanguageQuestionVariant(
+
+                        new ConcreteQuestionVariant(
+                                "¿Cuáles de los siguientes son colores primarios?",
+                                Difficulty.HARD,
+                                List.of("Rojo", "Azul", "Verde", "Amarillo")),
+                        "Espanhol"));
     }
 }
