@@ -47,7 +47,6 @@ public class ParticipantController {
         return ResponseEntity.ok(response);
     };
 
-    @RequireAuth
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
             @AuthenticationPrincipal User user,
