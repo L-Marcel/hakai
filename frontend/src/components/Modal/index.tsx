@@ -1,4 +1,3 @@
-// src/components/GameModal.tsx
 import { useState } from "react";
 import styles from "./index.module.scss";
 import { Game } from "@stores/useGame";
@@ -12,15 +11,23 @@ interface GameModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGameCreated: (newGame: Game) => void;
-}type QuestionType = "base" | "multiple-choice" | "true-false";
+}
+type QuestionType = "base" | "multiple-choice";
+interface QuestionFormData {
+  question: string;
+  answers: string[];
+  contexts: string;
+  type: QuestionType;
+  language: string;
+}
 export default function GameModal({
   isOpen,
   onClose,
   onGameCreated,
 }: GameModalProps) {
   const [title, setTitle] = useState("");
-  const [questions, setQuestions] = useState<QuestionRequest[]>([
-    { question: "", answers: [""], contexts: "", type: "base" },
+  const [questions, setQuestions] = useState<QuestionFormData[]>([
+    { question: "", answers: [""], contexts: "", type: "base", language: "" },
   ]);
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
@@ -29,7 +36,7 @@ export default function GameModal({
   function handleAddQuestion() {
     setQuestions([
       ...questions,
-      { question: "", answers: [""], contexts: "", type: "simple" },
+      { question: "", answers: [""], contexts: "", type: "base", language: "" }
     ]);
   }
   function handleTypeChange(idx: number, newType: QuestionType) {
@@ -91,7 +98,7 @@ export default function GameModal({
 
   function handleQuestionChange(
     idx: number,
-    field: keyof QuestionRequest,
+    field: keyof QuestionFormData,
     value: string
   ) {
     const _questions = [...questions];
@@ -115,24 +122,35 @@ export default function GameModal({
     setErrors([]);
 
     const questionsForPayload = questions.map((q) => {
-      const baseRequest = {
+
+      let request: any = {
         type: "ConcreteQuestionRequest",
         question: q.question,
-        answers: q.answers.filter((a) => a),
+        answers: q.answers.filter((a) => a.trim()),
         contexts: (q.contexts as string)
           .split(",")
           .map((c) => c.trim().toLowerCase())
           .filter((c) => c),
       };
       if (q.type === "multiple-choice") {
-        return {
+        request = {
           type: "MultipleChoiceQuestionRequest",
-          wrappee: baseRequest,
+          wrappee: request,
         };
       }
-      return baseRequest;
+
+      if (q.language && q.language.trim() !== "") {
+        request = {
+          type: "LanguageQuestionRequest",
+          language: q.language.trim(),
+          wrappee: request,
+        };
+      }
+
+      return request;
     });
-    const payload = { title, questions: questionsForPayload as any };
+
+    const payload = { title, questions: questionsForPayload };
 
     try {
       const createdGame = await createGame(payload);
@@ -185,7 +203,6 @@ export default function GameModal({
               >
                 <option value="simple">Simples</option>
                 <option value="multiple-choice">Múltipla Escolha</option>
-                <option value="true-false">Verdadeiro ou Falso</option>
               </select>
               <Input
                 autoComplete="off"
@@ -195,6 +212,15 @@ export default function GameModal({
                 onChange={(e) => handleQuestionChange(i, "question", e.target.value)}
               />
               <ErrorLabel field={`questions.${i}.question`} errors={errors} />
+              <Input
+                autoComplete="off"
+                type="text"
+                placeholder="Linguagem (opcional, ex: Inglês, Alemão, Espanhol)"
+                value={q.language}
+                onChange={(e) => handleQuestionChange(i, "language", e.target.value)}
+              />
+              <ErrorLabel field={`questions.${i}.language`} errors={errors} />
+
               {q.answers.map((answer, ansIdx) => (
                 <div key={`answer-${ansIdx}`} className={styles.answerRow}>
                   <Input
@@ -231,7 +257,7 @@ export default function GameModal({
               ))}
               <ErrorLabel field={`questions.${i}.answers`} errors={errors} />
               <div className={
-                q.type === "multiple-choice" || q.type === "true-false"
+                q.type === "multiple-choice"
                   ? `${styles.collapsible} ${styles.expanded}`
                   : styles.collapsible
               }>
