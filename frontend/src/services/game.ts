@@ -1,12 +1,26 @@
 import useGame, { Game } from "@stores/useGame";
 import { UUID } from "crypto";
 import api from "./axios";
-export interface QuestionRequest {
-  type?: string;
+
+export type ConcreteQuestionRequest = {
+  type: "ConcreteQuestionRequest";
   question: string;
   answers: string[];
   contexts: string | string[];
-}
+};
+
+export type BaseQuestionRequest = {
+  type: string;
+  wrappee: QuestionRequest;
+};
+
+export type QuestionWithFeedbackRequest = {
+  type: "QuestionWithFeedbackRequest",
+  wrappee: ConcreteQuestionRequest;
+};
+
+
+export type QuestionRequest = ConcreteQuestionRequest | BaseQuestionRequest | QuestionWithFeedbackRequest;
 
 export interface GameRequest {
   title: string;

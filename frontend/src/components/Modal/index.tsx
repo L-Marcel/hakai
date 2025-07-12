@@ -14,21 +14,36 @@ interface GameModalProps {
   onGameCreated: (newGame: Game) => void;
 }
 
+
+type QuestionType = "withFeedback";
+interface QuestionFormData {
+  question: string;
+  answers: string[];
+  contexts: string;
+  type: QuestionType;
+}
+
 export default function GameModal({
   isOpen,
   onClose,
   onGameCreated,
 }: GameModalProps) {
   const [title, setTitle] = useState("");
-  const [questions, setQuestions] = useState<QuestionRequest[]>([
-    { question: "", answers: [""], contexts: "" },
+  const [questions, setQuestions] = useState<QuestionFormData[]>([
+    {
+      question: "", answers: [""], contexts: "",
+      type: "withFeedback"
+    },
   ]);
 
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
   function handleAddQuestion() {
-    setQuestions([...questions, { question: "", answers: [""], contexts: "" }]);
+    setQuestions([...questions, {
+      question: "", answers: [""], contexts: "",
+      type: "withFeedback"
+    }]);
   }
 
   function handleRemoveQuestion(idx: number) {
@@ -40,7 +55,7 @@ export default function GameModal({
 
   function handleQuestionChange(
     idx: number,
-    field: keyof QuestionRequest,
+    field: keyof QuestionFormData,
     value: string
   ) {
     const _questions = [...questions];
@@ -62,32 +77,39 @@ export default function GameModal({
     setError("");
     setErrors([]);
 
-    const questionsWithType = questions.map((q) => ({
-      type: q.type ?? "ConcreteQuestionRequest",
-      question: q.question,
-      answers: q.answers,
-      contexts: (q.contexts as string)
-        .split(",")
-        .map((c) => c.trim().toLowerCase())
-        .filter((c) => c),
-    }));
+    const questionsForPayload = questions.map((q) => {
+      let request: QuestionRequest = {
+        type: "ConcreteQuestionRequest",
+        question: q.question,
+        answers: q.answers.filter((a) => a.trim()),
+        contexts: (q.contexts as string)
+          .split(",")
+          .map((c) => c.trim().toLowerCase())
+          .filter((c) => c),
+      };
 
-    const payload: GameRequest = { title, questions: questionsWithType };
+      request = {
+        type: "QuestionWithFeedbackRequest",
+        wrappee: request,
+      };
 
-    createGame(payload)
-      .then((createdGame) => {
-        onGameCreated(createdGame);
-        onClose();
-        setTitle("");
-        setQuestions([{ question: "", answers: [""], contexts: [] }]);
-      })
-      .catch((error: HttpError | ValidationErrors) => {
-        if (error.status === 400 && "errors" in error) {
-          setErrors((error as ValidationErrors).errors);
-        } else {
-          setError((error as HttpError).message);
-        }
-      });
+      return request;
+    });
+
+    const payload: GameRequest = { title, questions: questionsForPayload };
+
+    try {
+      const createdGame = await createGame(payload);
+      onGameCreated(createdGame);
+      onClose();
+    } catch (error: unknown) {
+      const _error = error as HttpError | ValidationErrors;
+      if (_error.status === 400 && "errors" in _error) {
+        setErrors(_error.errors);
+      } else if("message" in _error) {
+        setError(_error.message || "Ocorreu um erro desconhecido.");
+      }
+    }
   }
 
   if (!isOpen) return null;
