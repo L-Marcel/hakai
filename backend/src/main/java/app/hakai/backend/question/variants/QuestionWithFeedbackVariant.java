@@ -1,16 +1,18 @@
 package app.hakai.backend.question.variants;
 
-import java.util.List;
-
-import org.kahai.framework.models.Difficulty;
+import org.kahai.framework.questions.variants.BaseQuestionVariant;
 import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.questions.variants.response.QuestionVariantResponse;
 
-public class QuestionWithFeedbackVariant implements QuestionVariant {
+import app.hakai.backend.question.variants.dtos.QuestionWithFeedbackVariantResponse;
 
-    public QuestionWithFeedbackVariant(String string, Difficulty difficulty, List<String> options, String feedback) {
-        //TODO Auto-generated constructor stub
+public class QuestionWithFeedbackVariant extends BaseQuestionVariant {
+    private String feedback;
+
+    public QuestionWithFeedbackVariant(QuestionVariant wrappee, String feedback) {
+        super(wrappee);
+        this.feedback = feedback;
     }
 
     @Override
@@ -20,8 +22,10 @@ public class QuestionWithFeedbackVariant implements QuestionVariant {
 
     @Override
     public QuestionVariantResponse toResponse(Boolean hasAnswer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toResponse'");
+        return new QuestionWithFeedbackVariantResponse(
+            this.getWrappee().toResponse(hasAnswer),
+            this.feedback
+        );
     }
     
 }
