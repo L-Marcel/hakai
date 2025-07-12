@@ -28,14 +28,56 @@ export type Question = {
   contexts: string[];
 };
 
-export type QuestionVariant = {
+export type ConcreteQuestionVariant = {
   type: string;
   uuid: UUID;
   question: string;
   difficulty: Difficulty;
   options: string[];
-  contexts: string[];
-  original: UUID;
+  contexts?: string[];
+  answers?: string[];
+  original?: UUID;
+};
+
+export type BaseQuestionVariant = {
+  type: string;
+  wrappee: QuestionVariant;
+};
+
+export type QuestionVariant = BaseQuestionVariant | ConcreteQuestionVariant;
+
+export function getConcreteQuestionVariant(variant: QuestionVariant): ConcreteQuestionVariant {
+  if ('wrappee' in variant && variant.wrappee) {
+    return getConcreteQuestionVariant(variant.wrappee);
+  };
+
+  return variant as ConcreteQuestionVariant;
+};
+
+export function transformQuestionVariantFromResponse(variant: QuestionVariant): QuestionVariant {
+  variant.type = variant.type.replace("Response", "");
+
+  if ('wrappee' in variant && variant.wrappee) {
+    variant.wrappee = transformQuestionVariantFromResponse(variant.wrappee);
+  };
+
+  return variant;
+};
+
+export function transformQuestionVariantToRequest(variant: QuestionVariant): QuestionVariant {
+  variant.type = variant.type.replace("Response", "");
+
+  if ('wrappee' in variant && variant.wrappee) {
+    variant.wrappee = transformQuestionVariantToRequest(variant.wrappee);
+    return variant;
+  };
+
+  return {
+    ...variant,
+    answers: undefined,
+    contexts: undefined,
+    original: undefined
+  };
 };
 
 export type AnswersHistory = {
@@ -61,9 +103,10 @@ const useGame = create<GameStore>((set) => ({
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
       if (variants.length === 0 || !state.game) return state;
+      const firstVariantData = getConcreteQuestionVariant(variants[0]);
 
       const questions = state.game.questions.map((question) => {
-        if (question.uuid === variants[0].original) {
+        if (question.uuid === firstVariantData.original) {
           return {
             ...question,
             variants,
