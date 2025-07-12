@@ -36,69 +36,62 @@ public class ParticipantController {
 
     @Autowired
     private QuestionService questionService;
-    
+
     @RequireAuth
     @GetMapping("/me")
     public ResponseEntity<ParticipantResponse> findParticipantByUser(
-        @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         Participant participant = participantService.findParticipantByUser(user);
         ParticipantResponse response = new ParticipantResponse(participant);
 
         return ResponseEntity.ok(response);
     };
 
+    @RequireAuth
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
-        @AuthenticationPrincipal User user,
-        @RequestBody AnswerQuestionRequest body
-    ) {
+            @AuthenticationPrincipal User user,
+            @RequestBody AnswerQuestionRequest body) {
         Question question = questionService.findQuestionById(
-            body.getQuestion()
-        );
-        
+                body.getQuestion());
+
         Participant participant = participantService.findParticipantByUuid(
-            body.getParticipant()
-        );
-        
+                body.getParticipant());
+
         participantService.answerQuestion(
-            question, 
-            participant, 
-            body.getAnswers()
-        );
+                question,
+                participant,
+                body.getAnswers());
 
         UUID session = participant.getRoom().getSession();
         Game game = participant.getRoom().getGame();
         String nickname = participant.getNickname();
-        
+
         List<Answer> answers = Answer.fromList(
-            body.getAnswers()
-        );
+                body.getAnswers());
 
         answerService.createParticipantAnswer(
-            session, 
-            game, 
-            user,
-            question, 
-            nickname,
-            answers
-        );
+                session,
+                game,
+                user,
+                question,
+                nickname,
+                answers);
 
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build();
-    };    
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    };
 
     @RequireAuth
     @DeleteMapping
     public ResponseEntity<Void> kickFromRoom(
-        @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         Participant participant = participantService.findParticipantByUser(user);
         participantService.removeParticipant(participant);
 
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build();
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     };
 };

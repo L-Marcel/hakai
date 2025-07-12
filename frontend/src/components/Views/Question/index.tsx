@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
@@ -20,13 +20,29 @@ export default function QuestionView({
   className,
   ...props
 }: Props) {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]); console.log("Opções selecionadas:", selectedOptions);
   if (variant) {
+
     const variantData = getConcreteQuestionVariant(variant);
 
     const { difficulty, contexts, options, question, uuid } = variantData;
-
+    console.log("Opções selecionadas:", selectedOptions);
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
+    const handleOptionToggle = (option: string) => {
+      setSelectedOptions((currentSelected) => {
+        if (currentSelected.includes(option)) {
+          return currentSelected.filter((item) => item !== option);
+        }
+        return [...currentSelected, option];
+      });
+    }; const handleSubmit = () => {
+      if (selectedOptions.length === 0) {
+        alert("Por favor, selecione ao menos uma resposta.");
+        return;
+      }
+      sendParticipantAnswer(selectedOptions);
+    };
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -44,22 +60,30 @@ export default function QuestionView({
         </header>
         <ol className={styles.options}>
           {options.map((option) => {
-            const id =
-              highlight && highlight.includes(option) ? "highlight" : "option";
+            const isSelected = selectedOptions.includes(option);
+            const isHighlighted = highlight && highlight.includes(option);
 
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => sendParticipantAnswer([option])}
-                id={id}
-                theme="partial-red"
+                onClick={() => handleOptionToggle(option)}
+                theme={isSelected ? "light-red" : "partial-red"}
+                id={isHighlighted ? "highlight" : "option"}
                 key={uuid + "-" + option}
               >
                 {option}
               </Button>
             );
           })}
-        </ol>
+        </ol>  {!highlight && (
+          <Button
+            onClick={handleSubmit}
+            theme="full-red"
+            style={{ marginTop: '20px', width: '100%' }}
+          >
+            Enviar Resposta
+          </Button>
+        )}
       </article>
     );
   } else if (question) {

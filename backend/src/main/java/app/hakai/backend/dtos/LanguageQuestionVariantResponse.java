@@ -2,18 +2,18 @@ package app.hakai.backend.dtos;
 
 import java.util.List;
 
+import org.kahai.framework.questions.variants.response.BaseQuestionVariantResponse;
 import org.kahai.framework.questions.variants.response.QuestionVariantResponse;
 
 import lombok.Getter;
 
 @Getter
-public class LanguageQuestionVariantResponse implements QuestionVariantResponse {
+public class LanguageQuestionVariantResponse extends BaseQuestionVariantResponse {
 
-    private final QuestionVariantResponse wrappee;
     private String language;
 
     public LanguageQuestionVariantResponse(QuestionVariantResponse wrappee, String language) {
-        this.wrappee = wrappee;
+        super(wrappee);
         this.language = language;
 
     }
