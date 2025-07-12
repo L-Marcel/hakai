@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.strategies.VariantsDistributionStrategy;
@@ -14,15 +13,15 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
 
     @Override
     public Optional<QuestionVariant> selectVariant(Participant participant, List<QuestionVariant> variants) {
-        return Optional.empty();
-    }
+        Collections.shuffle(variants);
+        return variants.size() > 0? Optional.of(variants.getFirst()) : Optional.empty();
+    };
 
     @Override
     public List<QuestionVariant> selectVariants(Participant participant, List<QuestionVariant> variants) {
-
         if (variants == null || variants.isEmpty()) {
             return Collections.emptyList();
-        }
+        };
 
         List<QuestionVariant> hardVariants = new ArrayList<>();
         List<QuestionVariant> mediumVariants = new ArrayList<>();
@@ -39,8 +38,8 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
                 case EASY:
                     easyVariants.add(variant);
                     break;
-            }
-        }
+            };
+        };
 
         int totalSize = variants.size();
         int hardCount = (int) Math.round(totalSize * 0.30);
@@ -58,5 +57,5 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
 
         Collections.shuffle(selectedVariants);
         return selectedVariants;
-    }
-}
+    };
+};

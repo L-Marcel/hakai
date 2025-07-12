@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
 import { Game } from "@stores/useGame";
-import { createGame, GameRequest, QuestionRequest } from "../../services/game";
+import { createGame, QuestionRequest } from "../../services/game";
 import Input from "@components/Input";
 import ErrorLabel from "@components/Forms/ErrorsLabel";
 import { FaX } from "react-icons/fa6";
@@ -123,7 +123,7 @@ export default function GameModal({
 
     const questionsForPayload = questions.map((q) => {
 
-      let request: any = {
+      let request: QuestionRequest = {
         type: "ConcreteQuestionRequest",
         question: q.question,
         answers: q.answers.filter((a) => a.trim()),
@@ -132,6 +132,7 @@ export default function GameModal({
           .map((c) => c.trim().toLowerCase())
           .filter((c) => c),
       };
+
       if (q.type === "multiple-choice") {
         request = {
           type: "MultipleChoiceQuestionRequest",
@@ -156,11 +157,12 @@ export default function GameModal({
       const createdGame = await createGame(payload);
       onGameCreated(createdGame);
       onClose();
-    } catch (error: any) {
-      if (error.status === 400 && "errors" in error) {
-        setErrors(error.errors);
-      } else {
-        setError(error.message || "Ocorreu um erro desconhecido.");
+    } catch (error: unknown) {
+      const _error = error as HttpError | ValidationErrors;
+      if (_error.status === 400 && "errors" in _error) {
+        setErrors(_error.errors);
+      } else if("message" in _error) {
+        setError(_error.message || "Ocorreu um erro desconhecido.");
       }
     }
   }

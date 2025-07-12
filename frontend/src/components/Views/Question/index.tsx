@@ -2,7 +2,7 @@ import { DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
-import { difficultyToString, Question, getVariantData, QuestionVariant } from "@stores/useGame";
+import { difficultyToString, Question, getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
@@ -21,7 +21,7 @@ export default function QuestionView({
   ...props
 }: Props) {
   if (variant) {
-    const variantData = getVariantData(variant);
+    const variantData = getConcreteQuestionVariant(variant);
 
     const { difficulty, contexts, options, question, uuid } = variantData;
 
