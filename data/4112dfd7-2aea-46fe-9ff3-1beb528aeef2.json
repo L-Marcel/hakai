@@ -1,0 +1,22 @@
+{
+  "type" : "QuestionWithFeedback",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "4112dfd7-2aea-46fe-9ff3-1beb528aeef2",
+    "question" : "Quanto é 5+2",
+    "answers" : [ {
+      "uuid" : "c34467ef-4f65-4458-a164-7f6822036ee7",
+      "answer" : "7"
+    } ],
+    "contexts" : [ {
+      "id" : "d054475f-0eb6-42f0-9206-9d98ce31f755",
+      "name" : "soma"
+    }, {
+      "id" : "501671bc-eedf-4c4d-a0b8-f4e0329ccc9d",
+      "name" : "matematica"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 0
+  },
+  "feedback" : null
+}
