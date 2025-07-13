@@ -31,7 +31,7 @@ function Page() {
         {
           //<QuestionView variant={game.questions} />
         }
-        Nº Questões {}
+        Nº Questões {game?.questions.length}
       </section>
     </main>
   );
