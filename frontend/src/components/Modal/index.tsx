@@ -18,7 +18,8 @@ interface QuestionFormData {
   answers: string[];
   contexts: string;
   type: QuestionType;
-  language: string;
+  language: string; correctValue: string;
+  wrongValue: string;
 }
 export default function GameModal({
   isOpen,
@@ -27,18 +28,18 @@ export default function GameModal({
 }: GameModalProps) {
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<QuestionFormData[]>([
-    { question: "", answers: [""], contexts: "", type: "base", language: "" },
+    { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" },
   ]);
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [exitingAnswers, setExitingAnswers] = useState<{ id: number, text: string }[]>([]);
-
   function handleAddQuestion() {
     setQuestions([
       ...questions,
-      { question: "", answers: [""], contexts: "", type: "base", language: "" }
+      { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" }
     ]);
   }
+
   function handleTypeChange(idx: number, newType: QuestionType) {
     const updated = questions.map((q, i) => {
       if (i === idx) {
@@ -101,17 +102,12 @@ export default function GameModal({
     field: keyof QuestionFormData,
     value: string
   ) {
-    const _questions = [...questions];
-
-    if (field === "answers") {
-      _questions[idx][field][0] = value;
-    } else {
-      _questions[idx] = {
-        ..._questions[idx],
-        [field]: value,
-      };
-    }
-
+    const _questions = questions.map((q, i) => {
+      if (i === idx) {
+        return { ...q, [field]: value };
+      }
+      return q;
+    });
     setQuestions(_questions);
   }
 
@@ -122,8 +118,7 @@ export default function GameModal({
     setErrors([]);
 
     const questionsForPayload = questions.map((q) => {
-
-      let request: QuestionRequest = {
+      let request: any = { // Usando 'any' para flexibilidade na montagem
         type: "ConcreteQuestionRequest",
         question: q.question,
         answers: q.answers.filter((a) => a.trim()),
@@ -131,6 +126,9 @@ export default function GameModal({
           .split(",")
           .map((c) => c.trim().toLowerCase())
           .filter((c) => c),
+        // Converte os valores para número antes de enviar
+        correctValue: parseInt(q.correctValue, 10) || 1,
+        wrongValue: parseInt(q.wrongValue, 10) || 0,
       };
 
       if (q.type === "multiple-choice") {
@@ -147,7 +145,6 @@ export default function GameModal({
           wrappee: request,
         };
       }
-
       return request;
     });
 
@@ -161,7 +158,7 @@ export default function GameModal({
       const _error = error as HttpError | ValidationErrors;
       if (_error.status === 400 && "errors" in _error) {
         setErrors(_error.errors);
-      } else if("message" in _error) {
+      } else if ("message" in _error) {
         setError(_error.message || "Ocorreu um erro desconhecido.");
       }
     }
@@ -197,7 +194,32 @@ export default function GameModal({
           <ErrorLabel field="title" errors={errors} />
           {questions.map((q, i) => (
             <fieldset key={i} className={styles.questionBlock}>
-              <legend>Pergunta {i + 1}</legend>
+              <legend>Pergunta {i + 1}</legend> <div className={styles.scoreEditor} style={{ display: 'flex', gap: '1rem', margin: '1rem 0' }}>
+                <div className={styles.scoreEditor__field} style={{ flex: 1 }}>
+                  <label htmlFor={`correctValue-${i}`}>Valor por Acerto</label>
+                  <Input
+                    autoComplete="off"
+                    type="number"
+                    id={`correctValue-${i}`}
+                    placeholder="Ex: 1"
+                    value={q.correctValue}
+                    onChange={(e: any) => handleQuestionChange(i, "correctValue", e.target.value)}
+                  />
+                  <ErrorLabel field={`questions.${i}.correctValue`} errors={errors} />
+                </div>
+                <div className={styles.scoreEditor__field} style={{ flex: 1 }}>
+                  <label htmlFor={`wrongValue-${i}`}>Valor por Erro</label>
+                  <Input
+                    autoComplete="off"
+                    type="number"
+                    id={`wrongValue-${i}`}
+                    placeholder="Ex: 0"
+                    value={q.wrongValue}
+                    onChange={(e: any) => handleQuestionChange(i, "wrongValue", e.target.value)}
+                  />
+                  <ErrorLabel field={`questions.${i}.wrongValue`} errors={errors} />
+                </div>
+              </div>
               <select
                 value={q.type}
                 onChange={(e) => handleTypeChange(i, e.target.value as QuestionType)}

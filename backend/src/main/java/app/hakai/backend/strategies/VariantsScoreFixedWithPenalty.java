@@ -18,12 +18,17 @@ public class VariantsScoreFixedWithPenalty implements VariantsScoreStrategy {
 
         int correctValue = rootQuestion.getCorrectValue();
         int wrongValue = rootQuestion.getWrongValue();
+
         int totalScore = 0;
         for (Boolean isCorrect : corrects) {
             if (isCorrect) {
                 totalScore += correctValue;
             } else {
-                totalScore -= wrongValue;
+                if (wrongValue < 0) {
+                    totalScore += wrongValue;
+                } else {
+                    totalScore -= wrongValue;
+                }
             }
         }
         return totalScore;

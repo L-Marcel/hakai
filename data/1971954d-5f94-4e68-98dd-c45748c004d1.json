@@ -1,0 +1,25 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestion",
+    "wrappee" : {
+      "type" : "ConcreteQuestion",
+      "uuid" : "1971954d-5f94-4e68-98dd-c45748c004d1",
+      "question" : "Quais das opções são frutas?",
+      "answers" : [ {
+        "uuid" : "85e2b1b2-9a71-4d26-a610-2d1879716e63",
+        "answer" : "Apple"
+      }, {
+        "uuid" : "4237bdb9-5355-4cb7-a46a-81441b3cc4ab",
+        "answer" : "Tomato"
+      } ],
+      "contexts" : [ {
+        "id" : "df4b37b4-7fa0-4aac-82b3-8941a1a93f5f",
+        "name" : "fruits"
+      } ],
+      "correctValue" : 1,
+      "wrongValue" : 1
+    }
+  },
+  "language" : "Inglês"
+}
