@@ -45,33 +45,25 @@ public class QuestionController {
     @RequireAuth
     @PostMapping("/{uuid}/generate")
     public ResponseEntity<Void> startVariantsGeneration(
-        @PathVariable UUID uuid,
-        @AuthenticationPrincipal User user
-    ) {
+            @PathVariable UUID uuid,
+            @AuthenticationPrincipal User user) {
         Room room = roomService.findRoomByUser(user);
         Question question = questionService.findQuestionById(uuid);
         questionService.startVariantsGeneration(question, room);
 
         return ResponseEntity
-            .status(HttpStatus.ACCEPTED)
-            .build();
+                .status(HttpStatus.ACCEPTED)
+                .build();
     };
 
     @PostMapping("/send")
     public ResponseEntity<Void> sendVariantToParticipant(
-        @RequestBody List<SendQuestionVariantsRequest> body
-    ) {
-        Room room = roomService.findRoomByCode(body.get(0).getCode());
-
-        Map<UUID, List<QuestionVariant>> mappedVariants = new HashMap<>();
-        for (SendQuestionVariantsRequest request : body) {
-            mappedVariants.put(request.getOriginal(), request.getVariants());
-        }
-
-        questionService.sendAllVariant(
-            mappedVariants,
-            room
-        );
+            @RequestBody SendQuestionVariantsRequest body) {
+        Room room = roomService.findRoomByCode(body.getCode());
+        questionService.sendVariant(
+                body.getVariants(),
+                body.getOriginal(),
+                room);
 
         return ResponseEntity.ok().build();
     };

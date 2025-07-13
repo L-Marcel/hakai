@@ -1,5 +1,6 @@
 package app.hakai.backend.controllers;
 
+import java.time.Duration;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
 import jakarta.annotation.PostConstruct;
 
 @RestController
@@ -44,65 +46,63 @@ public class RoomController {
 
     @Autowired
     private AccessControlService accessControlService;
-    
+    @Autowired
+    private ProvaiRoomEventStrategy provaiStrategy;
+
     @PostConstruct
     public void setUpStrategies() {
         this.roomService.setEventStrategy(
-            new RoomEventStrategyNone()
-        );
+                new RoomEventStrategyNone());
     };
 
     @RequireAuth
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(
-        @RequestBody RoomRequest body,
-        @AuthenticationPrincipal User user
-    ) {
+            @RequestBody RoomRequest body,
+            @AuthenticationPrincipal User user) {
         Game game = gameService.findGameById(body.getGame());
         accessControlService.checkGameOwnership(user, game);
-
-        Room createdRoom = roomService.createRoom(game);
+        Duration duration = Duration.ofHours(1);
+        Room createdRoom = roomService.createRoom(game, duration);
+        provaiStrategy.onStart(createdRoom);
         RoomResponse response = new RoomResponse(createdRoom);
 
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(response);
+                .status(HttpStatus.CREATED)
+                .body(response);
     };
 
     @RequireAuth
     @DeleteMapping
     public ResponseEntity<Void> closeRoom(
-        @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         Room room = roomService.findRoomByUser(user);
         participantService.removeAllByRoom(room);
         roomService.closeRoom(room);
 
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build();
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     };
 
     @RequireAuth
     @DeleteMapping("/participants/{uuid}")
     public ResponseEntity<Void> kickFromRoom(
-        @PathVariable UUID uuid,
-        @AuthenticationPrincipal User user
-    ) {
+            @PathVariable UUID uuid,
+            @AuthenticationPrincipal User user) {
         Participant participant = participantService.findParticipantByUuid(uuid);
         accessControlService.checkRoomOwnership(user, participant.getRoom());
         participantService.removeParticipant(participant);
 
         return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .build();
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     };
 
     @RequireAuth
     @GetMapping
     public ResponseEntity<RoomResponse> findRoomByUser(
-        @AuthenticationPrincipal User user
-    ) {
+            @AuthenticationPrincipal User user) {
         Room room = roomService.findRoomByUser(user);
         RoomResponse response = new RoomResponse(room);
 
@@ -111,31 +111,28 @@ public class RoomController {
 
     @GetMapping("/{code}")
     public ResponseEntity<RoomResponse> findRoomByCode(
-        @PathVariable String code
-    ) {
+            @PathVariable String code) {
         Room room = roomService.findRoomByCode(code);
         RoomResponse response = new RoomResponse(room);
 
         return ResponseEntity.ok(response);
     };
-    
+
     @PostMapping("/{code}/join")
     public ResponseEntity<ParticipantResponse> joinRoom(
-        @PathVariable String code,
-        @RequestBody JoinRoomRequest body,
-        @AuthenticationPrincipal User user
-    ) {
+            @PathVariable String code,
+            @RequestBody JoinRoomRequest body,
+            @AuthenticationPrincipal User user) {
         Room room = roomService.findRoomByCode(code);
         Participant participant = participantService.createParticipant(
-            body, 
-            room,
-            user
-        );
+                body,
+                room,
+                user);
 
         ParticipantResponse response = new ParticipantResponse(participant);
 
         return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(response);
+                .status(HttpStatus.CREATED)
+                .body(response);
     };
 };

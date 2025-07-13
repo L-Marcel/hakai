@@ -24,6 +24,8 @@ export type Question = {
   uuid: UUID;
   question: string;
   answers: string[];
+  wrongValue: number;
+  correctValue: number;
   variants?: QuestionVariant[];
   contexts: string[];
 };
@@ -94,7 +96,7 @@ type GameStore = {
   setQuestion: (current?: QuestionVariant) => void;
   setGame: (game?: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
-  setHistory: (answers: AnswersHistory[]) => void;
+  setHistory: (answers: AnswersHistory[]) => void; updateQuestion: (questionId: UUID, field: 'correctValue' | 'wrongValue', value: number) => void;
 };
 
 const useGame = create<GameStore>((set) => ({
@@ -122,7 +124,34 @@ const useGame = create<GameStore>((set) => ({
         },
       };
     }),
+
   setHistory: (history: AnswersHistory[]) => set({ history }),
+
+  updateQuestion: (questionId, field, value) =>
+    set((state) => {
+      if (!state.game) {
+        return state; // Retorna o estado atual se não houver jogo
+      }
+
+      const updatedQuestions = state.game.questions.map((q) => {
+        // Se encontramos a questão correta...
+        if (q.uuid === questionId) {
+          // ...retornamos uma CÓPIA dela com o valor atualizado.
+          return {
+            ...q,
+            [field]: value, // Atualiza 'correctValue' ou 'wrongValue'
+          };
+        }
+        return q;
+      });
+
+      return {
+        game: {
+          ...state.game,
+          questions: updatedQuestions,
+        },
+      };
+    }),
 }));
 
 export default useGame;

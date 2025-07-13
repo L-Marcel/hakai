@@ -1,0 +1,25 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestion",
+    "wrappee" : {
+      "type" : "ConcreteQuestion",
+      "uuid" : "a7b2867a-8534-4d8b-ae9c-8b307ba3433c",
+      "question" : "Quais das opções são frutas?",
+      "answers" : [ {
+        "uuid" : "37a2f025-e2bc-4ab5-bd30-40481426fc88",
+        "answer" : "Tomate"
+      }, {
+        "uuid" : "bf97cc87-6dac-4678-a07c-80c5c4c51ea0",
+        "answer" : "Maça"
+      } ],
+      "contexts" : [ {
+        "id" : "3badddde-6fa3-4c21-8de1-b48890f2a740",
+        "name" : "fruits"
+      } ],
+      "correctValue" : 1,
+      "wrongValue" : 0
+    }
+  },
+  "language" : "Inglês"
+}

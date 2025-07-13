@@ -43,3 +43,29 @@
   gap: 0.25rem;
   margin-bottom: 0.5rem;
 }
+.scoreEditor {
+  display: flex;
+  gap: 1.25rem; // ~20px
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: $gray-200; // Um pouco mais escuro para destacar a área
+  border-radius: $border-radius;
+
+  // Cada um dos campos (div)
+  &__field {
+    flex: 1;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid $gray-300;
+      border-radius: $border-radius;
+    }
+  }
+}
