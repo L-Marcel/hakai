@@ -42,7 +42,7 @@
     margin: 0;
     font-size: 1.75rem;
     font-weight: 700;
-    color: $red-500;
+    color: $purple-500;
   }
 
   .closeBtn {
@@ -88,8 +88,8 @@
 
       &:focus {
         outline: none;
-        border-color: $red-600;
-        box-shadow: $ring-background, $ring-red-500;
+        border-color: $purple-600;
+        box-shadow: $ring-background, $ring-purple-500;
       }
     }
 
@@ -155,27 +155,10 @@
 
         &:focus {
           outline: none;
-          border-color: $red-600;
-          box-shadow: $ring-background, $ring-red-500;
+          border-color: $purple-600;
+          box-shadow: $ring-background, $ring-purple-500;
         }
       }
-    }
-  }
-  select {
-    margin-top: 0.25rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid $gray-200;
-    border-radius: $border-radius;
-    background: $red-50;
-    font-size: 1rem;
-    transition:
-      border-color 0.2s ease-in-out,
-      box-shadow 0.2s ease-in-out;
-
-    &:focus {
-      outline: none;
-      border-color: $red-600;
-      box-shadow: $ring-background, $ring-red-500;
     }
   }
 }

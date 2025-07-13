@@ -43,12 +43,12 @@ function Page() {
     <main className={styles.main}>
       <header className={styles.header}>
         <div>
-          <Button theme="full-red" onClick={() => setShowModal(true)}>
+          <Button theme="full-purple" onClick={() => setShowModal(true)}>
             <FaPlus />
           </Button>
           <CheckRoomForm />
         </div>
-        <Button theme="full-red" onClick={() => logout()}>
+        <Button theme="full-purple" onClick={() => logout()}>
           <FaSignOutAlt />
         </Button>
       </header>

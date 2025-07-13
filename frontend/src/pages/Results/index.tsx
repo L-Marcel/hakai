@@ -43,7 +43,7 @@ export function Page() {
         <section className={styles.panel}>
           <div className={styles.controllers}>
             <div className={styles.buttons}>
-              <Button onClick={onClose} theme="light-red">
+              <Button onClick={onClose} theme="light-purple">
                 <FaArrowLeft />
                 Voltar
               </Button>
@@ -81,7 +81,7 @@ export function Page() {
                         <Button
                           disabled
                           id={isCorrect ? "highlight" : ""}
-                          theme="partial-red"
+                          theme="partial-purple"
                         >
                           {answer.answer}
                         </Button>

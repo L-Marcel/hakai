@@ -5,6 +5,7 @@ import Button from "@components/Button";
 import { create } from "../../services/room";
 import { Game } from "@stores/useGame";
 import { FaArrowUpRightDots } from "react-icons/fa6";
+import { generateVariants } from "../../services/question";
 interface CardProps {
   game: Game;
 }
@@ -14,6 +15,7 @@ export default function Card({ game }: CardProps) {
 
   const onStart = () => {
     create(game.uuid).then((code) => {
+      //generateVariants(game.questions);
       navigate("/room/panel/" + code);
     });
   };
@@ -38,7 +40,7 @@ export default function Card({ game }: CardProps) {
         <Button rounded="full" onClick={seeResults}>
           <FaArrowUpRightDots />
         </Button>
-        <Button theme="light-red" onClick={onStart}>
+        <Button theme="light-purple" onClick={onStart}>
           <FaPlay />
           Iniciar
         </Button>

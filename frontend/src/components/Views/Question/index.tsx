@@ -22,11 +22,8 @@ export default function QuestionView({
 }: Props) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]); console.log("Opções selecionadas:", selectedOptions);
   if (variant) {
-
-    const variantData = getConcreteQuestionVariant(variant);
-
-    const { difficulty, contexts, options, question, uuid } = variantData;
-    console.log("Opções selecionadas:", selectedOptions);
+    const concreteVariant = getConcreteQuestionVariant(variant);
+    const { difficulty, contexts, options, question, uuid } = concreteVariant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
     const handleOptionToggle = (option: string) => {
@@ -47,10 +44,10 @@ export default function QuestionView({
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
           <p className={styles.tags}>
-            <Tag theme="full-red" value={difficultyToString[difficulty]} />
+            <Tag theme="full-purple" value={difficultyToString[difficulty]} />
             {(contexts || []).map((value) => (
               <Tag
-                theme="light-red"
+                theme="light-purple"
                 key={uuid + "-" + value}
                 value={value}
               />
@@ -66,9 +63,9 @@ export default function QuestionView({
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => handleOptionToggle(option)}
-                theme={isSelected ? "light-red" : "partial-red"}
-                id={isHighlighted ? "highlight" : "option"}
+                onClick={() => sendParticipantAnswer([option])}
+                id={id}
+                theme="partial-purple"
                 key={uuid + "-" + option}
               >
                 {option}
@@ -95,10 +92,10 @@ export default function QuestionView({
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
           <p className={styles.tags}>
-            <Tag theme="full-red" value="base" />
+            <Tag theme="full-purple" value="base" />
             {(question.contexts || []).map((value) => (
               <Tag
-                theme="light-red"
+                theme="light-purple"
                 key={uuid + "-" + value}
                 value={value}
               />
@@ -112,7 +109,7 @@ export default function QuestionView({
               <Button
                 disabled
                 id="highlight"
-                theme="partial-red"
+                theme="partial-purple"
                 key={uuid + "-" + option + "-answer"}
               >
                 {option}

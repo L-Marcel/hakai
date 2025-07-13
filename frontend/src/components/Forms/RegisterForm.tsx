@@ -74,7 +74,7 @@ export default function RegisterForm() {
       />
       <ErrorLabel field="confirmPassword" errors={errors} />
       {error && <p className={styles.error}>{error}</p>}
-      <Button theme="partial-red" type="submit">
+      <Button theme="full-purple" type="submit">
         Registrar
       </Button>
     </form>

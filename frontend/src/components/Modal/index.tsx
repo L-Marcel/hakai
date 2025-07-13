@@ -12,15 +12,16 @@ interface GameModalProps {
   onClose: () => void;
   onGameCreated: (newGame: Game) => void;
 }
-type QuestionType = "base" | "multiple-choice";
+
+
+type QuestionType = "base" | "withFeedback";
 interface QuestionFormData {
   question: string;
   answers: string[];
   contexts: string;
   type: QuestionType;
-  language: string; correctValue: string;
-  wrongValue: string;
 }
+
 export default function GameModal({
   isOpen,
   onClose,
@@ -28,16 +29,20 @@ export default function GameModal({
 }: GameModalProps) {
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<QuestionFormData[]>([
-    { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" },
+    {
+      question: "", answers: [""], contexts: "",
+      type: "withFeedback"
+    },
   ]);
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [exitingAnswers, setExitingAnswers] = useState<{ id: number, text: string }[]>([]);
   function handleAddQuestion() {
     setQuestions([
-      ...questions,
-      { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" }
-    ]);
+      ...questions, {
+      question: "", answers: [""], contexts: "",
+      type: "base"
+    }]);
   }
 
   function handleTypeChange(idx: number, newType: QuestionType) {
@@ -125,26 +130,14 @@ export default function GameModal({
         contexts: (q.contexts as string)
           .split(",")
           .map((c) => c.trim().toLowerCase())
-          .filter((c) => c),
-        // Converte os valores para número antes de enviar
-        correctValue: parseInt(q.correctValue, 10) || 1,
-        wrongValue: parseInt(q.wrongValue, 10) || 0,
+          .filter((c) => c)
       };
 
-      if (q.type === "multiple-choice") {
-        request = {
-          type: "MultipleChoiceQuestionRequest",
-          wrappee: request,
-        };
-      }
+      request = {
+        type: "QuestionWithFeedbackRequest",
+        wrappee: request,
+      };
 
-      if (q.language && q.language.trim() !== "") {
-        request = {
-          type: "LanguageQuestionRequest",
-          language: q.language.trim(),
-          wrappee: request,
-        };
-      }
       return request;
     });
 
@@ -304,7 +297,7 @@ export default function GameModal({
               {questions.length > 1 && (
                 <Button
                   type="button"
-                  theme="partial-red"
+                  theme="partial-purple"
                   onClick={() => handleRemoveQuestion(i)}
                   style={{ 'marginTop': '16px' }}
                 >
@@ -315,17 +308,17 @@ export default function GameModal({
           ))}
           <Button
             type="button"
-            theme="full-red"
+            theme="light-purple"
             onClick={handleAddQuestion}
           >
             Adicionar Pergunta
           </Button>
           {error && <p className={styles.error}>{error}</p>}
           <div className={styles.actions}>
-            <Button theme="partial-red" type="button" onClick={onClose}>
+            <Button theme="partial-purple" type="button" onClick={onClose}>
               Cancelar
             </Button>
-            <Button theme="full-red" type="submit">
+            <Button theme="full-purple" type="submit">
               Criar
             </Button>
           </div>

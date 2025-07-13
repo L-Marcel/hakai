@@ -8,7 +8,7 @@ export default function JoinPage() {
       <img className={styles.background} src={background} alt="" />
       <section className={styles.section}>
         <div className={styles.title}>
-          <h1>HAKAI</h1>
+          <h1>REVAI</h1>
           <p>Aprendendo de maneiras diferentes</p>
         </div>
         <JoinForm />

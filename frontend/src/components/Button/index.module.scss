@@ -11,14 +11,14 @@
   border-width: 0px;
   border-style: solid;
   background-color: $gray-300;
-  color: $red-500;
+  color: $purple-500;
   border-radius: $border-radius;
   transition: background-color 0.3s ease;
 
   &:hover,
   &:focus {
     &:not(:disabled) {
-      box-shadow: $ring-background, $ring-red-500;
+      box-shadow: $ring-background, $ring-purple-500;
     }
   }
 
@@ -46,21 +46,21 @@
 
 .lightRed {
   padding-left: calc(0.75rem + 4px);
-  background-color: $red-200;
+  background-color: $purple-200;
   padding: 0.75rem 1rem 0.75rem 0.75rem;
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    color: $red-700;
+    color: $purple-700;
   }
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    background: $red-300;
+    background: $purple-300;
   }
 
   &[id="highlight"] {
-    box-shadow: $ring-background, $ring-red-500;
+    box-shadow: $ring-background, $ring-purple-500;
   }
 }
 
@@ -72,26 +72,26 @@
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    color: $red-700;
+    color: $purple-700;
   }
 
   &:hover:not(:disabled),
   &[id="highlight"] {
-    background: $red-300;
+    background: $purple-300;
   }
 
   &[id="highlight"] {
-    box-shadow: $ring-background, $ring-red-500;
+    box-shadow: $ring-background, $ring-purple-500;
   }
 }
 
-.fullRed {
-  background-color: $red-500;
+.fullOrange {
+  background-color: $purple-500;
   color: white;
-  box-shadow: $shadow-red-500;
+  box-shadow: $shadow-purple-500;
 
   &:hover,
   &:focus {
-    background-color: $red-600;
+    background-color: $purple-600;
   }
 }

@@ -14,18 +14,13 @@ export type BaseQuestionRequest = {
   wrappee: QuestionRequest;
 };
 
-export type MultipleChoiceQuestionRequest = {
-  type: "MultipleChoiceQuestionRequest",
+export type QuestionWithFeedbackRequest = {
+  type: "QuestionWithFeedbackRequest",
   wrappee: ConcreteQuestionRequest;
 };
 
-export type LanguageQuestionRequest = {
-  type: "LanguageQuestionRequest",
-  language: string;
-  wrappee: ConcreteQuestionRequest;
-};
 
-export type QuestionRequest = ConcreteQuestionRequest | BaseQuestionRequest | MultipleChoiceQuestionRequest | LanguageQuestionRequest;
+export type QuestionRequest = ConcreteQuestionRequest | BaseQuestionRequest | QuestionWithFeedbackRequest;
 
 export interface GameRequest {
   title: string;

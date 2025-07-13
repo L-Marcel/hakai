@@ -5,10 +5,10 @@ $inter: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
 
 $border-radius: 10px;
 $shadow-black: 0 2px 10px rgba(0, 0, 0, 0.1);
-$shadow-red-500: 0px 0px 15px -3px $red-500;
-$shadow-lg-red-500: 0px 0px 15px 0px $red-500;
+$shadow-purple-500: 0px 0px 15px -3px $purple-500;
+$shadow-lg-purple-500: 0px 0px 15px 0px $purple-500;
 
 $ring-background: 0px 0px 0px 2px $white;
-$ring-red-500:
-  0px 0px 0px 4px $red-500,
-  $shadow-lg-red-500;
+$ring-purple-500:
+  0px 0px 0px 4px $purple-500,
+  $shadow-lg-purple-500;

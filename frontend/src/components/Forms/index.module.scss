@@ -1,7 +1,7 @@
 .error {
   font-weight: 300;
   font-style: italic;
-  color: $red-600;
+  color: $purple-600;
 }
 
 .errors {
@@ -49,7 +49,7 @@
       &:hover,
       &:focus-within {
         &:not(:disabled) {
-          box-shadow: $ring-background, $ring-red-500;
+          box-shadow: $ring-background, $ring-purple-500;
         }
       }
     }

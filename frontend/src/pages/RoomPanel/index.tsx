@@ -21,7 +21,7 @@ import useGame, { getConcreteQuestionVariant, QuestionVariant } from "@stores/us
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
-import { generateVariants, sendQuestion } from "../../services/question";
+import { generateVariants,  sendQuestion } from "../../services/question";
 import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
@@ -83,7 +83,7 @@ function Page() {
               <Button
                 disabled={variants.length === 0}
                 onClick={() => sendQuestion(variants as QuestionVariant[])}
-                theme="full-red"
+                theme="full-purple"
               >
                 <FaPlay />
                 Lançar
@@ -91,7 +91,7 @@ function Page() {
               <Button
                 disabled={!question}
                 onClick={() => generateVariants(question?.uuid as UUID)}
-                theme="light-red"
+                theme="light-purple"
               >
                 <FaSync />
                 Gerar
@@ -99,7 +99,7 @@ function Page() {
               <Button
                 disabled={index <= 0}
                 onClick={toPreviousQuestion}
-                theme="light-red"
+                theme="light-purple"
               >
                 <FaArrowLeft />
                 Anterior
@@ -107,12 +107,12 @@ function Page() {
               <Button
                 disabled={index >= questions.length - 1}
                 onClick={toNextQuestion}
-                theme="light-red"
+                theme="light-purple"
               >
                 <FaArrowRight />
                 Próxima
               </Button>
-              <Button onClick={close} theme="light-red">
+              <Button onClick={close} theme="light-purple">
                 <FaSignOutAlt />
                 Finalizar
               </Button>
@@ -141,7 +141,7 @@ function Page() {
         </section>
         <section className={styles.participants}>
           <h4>
-            <FaBomb /> Perguntas: 4<span>/</span>
+            <FaBomb /> Perguntas: {game?.questions.length}<span>/</span>
             <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
           </h4>
           <ParticipantsMansoryGrid

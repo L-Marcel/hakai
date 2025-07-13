@@ -1,0 +1,22 @@
+{
+  "type" : "QuestionWithFeedback",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "9b344583-3975-44a3-aa1a-ed89b8c0dba4",
+    "question" : "Qual a raiz de 25?",
+    "answers" : [ {
+      "uuid" : "3cd994c0-bbfc-4670-b1ee-8e965fdaf31f",
+      "answer" : "5"
+    } ],
+    "contexts" : [ {
+      "id" : "73fd8d17-852a-4634-a8bb-6d481eeac518",
+      "name" : "matemática"
+    }, {
+      "id" : "0af153c2-b858-4ed3-a088-1c49b7ba6720",
+      "name" : "raiz"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 0
+  },
+  "feedback" : null
+}

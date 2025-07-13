@@ -4,7 +4,7 @@ import styles from "./index.module.scss";
 interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
   value: string;
-  theme?: "default" | "light-red" | "full-red";
+  theme?: "default" | "light-purple" | "full-purple";
 }
 
 export default function Tag({
@@ -16,11 +16,11 @@ export default function Tag({
   const classes = [styles.tag, className];
 
   switch (theme) {
-    case "light-red":
-      classes.push(styles.lightRed);
+    case "light-purple":
+      classes.push(styles.lightOrange);
       break;
-    case "full-red":
-      classes.push(styles.fullRed);
+    case "full-purple":
+      classes.push(styles.fullOrange);
       break;
     default:
       break;
