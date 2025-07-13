@@ -45,8 +45,6 @@ public class RoomController {
     @Autowired
     private AccessControlService accessControlService;
 
-    private RoomEventStrategyNone roomEventStrategyNone;
-
     @PostConstruct
     public void setUpStrategies() {
         this.roomService.setEventStrategy(
@@ -61,7 +59,6 @@ public class RoomController {
         Game game = gameService.findGameById(body.getGame());
         accessControlService.checkGameOwnership(user, game);
         Room createdRoom = roomService.createRoom(game);
-        roomEventStrategyNone.onStart(createdRoom);
         RoomResponse response = new RoomResponse(createdRoom);
 
         return ResponseEntity
