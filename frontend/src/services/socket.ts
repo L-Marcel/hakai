@@ -1,5 +1,5 @@
 import { Client } from "@stomp/stompjs";
-import useGame, { QuestionVariant } from "@stores/useGame";
+import useGame, { QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
@@ -56,14 +56,11 @@ export function connect(
             "/question",
           (message) => {
             const variant: QuestionVariant = JSON.parse(message.body);
-            setQuestion({
-              ...variant,
-              type: variant.type.replace("Response", ""),
-            });
+            setQuestion(transformQuestionVariantFromResponse(variant));
           }
         );
       }
-
+      
       if (participant) getRoom(code);
 
       if (isOwner) {
@@ -71,11 +68,7 @@ export function connect(
           "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
-            const formattedVariants = variants.map((variant) => ({
-              ...variant,
-              type: variant.type.replace("Response", ""),
-            }));
-
+            const formattedVariants = variants.map(transformQuestionVariantFromResponse);
             setVariants(formattedVariants);
           }
         );

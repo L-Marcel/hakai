@@ -1,30 +1,23 @@
 import { UUID } from "crypto";
 import api from "./axios";
-import { Question, QuestionVariant } from "@stores/useGame";
+import { getConcreteQuestionVariant, QuestionVariant, transformQuestionVariantToRequest } from "@stores/useGame";
 import useRoom from "@stores/useRoom";
 
-export async function generateVariants(questionsList: Question[]): Promise<void> {
-  const promises = questionsList.map(question =>
-    api.post(`questions/${question.uuid as UUID}/generate`)
-  );
-  await Promise.all(promises);
+export async function generateVariants(question: UUID): Promise<void> {
+  return await api.post(`questions/${question}/generate`);
 }
 
 export async function sendQuestion(variants: QuestionVariant[]): Promise<void> {
   const { room } = useRoom.getState();
   if (!room) return;
 
+  const _variants = [...variants];
   const code = room.code;
-  const original = variants[0];
+  const original = getConcreteQuestionVariant(_variants[0]).original;
 
   return await api.post(`questions/send`, {
     code,
     original,
-    variants: variants.map((variant) => ({
-      ...variant,
-      answers: undefined,
-      contexts: undefined,
-      original: undefined,
-    })),
+    variants: [..._variants].map(transformQuestionVariantToRequest),
   });
 }

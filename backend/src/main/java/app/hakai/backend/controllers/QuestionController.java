@@ -1,11 +1,15 @@
 package app.hakai.backend.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
 import org.kahai.framework.models.User;
 import org.kahai.framework.questions.Question;
+import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.transients.Room;
@@ -19,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.hakai.backend.strategies.VariantsDistributionByDifficulty;
+import app.hakai.backend.strategies.VariantsDistributionAllByRandomly;
 import jakarta.annotation.PostConstruct;
 
 @RestController
@@ -34,7 +38,7 @@ public class QuestionController {
     @PostConstruct
     public void setUpStrategies() {
         this.questionService.setDistributionStrategy(
-            new VariantsDistributionByDifficulty()
+            new VariantsDistributionAllByRandomly()
         );
     };
 
@@ -55,12 +59,17 @@ public class QuestionController {
 
     @PostMapping("/send")
     public ResponseEntity<Void> sendVariantToParticipant(
-        @RequestBody SendQuestionVariantsRequest body
+        @RequestBody List<SendQuestionVariantsRequest> body
     ) {
-        Room room = roomService.findRoomByCode(body.getCode());
-        questionService.sendVariant(
-            body.getVariants(),
-            body.getOriginal(),
+        Room room = roomService.findRoomByCode(body.get(0).getCode());
+
+        Map<UUID, List<QuestionVariant>> mappedVariants = new HashMap<>();
+        for (SendQuestionVariantsRequest request : body) {
+            mappedVariants.put(request.getOriginal(), request.getVariants());
+        }
+
+        questionService.sendAllVariant(
+            mappedVariants,
             room
         );
 

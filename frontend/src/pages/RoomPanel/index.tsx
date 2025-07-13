@@ -17,11 +17,11 @@ import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
 import { close } from "../../services/room";
 import useRoom from "@stores/useRoom";
-import useGame, { QuestionVariant } from "@stores/useGame";
+import useGame, { getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
-import { generateVariants, sendQuestion } from "../../services/question";
+import { generateVariants,  sendQuestion } from "../../services/question";
 import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
@@ -55,10 +55,11 @@ function Page() {
     [question]
   );
 
-  const hardestVariant = useMemo(
-    () => (variants.length == 0 ? "" : variants[variants.length - 1].uuid),
-    [variants]
-  );
+  const hardestVariant = useMemo(() => {
+    if (variants.length === 0) return "";
+    const lastVariant = variants[variants.length - 1];
+    return getConcreteQuestionVariant(lastVariant).uuid;
+  }, [variants]);
 
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
@@ -89,7 +90,7 @@ function Page() {
               </Button>
               <Button
                 disabled={!question}
-                //onClick={() => generateVariants(question?.uuid as UUID)}
+                onClick={() => generateVariants(question?.uuid as UUID)}
                 theme="light-purple"
               >
                 <FaSync />
@@ -124,7 +125,7 @@ function Page() {
             <QuestionVariantsCarousel
               items={variants}
               start={hardestVariant}
-              identifier={(item) => item.uuid}
+              identifier={(item) => getConcreteQuestionVariant(item).uuid}
               render={(item) => {
                 return (
                   <li>
@@ -140,7 +141,7 @@ function Page() {
         </section>
         <section className={styles.participants}>
           <h4>
-            <FaBomb /> Perguntas: 4<span>/</span>
+            <FaBomb /> Perguntas: {game?.questions.length}<span>/</span>
             <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
           </h4>
           <ParticipantsMansoryGrid
