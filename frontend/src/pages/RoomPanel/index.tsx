@@ -42,7 +42,7 @@ function Page() {
 
   const game = useGame((state) => state.game);
   const room = useRoom((state) => state.room);
-
+  const [duration, setDuration] = useState(30);
   const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
     if (questions.length === 0) return undefined;
