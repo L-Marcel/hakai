@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
+import org.kahai.framework.errors.QuestionNotFound;
 import org.kahai.framework.models.User;
+import org.kahai.framework.questions.ConcreteQuestion;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.QuestionService;
@@ -24,76 +26,84 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.QuestionPayload;
+import app.hakai.backend.dtos.ScoringResponse;
 import app.hakai.backend.dtos.SendAllQuestionsRequest;
 import app.hakai.backend.strategies.VariantsDistributionAllByPercentage;
 import jakarta.annotation.PostConstruct;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/questions")
 public class QuestionController {
-    @Autowired
-    private RoomService roomService;
+        @Autowired
+        private RoomService roomService;
 
-    @Autowired
-    private QuestionService questionService;
+        @Autowired
+        private QuestionService questionService;
 
-    @PostConstruct
-    public void setUpStrategies() {
-        this.questionService.setDistributionStrategy(
-                new VariantsDistributionAllByPercentage());
-    };
+        @PostConstruct
+        public void setUpStrategies() {
+                this.questionService.setDistributionStrategy(
+                                new VariantsDistributionAllByPercentage());
+        };
 
-    @RequireAuth
-    @PostMapping("/{uuid}/generate")
-    public ResponseEntity<Void> startVariantsGeneration(
-            @PathVariable UUID uuid,
-            @AuthenticationPrincipal User user) {
-        Room room = roomService.findRoomByUser(user);
-        Question question = questionService.findQuestionById(uuid);
-        questionService.startVariantsGeneration(question, room);
+        @GetMapping("/{uuid}/scoring")
+        public ResponseEntity<ScoringResponse> getScoring(@PathVariable UUID uuid) {
+                return ResponseEntity.ok(new ScoringResponse(questionService.findQuestionById(uuid)));
+        }
 
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .build();
-    };
+        @RequireAuth
+        @PostMapping("/{uuid}/generate")
+        public ResponseEntity<Void> startVariantsGeneration(
+                        @PathVariable UUID uuid,
+                        @AuthenticationPrincipal User user) {
+                Room room = roomService.findRoomByUser(user);
+                Question question = questionService.findQuestionById(uuid);
+                questionService.startVariantsGeneration(question, room);
 
-    @PostMapping("/send")
-    public ResponseEntity<Void> sendVariantToParticipant(
-            @RequestBody SendQuestionVariantsRequest body) {
-        Room room = roomService.findRoomByCode(body.getCode());
-        questionService.sendVariant(
-                body.getVariants(),
-                body.getOriginal(),
-                room);
+                return ResponseEntity
+                                .status(HttpStatus.ACCEPTED)
+                                .build();
+        };
 
-        return ResponseEntity.ok().build();
-    };
+        @PostMapping("/send")
+        public ResponseEntity<Void> sendVariantToParticipant(
+                        @RequestBody SendQuestionVariantsRequest body) {
+                Room room = roomService.findRoomByCode(body.getCode());
+                questionService.sendVariant(
+                                body.getVariants(),
+                                body.getOriginal(),
+                                room);
 
-    @RequireAuth
-    @PostMapping("/generate-all")
-    public ResponseEntity<Void> startAllVariantsGeneration(
-            @AuthenticationPrincipal User user) {
-        Room room = roomService.findRoomByUser(user);
-        questionService.startAllVariantsGeneration(room);
+                return ResponseEntity.ok().build();
+        };
 
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .build();
-    };
+        @RequireAuth
+        @PostMapping("/generate-all")
+        public ResponseEntity<Void> startAllVariantsGeneration(
+                        @AuthenticationPrincipal User user) {
+                Room room = roomService.findRoomByUser(user);
+                questionService.startAllVariantsGeneration(room);
 
-    @PostMapping("/send-all")
-    public ResponseEntity<Void> sendAllVariantsToParticipants(
-            @RequestBody SendAllQuestionsRequest body) {
+                return ResponseEntity
+                                .status(HttpStatus.ACCEPTED)
+                                .build();
+        };
 
-        Room room = roomService.findRoomByCode(body.getCode());
+        @PostMapping("/send-all")
+        public ResponseEntity<Void> sendAllVariantsToParticipants(
+                        @RequestBody SendAllQuestionsRequest body) {
 
-        Map<UUID, List<QuestionVariant>> mappedVariants = body.getQuestions().stream()
-                .collect(Collectors.toMap(
-                        QuestionPayload::getOriginal,
-                        QuestionPayload::getVariants));
+                Room room = roomService.findRoomByCode(body.getCode());
 
-        questionService.sendAllVariant(mappedVariants, room);
+                Map<UUID, List<QuestionVariant>> mappedVariants = body.getQuestions().stream()
+                                .collect(Collectors.toMap(
+                                                QuestionPayload::getOriginal,
+                                                QuestionPayload::getVariants));
 
-        return ResponseEntity.ok().build();
-    };
+                questionService.sendAllVariant(mappedVariants, room);
+
+                return ResponseEntity.ok().build();
+        };
 };

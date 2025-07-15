@@ -70,6 +70,8 @@ export function Page() {
                 <QuestionView
                   highlight={question?.answers}
                   question={question}
+                  selectedOptions={[]}
+                  onOptionToggle={() => { }}
                 />
                 {answers.map((answer) => {
                   const isCorrect = question?.answers.includes(answer.answer);

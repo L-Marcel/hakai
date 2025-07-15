@@ -15,44 +15,24 @@ interface Props
   question?: Question;
   variant?: QuestionVariant;
   highlight?: string[];
-  editable?: boolean;
+  editable?: boolean; selectedOptions: string[];
+  onOptionToggle: (option: string) => void;
 }
 
 export default function QuestionView({
   highlight,
   question,
   variant,
-  className,
+  className, selectedOptions,
+  onOptionToggle,
   ...props
 }: Props) {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   if (variant) {
     const variantData = getConcreteQuestionVariant(variant);
 
     const { difficulty, contexts, options, question, uuid } = variantData;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
-    const handleOptionToggle = (option: string) => {
-      setSelectedOptions((currentSelected) => {
-        if (currentSelected.includes(option)) {
-          return currentSelected.filter((item) => item !== option);
-        }
-        return [...currentSelected, option];
-      });
-    };
-    const handleSubmit = () => {
-      if (selectedOptions.length === 0) {
-        alert("Por favor, selecione ao menos uma resposta.");
-        return;
-      }
-
-      // TEM QUE TIRAR A LÓGICA DE ENVIAR DAQUI, ADICIONAR
-      // UM BOTÃO AO FINAL DAS QUESTÕES PARA ENVIAR
-      // TUDO DE UMA SÓ VEZ
-
-      // POR ENQUANTO, VOU DEIXAR COMO ESTÁ: ASSIM QUE CLICA, ENVIA
-      sendParticipantAnswer(selectedOptions, variant);
-    };
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -66,13 +46,15 @@ export default function QuestionView({
         </header>
         <ol className={styles.options}>
           {options.map((option) => {
+            // Usa as props para determinar se a opção está selecionada
             const isSelected = selectedOptions.includes(option);
             const isHighlighted = highlight && highlight.includes(option);
 
             return (
               <Button
                 disabled={!!highlight}
-                onClick={() => handleOptionToggle(option)}
+                // Chama a função recebida via props
+                onClick={() => onOptionToggle(option)}
                 theme={isSelected ? "light-red" : "partial-red"}
                 id={isHighlighted ? "highlight" : "option"}
                 key={uuid + "-" + option}
@@ -81,16 +63,7 @@ export default function QuestionView({
               </Button>
             );
           })}
-        </ol>{" "}
-        {!highlight && (
-          <Button
-            onClick={handleSubmit}
-            theme="full-red"
-            style={{ marginTop: "20px", width: "100%" }}
-          >
-            Enviar Resposta
-          </Button>
-        )}
+        </ol>
       </article>
     );
   } else if (question) {

@@ -1,5 +1,6 @@
 import { Client } from "@stomp/stompjs";
 import useGame, {
+  getConcreteQuestionVariant,
   QuestionVariant,
   transformQuestionVariantFromResponse,
 } from "@stores/useGame";
@@ -18,6 +19,18 @@ export function disconnect(): void {
   setParticipant(undefined);
   setGame(undefined);
   setQuestions([]);
+}type ScoringResponse = {
+  question: string;
+  correctValue: number;
+  wrongValue: number;
+};
+
+async function fetchQuestionScoring(uuid: string): Promise<ScoringResponse> {
+  const response = await fetch(`/api/questions/${uuid}/scoring`);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar pontuação da questão");
+  }
+  return await response.json();
 }
 
 export function connect(
@@ -50,45 +63,47 @@ export function connect(
         useGenerationStatus.getState().setGenerationStatus(message.body);
       });
 
-      if (participant && room) {
-        client.subscribe(
-          "/channel/events/rooms/" +
-            code +
-            "/participants/" +
-            participant +
-            "/question",
-          (message) => {
-            console.log();
-            const payload: QuestionVariant[] = JSON.parse(message.body);
+if (participant && room) {
+  client.subscribe(
+    `/channel/events/rooms/${code}/participants/${participant}/question`,
+    async (message) => {
+      const payload: QuestionVariant[] = JSON.parse(message.body);
 
-            if (Array.isArray(payload)) {
-              const variants: QuestionVariant[] = payload.map((item) =>
-                transformQuestionVariantFromResponse(item)
-              );
-
-              const formattedVariants: QuestionVariant[] = variants.map(
-                (variant) => {
-                  // const concreteVariant = getConcreteQuestionVariant(variant);
-                  // const originalUuid = concreteVariant.original;
-                  // const originalQuestion = game?.questions.find(
-                  //   (q) => q.uuid === originalUuid
-                  // );
-
-                  // COLOCA AQUI SUA LÓGICA DE PEGAR OS VALORES
-
-                  return {
-                    ...variant,
-                    // wrongValue: originalQuestion?.wrongValue ?? 0,
-                    // correctValue: originalQuestion?.correctValue ?? 0,
-                  };
-                }
-              );
-
-              setQuestions(formattedVariants);
-            }
-          }
+      if (Array.isArray(payload)) {
+        const variants: QuestionVariant[] = payload.map((item) =>
+          transformQuestionVariantFromResponse(item)
         );
+        const formattedVariants: QuestionVariant[] = await Promise.all(
+          variants.map(async (variant) => {
+            const concreteVariant = getConcreteQuestionVariant(variant);
+            const originalUuid = concreteVariant.original;
+
+            let correctValue = 0;
+            let wrongValue = 0;
+
+            if (originalUuid) {
+              try {
+                const scoring = await fetchQuestionScoring(originalUuid);
+                correctValue = scoring.correctValue;
+                wrongValue = scoring.wrongValue;
+              } catch (error) {
+                console.warn("Erro ao buscar pontuação para", originalUuid, error);
+              }
+            }
+
+            return {
+              ...variant,
+              correctValue,
+              wrongValue,
+            };
+          })
+        );
+
+        setQuestions(formattedVariants);
       }
+    }
+  );
+}
 
       if (participant) getRoom(code);
 
