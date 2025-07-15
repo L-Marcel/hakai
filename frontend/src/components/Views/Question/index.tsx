@@ -20,13 +20,12 @@ export default function QuestionView({
   className,
   ...props
 }: Props) {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]); console.log("Opções selecionadas:", selectedOptions);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   if (variant) {
 
     const variantData = getConcreteQuestionVariant(variant);
 
     const { difficulty, contexts, options, question, uuid } = variantData;
-    console.log("Opções selecionadas:", selectedOptions);
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
     const handleOptionToggle = (option: string) => {
