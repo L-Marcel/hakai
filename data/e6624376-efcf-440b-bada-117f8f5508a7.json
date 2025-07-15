@@ -1,0 +1,22 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestion",
+    "wrappee" : {
+      "type" : "ConcreteQuestion",
+      "uuid" : "e6624376-efcf-440b-bada-117f8f5508a7",
+      "question" : "Qual desses fatores são importantes para garantir uma boa qualdiade de código?",
+      "answers" : [ {
+        "uuid" : "e18ed751-8bc9-4b09-bb19-e1b1ad836811",
+        "answer" : "Padrões de projetos"
+      } ],
+      "contexts" : [ {
+        "id" : "fdf3abc9-3f56-468a-99d8-54740c90a3cd",
+        "name" : "programação"
+      } ],
+      "correctValue" : 1,
+      "wrongValue" : 0
+    }
+  },
+  "language" : "Testes automatizados"
+}
