@@ -71,7 +71,7 @@ export function Page() {
                   highlight={question?.answers}
                   question={question}
                   selectedOptions={[]}
-                  onOptionToggle={() => { }}
+                  onOptionToggle={() => {}}
                 />
                 {answers.map((answer) => {
                   const isCorrect = question?.answers.includes(answer.answer);

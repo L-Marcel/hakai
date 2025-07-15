@@ -1,6 +1,7 @@
 import { Client } from "@stomp/stompjs";
 import useGame, {
   getConcreteQuestionVariant,
+  putScoreValueInConcreteQuestionVariant,
   QuestionVariant,
   transformQuestionVariantFromResponse,
 } from "@stores/useGame";
@@ -8,6 +9,7 @@ import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
 import useGenerationStatus from "@stores/useStatus";
+import api from "./axios";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
@@ -19,18 +21,15 @@ export function disconnect(): void {
   setParticipant(undefined);
   setGame(undefined);
   setQuestions([]);
-}type ScoringResponse = {
+}
+type ScoringResponse = {
   question: string;
   correctValue: number;
   wrongValue: number;
 };
 
 async function fetchQuestionScoring(uuid: string): Promise<ScoringResponse> {
-  const response = await fetch(`/api/questions/${uuid}/scoring`);
-  if (!response.ok) {
-    throw new Error("Erro ao buscar pontuação da questão");
-  }
-  return await response.json();
+  return api.get<ScoringResponse>(`questions/${uuid}/scoring`).then((response) => response.data);
 }
 
 export function connect(
@@ -63,47 +62,49 @@ export function connect(
         useGenerationStatus.getState().setGenerationStatus(message.body);
       });
 
-if (participant && room) {
-  client.subscribe(
-    `/channel/events/rooms/${code}/participants/${participant}/question`,
-    async (message) => {
-      const payload: QuestionVariant[] = JSON.parse(message.body);
+      if (participant && room) {
+        client.subscribe(
+          `/channel/events/rooms/${code}/participants/${participant}/question`,
+          async (message) => {
+            const payload: QuestionVariant[] = JSON.parse(message.body);
 
-      if (Array.isArray(payload)) {
-        const variants: QuestionVariant[] = payload.map((item) =>
-          transformQuestionVariantFromResponse(item)
-        );
-        const formattedVariants: QuestionVariant[] = await Promise.all(
-          variants.map(async (variant) => {
-            const concreteVariant = getConcreteQuestionVariant(variant);
-            const originalUuid = concreteVariant.original;
+            if (Array.isArray(payload)) {
+              const variants: QuestionVariant[] = payload.map((item) =>
+                transformQuestionVariantFromResponse(item)
+              );
+              const formattedVariants: QuestionVariant[] = await Promise.all(
+                variants.map(async (variant) => {
+                  const concreteVariant = getConcreteQuestionVariant(variant);
+                  const originalUuid = concreteVariant.original;
 
-            let correctValue = 0;
-            let wrongValue = 0;
+                  if (originalUuid) {
+                    try {
+                      const scoring = await fetchQuestionScoring(originalUuid);
+                      variant = putScoreValueInConcreteQuestionVariant(
+                        variant,
+                        scoring.correctValue,
+                        scoring.wrongValue
+                      );
+                    } catch (error) {
+                      console.warn(
+                        "Erro ao buscar pontuação para",
+                        originalUuid,
+                        error
+                      );
+                    }
+                  }
 
-            if (originalUuid) {
-              try {
-                const scoring = await fetchQuestionScoring(originalUuid);
-                correctValue = scoring.correctValue;
-                wrongValue = scoring.wrongValue;
-              } catch (error) {
-                console.warn("Erro ao buscar pontuação para", originalUuid, error);
-              }
+                  return {
+                    ...variant,
+                  };
+                })
+              );
+
+              setQuestions(formattedVariants);
             }
-
-            return {
-              ...variant,
-              correctValue,
-              wrongValue,
-            };
-          })
+          }
         );
-
-        setQuestions(formattedVariants);
       }
-    }
-  );
-}
 
       if (participant) getRoom(code);
 

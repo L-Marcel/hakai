@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "cdb3a7d5-8c99-4607-a5e3-b258dfc6648b",
+  "question" : "Qual destes é um bloco condicional?",
+  "answers" : [ {
+    "uuid" : "a3a8d8a5-baa0-4ab2-8ba5-7233eded4bb4",
+    "answer" : "if"
+  } ],
+  "contexts" : [ {
+    "id" : "c35265be-b638-482a-98c1-fe42ecdea675",
+    "name" : "blocos condicionais"
+  }, {
+    "id" : "40d995f6-0a36-455a-94f1-3ab9c3520852",
+    "name" : "programação"
+  } ],
+  "correctValue" : 10,
+  "wrongValue" : 20
+}

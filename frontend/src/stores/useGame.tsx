@@ -39,6 +39,8 @@ export type ConcreteQuestionVariant = {
   contexts?: string[];
   answers?: string[];
   original?: UUID;
+  wrongValue?: number;
+  correctValue?: number;
 };
 
 export type BaseQuestionVariant = {
@@ -56,6 +58,21 @@ export function getConcreteQuestionVariant(
   }
 
   return variant as ConcreteQuestionVariant;
+}
+
+export function putScoreValueInConcreteQuestionVariant(
+  variant: QuestionVariant,
+  correctValue: number,
+  wrongValue: number
+): QuestionVariant {
+  if ("wrappee" in variant && variant.wrappee) {
+    variant.wrappee = putScoreValueInConcreteQuestionVariant(variant.wrappee, correctValue, wrongValue);
+  } else {
+    (variant as ConcreteQuestionVariant).correctValue = correctValue;
+    (variant as ConcreteQuestionVariant).wrongValue = wrongValue;
+  };
+
+  return variant;
 }
 
 export function transformQuestionVariantFromResponse(

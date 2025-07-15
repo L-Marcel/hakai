@@ -128,8 +128,12 @@ function Page() {
           </div>
         </section>
         <section>
-          <QuestionView highlight={question?.answers} question={question} selectedOptions={[]}
-            onOptionToggle={() => { }} />
+          <QuestionView
+            highlight={question?.answers}
+            question={question}
+            selectedOptions={[]}
+            onOptionToggle={() => {}}
+          />
           {variants && variants.length > 0 && (
             <QuestionVariantsCarousel
               items={variants}
@@ -140,8 +144,9 @@ function Page() {
                   <li key={getConcreteQuestionVariant(item).uuid}>
                     <QuestionView
                       highlight={question?.answers}
-                      variant={item} selectedOptions={[]}
-                      onOptionToggle={() => { }}
+                      variant={item}
+                      selectedOptions={[]}
+                      onOptionToggle={() => {}}
                     />
                   </li>
                 );

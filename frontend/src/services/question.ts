@@ -52,17 +52,20 @@ export async function sendAllQuestions(): Promise<void> {
           original: question.uuid,
           variants: question.variants.map(transformQuestionVariantToRequest),
         };
-      };
+      }
 
       return null;
-    }).filter((q) => q !== null);
+    })
+    .filter((q) => q !== null);
 
   if (questionsPayload.length === 0) {
-    setGenerationStatus("Nenhuma variante para ser enviada!")
+    setGenerationStatus("Nenhuma variante para ser enviada!");
     return;
   } else {
-    setGenerationStatus("Enviando as " + questionsPayload.length + " variantes!");
-  };
+    setGenerationStatus(
+      "Enviando as " + questionsPayload.length + " variantes!"
+    );
+  }
 
   return await api.post(`questions/send-all`, {
     code: room.code,

@@ -12,7 +12,10 @@ export async function exit(): Promise<void> {
   });
 }
 
-export async function sendParticipantAnswer(answers: string[], variant: QuestionVariant): Promise<void> {
+export async function sendParticipantAnswer(
+  answers: string[],
+  variant: QuestionVariant
+): Promise<void> {
   const { participant } = useRoom.getState();
   //const { questions, setQuestions } = useGame.getState();
 

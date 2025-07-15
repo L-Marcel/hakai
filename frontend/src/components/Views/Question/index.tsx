@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
@@ -8,14 +8,14 @@ import {
   getConcreteQuestionVariant,
   QuestionVariant,
 } from "@stores/useGame";
-import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   question?: Question;
   variant?: QuestionVariant;
   highlight?: string[];
-  editable?: boolean; selectedOptions: string[];
+  editable?: boolean;
+  selectedOptions: string[];
   onOptionToggle: (option: string) => void;
 }
 
@@ -23,16 +23,18 @@ export default function QuestionView({
   highlight,
   question,
   variant,
-  className, selectedOptions,
+  className,
+  selectedOptions,
   onOptionToggle,
   ...props
 }: Props) {
   if (variant) {
-    const variantData = getConcreteQuestionVariant(variant);
+    const concrete = getConcreteQuestionVariant(variant);
 
-    const { difficulty, contexts, options, question, uuid } = variantData;
+    const { difficulty, contexts, options, question, uuid, wrongValue, correctValue } = concrete;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
+
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -43,17 +45,18 @@ export default function QuestionView({
             ))}
           </p>
           <h1>{question}</h1>
+          {!!correctValue && !wrongValue && <p id="values">Você ganha {correctValue} pontos por acerto.</p>}
+          {!correctValue && !!wrongValue && <p id="values">Você perde {wrongValue} pontos por erro.</p>}
+          {!!correctValue && !!wrongValue && <p id="values">Você ganha {correctValue} pontos por acerto e perde {wrongValue} por erro.</p>}
         </header>
         <ol className={styles.options}>
           {options.map((option) => {
-            // Usa as props para determinar se a opção está selecionada
             const isSelected = selectedOptions.includes(option);
             const isHighlighted = highlight && highlight.includes(option);
 
             return (
               <Button
                 disabled={!!highlight}
-                // Chama a função recebida via props
                 onClick={() => onOptionToggle(option)}
                 theme={isSelected ? "light-red" : "partial-red"}
                 id={isHighlighted ? "highlight" : "option"}
