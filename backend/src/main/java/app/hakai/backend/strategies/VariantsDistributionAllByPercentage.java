@@ -41,54 +41,44 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
         if (actualTotalToSend == 0) {
             return new ArrayList<>();
         }
+
         double easyPercentage = 0.3;
         double mediumPercentage = 0.4;
 
         int numHardToSelect = (int) Math.round(actualTotalToSend * (1.0 - easyPercentage - mediumPercentage));
-        int numMediumToSelect = (int) Math.round(actualTotalToSend * mediumPercentage);
-        int numEasyToSelect = actualTotalToSend - numHardToSelect - numMediumToSelect;
+        int numNormalToSelect = (int) Math.round(actualTotalToSend * mediumPercentage);
+        int numEasyToSelect = actualTotalToSend - numHardToSelect - numNormalToSelect;
 
         List<QuestionVariant> finalSelectedVariants = new ArrayList<>();
-        Set<UUID> usedQuestionUuids = new HashSet();
+        List<UUID> uuidList = new ArrayList<>(variantsByQuestion.keySet());
+        for (UUID question : uuidList) {
+            List<QuestionVariant> variantsForThisQuestion = variantsByQuestion.get(question);
+            if (numHardToSelect > 0) {
+                for (QuestionVariant variant : variantsForThisQuestion) {
+                    if (variant.getRoot().getDifficulty() == Difficulty.HARD) {
+                        finalSelectedVariants.add(variant);
+                    }
+                }
+                numHardToSelect--;
 
-        List<List<QuestionVariant>> shuffledQuestions = new ArrayList<>(variantsByQuestion.values());
-        Collections.shuffle(shuffledQuestions);
-        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.HARD, numHardToSelect, finalSelectedVariants,
-                usedQuestionUuids);
-        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.NORMAL, numMediumToSelect, finalSelectedVariants,
-                usedQuestionUuids);
-        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.EASY, numEasyToSelect, finalSelectedVariants,
-                usedQuestionUuids);
+            } else if (numNormalToSelect > 0) {
+                for (QuestionVariant variant : variantsForThisQuestion) {
+                    if (variant.getRoot().getDifficulty() == Difficulty.NORMAL) {
+                        finalSelectedVariants.add(variant);
+                    }
+                }
+                numNormalToSelect--;
+            } else if (numEasyToSelect > 0) {
+                for (QuestionVariant variant : variantsForThisQuestion) {
+                    if (variant.getRoot().getDifficulty() == Difficulty.EASY) {
+                        finalSelectedVariants.add(variant);
+                    }
+                }
+                numEasyToSelect--;
+            }
+        }
 
         Collections.shuffle(finalSelectedVariants);
         return finalSelectedVariants;
-    }
-
-    private void findAndAddQuestionsByDifficulty(
-            List<List<QuestionVariant>> allQuestions,
-            Difficulty targetDifficulty,
-            int countToSelect,
-            List<QuestionVariant> finalSelectionList,
-            Set<UUID> usedQuestionUuids) {
-
-        int foundCount = 0;
-        for (List<QuestionVariant> variantsForOneQuestion : allQuestions) {
-            if (foundCount >= countToSelect) {
-                break;
-            }
-
-            QuestionVariant representativeVariant = variantsForOneQuestion.get(0);
-            UUID questionUuid = representativeVariant.getRoot().getUuid();
-            if (representativeVariant.getRoot().getDifficulty() == targetDifficulty
-                    && !usedQuestionUuids.contains(questionUuid)) {
-                QuestionVariant randomVariant = variantsForOneQuestion
-                        .get(random.nextInt(variantsForOneQuestion.size()));
-
-                finalSelectionList.add(randomVariant);
-                usedQuestionUuids.add(questionUuid);
-
-                foundCount++;
-            }
-        }
     }
 }
