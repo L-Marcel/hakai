@@ -3,59 +3,87 @@ package app.hakai.backend.strategies;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.kahai.framework.models.Difficulty;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.strategies.VariantsDistributionStrategy;
 import org.kahai.framework.transients.Participant;
 
 public class VariantsDistributionAllByPercentage implements VariantsDistributionStrategy {
+    private static final double EASY_PERCENTAGE = 0.3;
+    private static final double MEDIUM_PERCENTAGE = 0.4;
+    private final Random random = new Random();
 
     @Override
     public Optional<QuestionVariant> selectVariant(Participant participant, List<QuestionVariant> variants) {
-        Collections.shuffle(variants);
-        return variants.size() > 0? Optional.of(variants.getFirst()) : Optional.empty();
-    };
+        // única variante não é aplicável.
+        return Optional.empty();
+    }
 
     @Override
-    public List<QuestionVariant> selectVariants(Participant participant, List<QuestionVariant> variants) {
-        if (variants == null || variants.isEmpty()) {
-            return Collections.emptyList();
-        };
+    public List<QuestionVariant> selectVariants(Participant participant, List<QuestionVariant> allAvailableVariants) {
+        if (allAvailableVariants == null || allAvailableVariants.isEmpty()) {
+            return new ArrayList<>();
+        }
 
-        List<QuestionVariant> hardVariants = new ArrayList<>();
-        List<QuestionVariant> mediumVariants = new ArrayList<>();
-        List<QuestionVariant> easyVariants = new ArrayList<>();
+        Map<UUID, List<QuestionVariant>> variantsByQuestion = allAvailableVariants.stream()
+                .collect(Collectors.groupingBy(variant -> variant.getRoot().getUuid()));
 
-        for (QuestionVariant variant : variants) {
-            switch (variant.getRoot().getDifficulty()) {
-                case HARD:
-                    hardVariants.add(variant);
+        List<List<QuestionVariant>> easyQuestionPool = new ArrayList<>();
+        List<List<QuestionVariant>> mediumQuestionPool = new ArrayList<>();
+        List<List<QuestionVariant>> hardQuestionPool = new ArrayList<>();
+        variantsByQuestion.values().forEach(variantList -> {
+            Difficulty difficulty = variantList.get(0).getRoot().getDifficulty();
+            switch (difficulty) {
+                case EASY:
+                    easyQuestionPool.add(variantList);
                     break;
                 case NORMAL:
-                    mediumVariants.add(variant);
+                    mediumQuestionPool.add(variantList);
                     break;
-                case EASY:
-                    easyVariants.add(variant);
+                case HARD:
+                    hardQuestionPool.add(variantList);
                     break;
-            };
-        };
+            }
+        });
 
-        int totalSize = variants.size();
-        int hardCount = (int) Math.round(totalSize * 0.30);
-        int mediumCount = (int) Math.round(totalSize * 0.40);
-        int easyCount = totalSize - hardCount - mediumCount;
+        int baseNumber = variantsByQuestion.size();
+        int actualTotalToSend = baseNumber / 3;
 
-        List<QuestionVariant> selectedVariants = new ArrayList<>();
-        Collections.shuffle(hardVariants);
-        Collections.shuffle(mediumVariants);
-        Collections.shuffle(easyVariants);
+        if (actualTotalToSend == 0) {
+            return new ArrayList<>();
+        }
 
-        selectedVariants.addAll(hardVariants.subList(0, Math.min(hardCount, hardVariants.size())));
-        selectedVariants.addAll(mediumVariants.subList(0, Math.min(mediumCount, mediumVariants.size())));
-        selectedVariants.addAll(easyVariants.subList(0, Math.min(easyCount, easyVariants.size())));
+        int numEasyToSelect = (int) Math.round(actualTotalToSend * EASY_PERCENTAGE);
+        int numMediumToSelect = (int) Math.round(actualTotalToSend * MEDIUM_PERCENTAGE);
+        int numHardToSelect = actualTotalToSend - numEasyToSelect - numMediumToSelect;
 
-        Collections.shuffle(selectedVariants);
-        return selectedVariants;
-    };
-};
+        List<QuestionVariant> finalSelectedVariants = new ArrayList<>();
+
+        addRandomVariants(hardQuestionPool, numHardToSelect, finalSelectedVariants);
+        addRandomVariants(mediumQuestionPool, numMediumToSelect, finalSelectedVariants);
+        addRandomVariants(easyQuestionPool, numEasyToSelect, finalSelectedVariants);
+
+        Collections.shuffle(finalSelectedVariants);
+        return finalSelectedVariants;
+    }
+
+    private void addRandomVariants(List<List<QuestionVariant>> questionPool, int countToSelect,
+            List<QuestionVariant> finalSelectionList) {
+
+        Collections.shuffle(questionPool);
+
+        int limit = Math.min(countToSelect, questionPool.size());
+
+        for (int i = 0; i < limit; i++) {
+            List<QuestionVariant> variantsForOneQuestion = questionPool.get(i);
+            QuestionVariant randomVariant = variantsForOneQuestion.get(random.nextInt(variantsForOneQuestion.size()));
+            finalSelectionList.add(randomVariant);
+        }
+    }
+}
