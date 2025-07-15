@@ -17,14 +17,14 @@ import QuestionVariantsCarousel from "@components/Carousel";
 import QuestionView from "@components/Views/Question";
 import { close } from "../../services/room";
 import useRoom from "@stores/useRoom";
-import useGame, { getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
+import useGame, {
+  getConcreteQuestionVariant,
+  QuestionVariant,
+} from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
-import {
-  generateAllVariants,
-  sendAllQuestions
-} from "../../services/question";
+import { generateAllVariants, sendAllQuestions } from "../../services/question";
 import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
@@ -58,9 +58,10 @@ function Page() {
     [question]
   );
 
-  const hasAnyVariant = useMemo(() =>
-    questions.some(q => q.variants && q.variants.length > 0),
-    [questions]);
+  const hasAnyVariant = useMemo(
+    () => questions.some((q) => q.variants && q.variants.length > 0),
+    [questions]
+  );
 
   const hardestVariant = useMemo(() => {
     if (variants.length === 0) return "";

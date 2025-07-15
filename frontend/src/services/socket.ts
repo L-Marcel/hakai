@@ -1,5 +1,8 @@
 import { Client } from "@stomp/stompjs";
-import useGame, { getConcreteQuestionVariant, Question, QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
+import useGame, {
+  QuestionVariant,
+  transformQuestionVariantFromResponse,
+} from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
@@ -7,14 +10,14 @@ import useGenerationStatus from "@stores/useStatus";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
-  const { setGame, setQuestion } = useGame.getState();
+  const { setGame, setQuestions } = useGame.getState();
 
   setClient(undefined);
   setRoom(undefined);
   setClient(undefined);
   setParticipant(undefined);
   setGame(undefined);
-  setQuestion(undefined);
+  setQuestions([]);
 }
 
 export function connect(
@@ -23,7 +26,7 @@ export function connect(
   isOwner?: boolean
 ): void {
   const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
-  const { setVariants, setQuestion } = useGame.getState();
+  const { setVariants, setQuestions } = useGame.getState();
 
   if (oldClient && oldClient.connected) return;
 
@@ -55,49 +58,34 @@ export function connect(
             participant +
             "/question",
           (message) => {
-            console.log("Recebida lista de questões do jogo!", message.body);
-            const payload: any = JSON.parse(message.body);
+            console.log();
+            const payload: QuestionVariant[] = JSON.parse(message.body);
 
             if (Array.isArray(payload)) {
-  console.log("[DEBUG 1] Payload recebido e é um array. Tamanho:", payload.length);
+              const variants: QuestionVariant[] = payload.map((item) =>
+                transformQuestionVariantFromResponse(item)
+              );
 
-  const variantsReceived: QuestionVariant[] = payload.map(item => transformQuestionVariantFromResponse(item.wrappee));
-  console.log("[DEBUG 2] Variantes extraídas e formatadas:", variantsReceived);
+              const formattedVariants: QuestionVariant[] = variants.map(
+                (variant) => {
+                  // const concreteVariant = getConcreteQuestionVariant(variant);
+                  // const originalUuid = concreteVariant.original;
+                  // const originalQuestion = game?.questions.find(
+                  //   (q) => q.uuid === originalUuid
+                  // );
 
-  const { game, setGame } = useGame.getState(); 
+                  // COLOCA AQUI SUA LÓGICA DE PEGAR OS VALORES
 
-  const playableQuestions: Question[] = variantsReceived.map((variant, index) => {
-    console.log(`[DEBUG 3.${index}] Mapeando variante:`, variant);
-    
-    const concreteVariant = getConcreteQuestionVariant(variant);
-    const originalUuid = concreteVariant.original;
-    console.log(`[DEBUG 3.${index}] UUID Original da variante:`, originalUuid);
-    const originalQuestion = game?.questions.find(q => q.uuid === originalUuid);
-    console.log(`[DEBUG 3.${index}] Questão Original encontrada no estado?`, originalQuestion);
+                  return {
+                    ...variant,
+                    // wrongValue: originalQuestion?.wrongValue ?? 0,
+                    // correctValue: originalQuestion?.correctValue ?? 0,
+                  };
+                }
+              );
 
-    return {
-      uuid: concreteVariant.uuid,
-      question: concreteVariant.question,
-      answers: concreteVariant.options,
-      contexts: concreteVariant.contexts ?? [],
-      wrongValue: originalQuestion?.wrongValue ?? 0,
-      correctValue: originalQuestion?.correctValue ?? 0,
-      variants: [variant],
-    };
-  });
-
-  console.log("[DEBUG 4] Array final 'playableQuestions' pronto para ser salvo:", playableQuestions);
-
-  if (game) {
-    setGame({
-      ...game,
-      questions: playableQuestions,
-    });
-    console.log("[DEBUG 5] setGame FOI CHAMADO! O estado deveria ter sido atualizado.");
-  } else {
-    console.error("[DEBUG ERRO] O objeto 'game' não foi encontrado no estado na hora de salvar as questões!");
-  }
-}
+              setQuestions(formattedVariants);
+            }
           }
         );
       }
@@ -109,7 +97,9 @@ export function connect(
           "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
           (message) => {
             const variants: QuestionVariant[] = JSON.parse(message.body);
-            const formattedVariants = variants.map(transformQuestionVariantFromResponse);
+            const formattedVariants = variants.map(
+              transformQuestionVariantFromResponse
+            );
             setVariants(formattedVariants);
           }
         );

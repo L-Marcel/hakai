@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "8beb0da9-9c59-407f-bd2f-28eaa7548e08",
+  "question" : "Qual destes não é um dia da semana?",
+  "answers" : [ {
+    "uuid" : "e75095c3-9045-4ed2-84f6-9c670adb892f",
+    "answer" : "Outubro"
+  } ],
+  "contexts" : [ {
+    "id" : "c1f8ef1d-b9f5-4347-9ae3-7000d2ae1433",
+    "name" : "dias"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

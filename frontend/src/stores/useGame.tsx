@@ -48,39 +48,45 @@ export type BaseQuestionVariant = {
 
 export type QuestionVariant = BaseQuestionVariant | ConcreteQuestionVariant;
 
-export function getConcreteQuestionVariant(variant: QuestionVariant): ConcreteQuestionVariant {
-  if ('wrappee' in variant && variant.wrappee) {
+export function getConcreteQuestionVariant(
+  variant: QuestionVariant
+): ConcreteQuestionVariant {
+  if ("wrappee" in variant && variant.wrappee) {
     return getConcreteQuestionVariant(variant.wrappee);
-  };
+  }
 
   return variant as ConcreteQuestionVariant;
-};
+}
 
-export function transformQuestionVariantFromResponse(variant: QuestionVariant): QuestionVariant {
+export function transformQuestionVariantFromResponse(
+  variant: QuestionVariant
+): QuestionVariant {
   variant.type = variant.type.replace("Response", "");
 
-  if ('wrappee' in variant && variant.wrappee) {
+  if ("wrappee" in variant && variant.wrappee) {
     variant.wrappee = transformQuestionVariantFromResponse(variant.wrappee);
-  };
+  }
 
   return variant;
-};
+}
 
-export function transformQuestionVariantToRequest(variant: QuestionVariant): QuestionVariant {
+export function transformQuestionVariantToRequest(
+  variant: QuestionVariant
+): QuestionVariant {
   variant.type = variant.type.replace("Response", "");
 
-  if ('wrappee' in variant && variant.wrappee) {
+  if ("wrappee" in variant && variant.wrappee) {
     variant.wrappee = transformQuestionVariantToRequest(variant.wrappee);
     return variant;
-  };
+  }
 
   return {
     ...variant,
     answers: undefined,
     contexts: undefined,
-    original: undefined
+    original: undefined,
   };
-};
+}
 
 export type AnswersHistory = {
   uuid: UUID;
@@ -90,40 +96,57 @@ export type AnswersHistory = {
 };
 
 type GameStore = {
-  question?: QuestionVariant;
+  questions: QuestionVariant[];
   game?: Game;
   history?: AnswersHistory[];
-  setQuestion: (current?: QuestionVariant) => void;
+  setQuestions: (current: QuestionVariant[]) => void;
   setGame: (game?: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
-  setHistory: (answers: AnswersHistory[]) => void; updateQuestion: (questionId: UUID, field: 'correctValue' | 'wrongValue', value: number) => void;
+  setHistory: (answers: AnswersHistory[]) => void;
+  updateQuestion: (
+    questionId: UUID,
+    field: "correctValue" | "wrongValue",
+    value: number
+  ) => void;
 };
 
 const useGame = create<GameStore>((set) => ({
-  setQuestion: (question?: QuestionVariant) => set({ question }),
+  questions: [],
+  setQuestions: (questions: QuestionVariant[]) => set({ questions }),
   setGame: (game?: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
       console.groupCollapsed("[useGame] Executando setVariants"); // Agrupa os logs
-      console.log("[setVariants] 1. Estado ANTES da atualização:", JSON.parse(JSON.stringify(state.game?.questions)));
+      console.log(
+        "[setVariants] 1. Estado ANTES da atualização:",
+        JSON.parse(JSON.stringify(state.game?.questions))
+      );
       console.log("[setVariants] 2. Variantes RECEBIDAS:", variants);
 
       if (variants.length === 0 || !state.game) {
-        console.warn("[setVariants] Abortado: Sem variantes ou sem jogo no estado.");
+        console.warn(
+          "[setVariants] Abortado: Sem variantes ou sem jogo no estado."
+        );
         console.groupEnd();
         return state;
       }
 
-      const variantsByOriginal = variants.reduce((acc, variant) => {
-        const originalId = getConcreteQuestionVariant(variant).original;
-        if (originalId) {
-          if (!acc[originalId]) acc[originalId] = [];
-          acc[originalId].push(variant);
-        }
-        return acc;
-      }, {} as Record<UUID, QuestionVariant[]>);
+      const variantsByOriginal = variants.reduce(
+        (acc, variant) => {
+          const originalId = getConcreteQuestionVariant(variant).original;
+          if (originalId) {
+            if (!acc[originalId]) acc[originalId] = [];
+            acc[originalId].push(variant);
+          }
+          return acc;
+        },
+        {} as Record<UUID, QuestionVariant[]>
+      );
 
-      console.log("[setVariants] 3. Variantes AGRUPADAS por questão:", variantsByOriginal);
+      console.log(
+        "[setVariants] 3. Variantes AGRUPADAS por questão:",
+        variantsByOriginal
+      );
 
       const updatedQuestions = state.game.questions.map((question) => {
         if (variantsByOriginal[question.uuid]) {
@@ -132,7 +155,10 @@ const useGame = create<GameStore>((set) => ({
         return question;
       });
 
-      console.log("[setVariants] 4. Questões ATUALIZADAS (prontas para salvar):", updatedQuestions);
+      console.log(
+        "[setVariants] 4. Questões ATUALIZADAS (prontas para salvar):",
+        updatedQuestions
+      );
       console.groupEnd();
 
       return {

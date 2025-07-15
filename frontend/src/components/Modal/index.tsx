@@ -18,7 +18,8 @@ interface QuestionFormData {
   answers: string[];
   contexts: string;
   type: QuestionType;
-  language: string; correctValue: string;
+  language: string;
+  correctValue: string;
   wrongValue: string;
 }
 export default function GameModal({
@@ -28,15 +29,33 @@ export default function GameModal({
 }: GameModalProps) {
   const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState<QuestionFormData[]>([
-    { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" },
+    {
+      question: "",
+      answers: [""],
+      contexts: "",
+      type: "base",
+      language: "",
+      correctValue: "1",
+      wrongValue: "0",
+    },
   ]);
   const [error, setError] = useState<string>("");
   const [errors, setErrors] = useState<ValidationError[]>([]);
-  const [exitingAnswers, setExitingAnswers] = useState<{ id: number, text: string }[]>([]);
+  const [exitingAnswers, setExitingAnswers] = useState<
+    { id: number; text: string }[]
+  >([]);
   function handleAddQuestion() {
     setQuestions([
       ...questions,
-      { question: "", answers: [""], contexts: "", type: "base", language: "", correctValue: "1", wrongValue: "0" }
+      {
+        question: "",
+        answers: [""],
+        contexts: "",
+        type: "base",
+        language: "",
+        correctValue: "1",
+        wrongValue: "0",
+      },
     ]);
   }
 
@@ -49,26 +68,32 @@ export default function GameModal({
     });
     setQuestions(updated);
   }
-  function handleAnswerChange(questionIdx: number, answerIdx: number, value: string) {
-    setQuestions(prevQuestions =>
+  function handleAnswerChange(
+    questionIdx: number,
+    answerIdx: number,
+    value: string
+  ) {
+    setQuestions((prevQuestions) =>
       prevQuestions.map((question, qIdx) => {
         if (qIdx === questionIdx) {
           const newAnswers = [...question.answers];
           newAnswers[answerIdx] = value;
           return { ...question, answers: newAnswers };
-        } return question;
+        }
+        return question;
       })
     );
   }
   function handleAddAnswer(questionIdx: number) {
-    setQuestions(prevQuestions =>
+    setQuestions((prevQuestions) =>
       prevQuestions.map((question, qIdx) => {
         if (qIdx === questionIdx) {
           return {
             ...question,
             answers: [...question.answers, ""],
           };
-        } return question;
+        }
+        return question;
       })
     );
   }
@@ -77,8 +102,8 @@ export default function GameModal({
 
     const answerToRemove = questions[questionIdx].answers[answerIdx];
     const exitingItem = { id: Date.now(), text: answerToRemove };
-    setExitingAnswers(prev => [...prev, exitingItem]);
-    setQuestions(prevQuestions =>
+    setExitingAnswers((prev) => [...prev, exitingItem]);
+    setQuestions((prevQuestions) =>
       prevQuestions.map((q, i) => {
         if (i === questionIdx) {
           return { ...q, answers: q.answers.filter((_, i) => i !== answerIdx) };
@@ -87,7 +112,9 @@ export default function GameModal({
       })
     );
     setTimeout(() => {
-      setExitingAnswers(prev => prev.filter(item => item.id !== exitingItem.id));
+      setExitingAnswers((prev) =>
+        prev.filter((item) => item.id !== exitingItem.id)
+      );
     }, ANIMATION_DURATION);
   }
   function handleRemoveQuestion(idx: number) {
@@ -111,14 +138,14 @@ export default function GameModal({
     setQuestions(_questions);
   }
 
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setErrors([]);
 
     const questionsForPayload = questions.map((q) => {
-      let request: any = { // Usando 'any' para flexibilidade na montagem
+      let request: any = {
+        // Usando 'any' para flexibilidade na montagem
         type: "ConcreteQuestionRequest",
         question: q.question,
         answers: q.answers.filter((a) => a.trim()),
@@ -194,7 +221,11 @@ export default function GameModal({
           <ErrorLabel field="title" errors={errors} />
           {questions.map((q, i) => (
             <fieldset key={i} className={styles.questionBlock}>
-              <legend>Pergunta {i + 1}</legend> <div className={styles.scoreEditor} style={{ display: 'flex', gap: '1rem', margin: '1rem 0' }}>
+              <legend>Pergunta {i + 1}</legend>{" "}
+              <div
+                className={styles.scoreEditor}
+                style={{ display: "flex", gap: "1rem", margin: "1rem 0" }}
+              >
                 <div className={styles.scoreEditor__field} style={{ flex: 1 }}>
                   <label htmlFor={`correctValue-${i}`}>Valor por Acerto</label>
                   <Input
@@ -203,9 +234,14 @@ export default function GameModal({
                     id={`correctValue-${i}`}
                     placeholder="Ex: 1"
                     value={q.correctValue}
-                    onChange={(e: any) => handleQuestionChange(i, "correctValue", e.target.value)}
+                    onChange={(e: any) =>
+                      handleQuestionChange(i, "correctValue", e.target.value)
+                    }
                   />
-                  <ErrorLabel field={`questions.${i}.correctValue`} errors={errors} />
+                  <ErrorLabel
+                    field={`questions.${i}.correctValue`}
+                    errors={errors}
+                  />
                 </div>
                 <div className={styles.scoreEditor__field} style={{ flex: 1 }}>
                   <label htmlFor={`wrongValue-${i}`}>Valor por Erro</label>
@@ -215,14 +251,21 @@ export default function GameModal({
                     id={`wrongValue-${i}`}
                     placeholder="Ex: 0"
                     value={q.wrongValue}
-                    onChange={(e: any) => handleQuestionChange(i, "wrongValue", e.target.value)}
+                    onChange={(e: any) =>
+                      handleQuestionChange(i, "wrongValue", e.target.value)
+                    }
                   />
-                  <ErrorLabel field={`questions.${i}.wrongValue`} errors={errors} />
+                  <ErrorLabel
+                    field={`questions.${i}.wrongValue`}
+                    errors={errors}
+                  />
                 </div>
               </div>
               <select
                 value={q.type}
-                onChange={(e) => handleTypeChange(i, e.target.value as QuestionType)}
+                onChange={(e) =>
+                  handleTypeChange(i, e.target.value as QuestionType)
+                }
                 className={styles.select}
               >
                 <option value="simple">Simples</option>
@@ -233,7 +276,9 @@ export default function GameModal({
                 type="text"
                 placeholder="Pergunta"
                 value={q.question}
-                onChange={(e) => handleQuestionChange(i, "question", e.target.value)}
+                onChange={(e) =>
+                  handleQuestionChange(i, "question", e.target.value)
+                }
               />
               <ErrorLabel field={`questions.${i}.question`} errors={errors} />
               <Input
@@ -241,10 +286,11 @@ export default function GameModal({
                 type="text"
                 placeholder="Linguagem (opcional, ex: Inglês, Alemão, Espanhol)"
                 value={q.language}
-                onChange={(e) => handleQuestionChange(i, "language", e.target.value)}
+                onChange={(e) =>
+                  handleQuestionChange(i, "language", e.target.value)
+                }
               />
               <ErrorLabel field={`questions.${i}.language`} errors={errors} />
-
               {q.answers.map((answer, ansIdx) => (
                 <div key={`answer-${ansIdx}`} className={styles.answerRow}>
                   <Input
@@ -252,7 +298,9 @@ export default function GameModal({
                     type="text"
                     placeholder={`Resposta ${ansIdx + 1}`}
                     value={answer}
-                    onChange={(e) => handleAnswerChange(i, ansIdx, e.target.value)}
+                    onChange={(e) =>
+                      handleAnswerChange(i, ansIdx, e.target.value)
+                    }
                   />
                   {q.answers.length > 1 && (
                     <Button
@@ -280,11 +328,13 @@ export default function GameModal({
                 </div>
               ))}
               <ErrorLabel field={`questions.${i}.answers`} errors={errors} />
-              <div className={
-                q.type === "multiple-choice"
-                  ? `${styles.collapsible} ${styles.expanded}`
-                  : styles.collapsible
-              }>
+              <div
+                className={
+                  q.type === "multiple-choice"
+                    ? `${styles.collapsible} ${styles.expanded}`
+                    : styles.collapsible
+                }
+              >
                 <Button
                   type="button"
                   theme="partial-red"
@@ -298,7 +348,9 @@ export default function GameModal({
                 type="text"
                 placeholder="Contextos separados por vírgula"
                 value={q.contexts}
-                onChange={(e) => handleQuestionChange(i, "contexts", e.target.value)}
+                onChange={(e) =>
+                  handleQuestionChange(i, "contexts", e.target.value)
+                }
               />
               <ErrorLabel field={`questions.${i}.contexts`} errors={errors} />
               {questions.length > 1 && (
@@ -306,18 +358,14 @@ export default function GameModal({
                   type="button"
                   theme="partial-red"
                   onClick={() => handleRemoveQuestion(i)}
-                  style={{ 'marginTop': '16px' }}
+                  style={{ marginTop: "16px" }}
                 >
                   Remover Pergunta
                 </Button>
               )}
             </fieldset>
           ))}
-          <Button
-            type="button"
-            theme="full-red"
-            onClick={handleAddQuestion}
-          >
+          <Button type="button" theme="full-red" onClick={handleAddQuestion}>
             Adicionar Pergunta
           </Button>
           {error && <p className={styles.error}>{error}</p>}

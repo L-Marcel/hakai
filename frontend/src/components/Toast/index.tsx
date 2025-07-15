@@ -1,5 +1,5 @@
 import useGenerationStatus from "@stores/useStatus";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect } from "react";
 import styles from "./index.module.scss";
 
 export default function StatusToast() {

@@ -1,6 +1,6 @@
 import useRoom, { Participant } from "@stores/useRoom";
 import api from "./axios";
-import useGame, {getConcreteQuestionVariant } from "@stores/useGame";
+import { getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import { connect } from "./socket";
 import { saveParticipantAnswer } from "./answers";
 
@@ -12,27 +12,20 @@ export async function exit(): Promise<void> {
   });
 }
 
-export async function sendParticipantAnswer(answers: string[]): Promise<void> {
+export async function sendParticipantAnswer(answers: string[], variant: QuestionVariant): Promise<void> {
   const { participant } = useRoom.getState();
-  const { question, setQuestion } = useGame.getState();
+  //const { questions, setQuestions } = useGame.getState();
 
- 
-  if (!question) {
-    console.error("Tentou responder uma questão que não existe.");
-    return;
-  }
-
-  const concreteQuestion = getConcreteQuestionVariant(question);
+  const concreteQuestion = getConcreteQuestionVariant(variant);
 
   return api
     .post("participants/answer", {
       answers,
       question: concreteQuestion.original,
-           participant: participant!.uuid,
+      participant: participant!.uuid,
     })
     .then(() => {
-  
-     saveParticipantAnswer(answers, concreteQuestion.original!);  setQuestion(undefined);
+      saveParticipantAnswer(answers, concreteQuestion.original!);
     });
 }
 

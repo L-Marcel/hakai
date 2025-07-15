@@ -15,17 +15,21 @@ export type BaseQuestionRequest = {
 };
 
 export type MultipleChoiceQuestionRequest = {
-  type: "MultipleChoiceQuestionRequest",
+  type: "MultipleChoiceQuestionRequest";
   wrappee: ConcreteQuestionRequest;
 };
 
 export type LanguageQuestionRequest = {
-  type: "LanguageQuestionRequest",
+  type: "LanguageQuestionRequest";
   language: string;
   wrappee: ConcreteQuestionRequest;
 };
 
-export type QuestionRequest = ConcreteQuestionRequest | BaseQuestionRequest | MultipleChoiceQuestionRequest | LanguageQuestionRequest;
+export type QuestionRequest =
+  | ConcreteQuestionRequest
+  | BaseQuestionRequest
+  | MultipleChoiceQuestionRequest
+  | LanguageQuestionRequest;
 
 export interface GameRequest {
   title: string;

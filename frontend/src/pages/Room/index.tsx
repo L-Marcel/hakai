@@ -1,7 +1,7 @@
 import RoomGuard from "@components/Guards/RoomGuard";
 import styles from "./index.module.scss";
 import ParticipantGuard from "@components/Guards/ParticipantGuard";
-import useGame from "@stores/useGame";
+import useGame, { getConcreteQuestionVariant } from "@stores/useGame";
 import QuestionView from "@components/Views/Question";
 import { FaUserGroup } from "react-icons/fa6";
 import useRoom from "@stores/useRoom";
@@ -22,7 +22,7 @@ export default function RoomPage() {
 
 function Page() {
   const room = useRoom((state) => state.room);
-  const question = useGame((state) => state.question);
+  const questions = useGame((state) => state.questions);
 
   return (
     <main className={styles.main}>
@@ -37,9 +37,12 @@ function Page() {
           </h4>
         </div>
       </header>
-      {question ? (
+      {questions.length >= 0 ? (
         <section>
-          <QuestionView variant={question} />
+          {questions.map((question) => {
+            const concrete = getConcreteQuestionVariant(question);
+            return <QuestionView key={concrete.original ?? concrete.uuid} variant={question} />;
+          })}
         </section>
       ) : (
         <section>

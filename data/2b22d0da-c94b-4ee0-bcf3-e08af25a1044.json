@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "2b22d0da-c94b-4ee0-bcf3-e08af25a1044",
+  "question" : "Qual destes é um dia da semana?",
+  "answers" : [ {
+    "uuid" : "9f09b5ef-93a9-4057-a5f6-b7abc293d38d",
+    "answer" : "Segunda-feira"
+  } ],
+  "contexts" : [ {
+    "id" : "464de868-6b2b-4584-8da4-a9288f7ac771",
+    "name" : "dias"
+  } ],
+  "correctValue" : 10,
+  "wrongValue" : 20
+}

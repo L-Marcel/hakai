@@ -2,7 +2,12 @@ import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
-import { difficultyToString, Question, getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
+import {
+  difficultyToString,
+  Question,
+  getConcreteQuestionVariant,
+  QuestionVariant,
+} from "@stores/useGame";
 import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
@@ -22,7 +27,6 @@ export default function QuestionView({
 }: Props) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   if (variant) {
-
     const variantData = getConcreteQuestionVariant(variant);
 
     const { difficulty, contexts, options, question, uuid } = variantData;
@@ -35,12 +39,19 @@ export default function QuestionView({
         }
         return [...currentSelected, option];
       });
-    }; const handleSubmit = () => {
+    };
+    const handleSubmit = () => {
       if (selectedOptions.length === 0) {
         alert("Por favor, selecione ao menos uma resposta.");
         return;
       }
-      sendParticipantAnswer(selectedOptions);
+
+      // TEM QUE TIRAR A LÓGICA DE ENVIAR DAQUI, ADICIONAR
+      // UM BOTÃO AO FINAL DAS QUESTÕES PARA ENVIAR
+      // TUDO DE UMA SÓ VEZ
+
+      // POR ENQUANTO, VOU DEIXAR COMO ESTÁ: ASSIM QUE CLICA, ENVIA
+      sendParticipantAnswer(selectedOptions, variant);
     };
     return (
       <article className={finalClassName} {...props}>
@@ -48,11 +59,7 @@ export default function QuestionView({
           <p className={styles.tags}>
             <Tag theme="full-red" value={difficultyToString[difficulty]} />
             {(contexts || []).map((value) => (
-              <Tag
-                theme="light-red"
-                key={uuid + "-" + value}
-                value={value}
-              />
+              <Tag theme="light-red" key={uuid + "-" + value} value={value} />
             ))}
           </p>
           <h1>{question}</h1>
@@ -74,11 +81,12 @@ export default function QuestionView({
               </Button>
             );
           })}
-        </ol>  {!highlight && (
+        </ol>{" "}
+        {!highlight && (
           <Button
             onClick={handleSubmit}
             theme="full-red"
-            style={{ marginTop: '20px', width: '100%' }}
+            style={{ marginTop: "20px", width: "100%" }}
           >
             Enviar Resposta
           </Button>
@@ -96,11 +104,7 @@ export default function QuestionView({
           <p className={styles.tags}>
             <Tag theme="full-red" value="base" />
             {(question.contexts || []).map((value) => (
-              <Tag
-                theme="light-red"
-                key={uuid + "-" + value}
-                value={value}
-              />
+              <Tag theme="light-red" key={uuid + "-" + value} value={value} />
             ))}
           </p>
           <h1>{content}</h1>
