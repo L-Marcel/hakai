@@ -18,8 +18,6 @@ import org.kahai.framework.transients.Participant;
 
 public class VariantsDistributionAllByPercentage implements VariantsDistributionStrategy {
 
-    private final Random random = new Random();
-
     @Override
     public Optional<QuestionVariant> selectVariant(Participant participant, List<QuestionVariant> variants) {
         // única variante não é aplicável.
@@ -29,37 +27,19 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
     @Override
     public List<QuestionVariant> selectVariants(Participant participant, List<QuestionVariant> allAvailableVariants) {
         if (allAvailableVariants == null || allAvailableVariants.isEmpty()) {
-            System.out.println("Nenhuma variante disponível para seleção.");
             return new ArrayList<>();
         }
-
-        System.out.println("Total de variantes recebidas: " + allAvailableVariants.size());
 
         Map<UUID, List<QuestionVariant>> variantsByQuestion = allAvailableVariants.stream()
-                .collect(Collectors.groupingBy(variant -> variant.getRoot().getUuid()));
-
-        System.out.println("Total de questões únicas: " + variantsByQuestion.size());
-
+                .collect(Collectors.groupingBy(variant -> variant.getRoot().getOriginal().getRoot().getUuid()));
         int baseNumber = variantsByQuestion.size();
-        int actualTotalToSend = baseNumber / 3;
-
-        System.out.println("Total de questões a serem enviadas: " + actualTotalToSend);
-
-        if (actualTotalToSend == 0) {
-            return new ArrayList<>();
-        }
 
         double easyPercentage = 0.3;
         double mediumPercentage = 0.4;
 
-        int numHardToSelect = (int) Math.round(actualTotalToSend * (1.0 - easyPercentage - mediumPercentage));
-        int numNormalToSelect = (int) Math.round(actualTotalToSend * mediumPercentage);
-        int numEasyToSelect = actualTotalToSend - numHardToSelect - numNormalToSelect;
-
-        System.out.println("Serão selecionadas:");
-        System.out.println("Fáceis: " + numEasyToSelect);
-        System.out.println("Médias: " + numNormalToSelect);
-        System.out.println("Difíceis: " + numHardToSelect);
+        int numHardToSelect = (int) Math.round(baseNumber * (1.0 - easyPercentage - mediumPercentage));
+        int numNormalToSelect = (int) Math.round(baseNumber * mediumPercentage);
+        int numEasyToSelect = baseNumber - numHardToSelect - numNormalToSelect;
 
         List<QuestionVariant> finalSelectedVariants = new ArrayList<>();
         List<UUID> uuidList = new ArrayList<>(variantsByQuestion.keySet());
@@ -72,8 +52,7 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
                     if (variant.getRoot().getDifficulty() == Difficulty.HARD) {
                         finalSelectedVariants.add(variant);
                         numHardToSelect--;
-                        System.out.println(
-                                "Selecionada HARD da questão " + question);
+
                         break;
                     }
                 }
@@ -83,8 +62,6 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
                     if (variant.getRoot().getDifficulty() == Difficulty.NORMAL) {
                         finalSelectedVariants.add(variant);
                         numNormalToSelect--;
-                        System.out.println(
-                                "Selecionada NORMAL da questão " + question);
                         break;
                     }
                 }
@@ -94,8 +71,7 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
                     if (variant.getRoot().getDifficulty() == Difficulty.EASY) {
                         finalSelectedVariants.add(variant);
                         numEasyToSelect--;
-                        System.out.println(
-                                "Selecionada EASY da questão " + question);
+
                         break;
                     }
                 }
@@ -103,7 +79,6 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
         }
 
         Collections.shuffle(finalSelectedVariants);
-        System.out.println("Final total selecionado: " + finalSelectedVariants.size());
         return finalSelectedVariants;
     }
 }
