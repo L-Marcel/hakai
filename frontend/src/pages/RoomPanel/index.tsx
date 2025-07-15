@@ -21,7 +21,10 @@ import useGame, { getConcreteQuestionVariant, QuestionVariant } from "@stores/us
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
 import { UUID } from "crypto";
-import { generateVariants, sendQuestion } from "../../services/question";
+import {
+  generateAllVariants,
+  sendAllQuestions
+} from "../../services/question";
 import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
@@ -55,6 +58,10 @@ function Page() {
     [question]
   );
 
+  const hasAnyVariant = useMemo(() =>
+    questions.some(q => q.variants && q.variants.length > 0),
+    [questions]);
+
   const hardestVariant = useMemo(() => {
     if (variants.length === 0) return "";
     const lastVariant = variants[variants.length - 1];
@@ -81,16 +88,16 @@ function Page() {
           <div className={styles.controllers}>
             <div className={styles.buttons}>
               <Button
-                disabled={variants.length === 0}
-                onClick={() => sendQuestion(variants as QuestionVariant[])}
+                disabled={!hasAnyVariant}
+                onClick={sendAllQuestions}
                 theme="full-red"
               >
                 <FaPlay />
                 Lançar
               </Button>
               <Button
-                disabled={!question}
-                onClick={() => generateVariants(question?.uuid as UUID)}
+                disabled={questions.length === 0}
+                onClick={generateAllVariants}
                 theme="light-red"
               >
                 <FaSync />
@@ -128,7 +135,7 @@ function Page() {
               identifier={(item) => getConcreteQuestionVariant(item).uuid}
               render={(item) => {
                 return (
-                  <li>
+                  <li key={getConcreteQuestionVariant(item).uuid}>
                     <QuestionView
                       highlight={question?.answers}
                       variant={item}

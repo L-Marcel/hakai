@@ -104,23 +104,41 @@ const useGame = create<GameStore>((set) => ({
   setGame: (game?: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
-      if (variants.length === 0 || !state.game) return state;
-      const firstVariantData = getConcreteQuestionVariant(variants[0]);
+      console.groupCollapsed("[useGame] Executando setVariants"); // Agrupa os logs
+      console.log("[setVariants] 1. Estado ANTES da atualização:", JSON.parse(JSON.stringify(state.game?.questions)));
+      console.log("[setVariants] 2. Variantes RECEBIDAS:", variants);
 
-      const questions = state.game.questions.map((question) => {
-        if (question.uuid === firstVariantData.original) {
-          return {
-            ...question,
-            variants,
-          };
+      if (variants.length === 0 || !state.game) {
+        console.warn("[setVariants] Abortado: Sem variantes ou sem jogo no estado.");
+        console.groupEnd();
+        return state;
+      }
+
+      const variantsByOriginal = variants.reduce((acc, variant) => {
+        const originalId = getConcreteQuestionVariant(variant).original;
+        if (originalId) {
+          if (!acc[originalId]) acc[originalId] = [];
+          acc[originalId].push(variant);
+        }
+        return acc;
+      }, {} as Record<UUID, QuestionVariant[]>);
+
+      console.log("[setVariants] 3. Variantes AGRUPADAS por questão:", variantsByOriginal);
+
+      const updatedQuestions = state.game.questions.map((question) => {
+        if (variantsByOriginal[question.uuid]) {
+          return { ...question, variants: variantsByOriginal[question.uuid] };
         }
         return question;
       });
 
+      console.log("[setVariants] 4. Questões ATUALIZADAS (prontas para salvar):", updatedQuestions);
+      console.groupEnd();
+
       return {
         game: {
           ...state.game,
-          questions,
+          questions: updatedQuestions,
         },
       };
     }),
@@ -130,16 +148,14 @@ const useGame = create<GameStore>((set) => ({
   updateQuestion: (questionId, field, value) =>
     set((state) => {
       if (!state.game) {
-        return state; // Retorna o estado atual se não houver jogo
+        return state;
       }
 
       const updatedQuestions = state.game.questions.map((q) => {
-        // Se encontramos a questão correta...
         if (q.uuid === questionId) {
-          // ...retornamos uma CÓPIA dela com o valor atualizado.
           return {
             ...q,
-            [field]: value, // Atualiza 'correctValue' ou 'wrongValue'
+            [field]: value,
           };
         }
         return q;

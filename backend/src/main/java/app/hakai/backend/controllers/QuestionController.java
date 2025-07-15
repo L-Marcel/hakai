@@ -1,11 +1,15 @@
 package app.hakai.backend.controllers;
 
+import java.util.Map;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
 import org.kahai.framework.models.User;
 import org.kahai.framework.questions.Question;
+import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.transients.Room;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.dtos.QuestionPayload;
+import app.hakai.backend.dtos.SendAllQuestionsRequest;
 import app.hakai.backend.strategies.VariantsDistributionAllByPercentage;
 import jakarta.annotation.PostConstruct;
 
@@ -59,6 +65,34 @@ public class QuestionController {
                 body.getVariants(),
                 body.getOriginal(),
                 room);
+
+        return ResponseEntity.ok().build();
+    };
+
+    @RequireAuth
+    @PostMapping("/generate-all")
+    public ResponseEntity<Void> startAllVariantsGeneration(
+            @AuthenticationPrincipal User user) {
+        Room room = roomService.findRoomByUser(user);
+        questionService.startAllVariantsGeneration(room);
+
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .build();
+    };
+
+    @PostMapping("/send-all")
+    public ResponseEntity<Void> sendAllVariantsToParticipants(
+            @RequestBody SendAllQuestionsRequest body) {
+
+        Room room = roomService.findRoomByCode(body.getCode());
+
+        Map<UUID, List<QuestionVariant>> mappedVariants = body.getQuestions().stream()
+                .collect(Collectors.toMap(
+                        QuestionPayload::getOriginal,
+                        QuestionPayload::getVariants));
+
+        questionService.sendAllVariant(mappedVariants, room);
 
         return ResponseEntity.ok().build();
     };
