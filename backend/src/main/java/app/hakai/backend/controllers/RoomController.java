@@ -29,110 +29,116 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.dtos.RoomDurationRequest;
 import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
 import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
-    @Autowired
-    private RoomService roomService;
+        @Autowired
+        private RoomService roomService;
 
-    @Autowired
-    private GameService gameService;
+        @Autowired
+        private GameService gameService;
 
-    @Autowired
-    private ParticipantService participantService;
+        @Autowired
+        private ParticipantService participantService;
 
-    @Autowired
-    private AccessControlService accessControlService;
-    @Autowired
-    private ProvaiRoomEventStrategy provaiStrategy;
+        @Autowired
+        private AccessControlService accessControlService;
+        @Autowired
+        private ProvaiRoomEventStrategy provaiStrategy;
 
-    @PostConstruct
-    public void setUpStrategies() {
-        this.roomService.setEventStrategy(
-                new RoomEventStrategyNone());
-    };
+        @PostConstruct
+        public void setUpStrategies() {
+                this.roomService.setEventStrategy(
+                                new RoomEventStrategyNone());
+        };
 
-    @RequireAuth
-    @PostMapping
-    public ResponseEntity<RoomResponse> createRoom(
-            @RequestBody RoomRequest body,
-            @AuthenticationPrincipal User user) {
-        Game game = gameService.findGameById(body.getGame());
-        accessControlService.checkGameOwnership(user, game);
-        Duration duration = Duration.ofHours(1);
-        Room createdRoom = roomService.createRoom(game, duration);
-        provaiStrategy.onStart(createdRoom);
-        RoomResponse response = new RoomResponse(createdRoom);
+        @RequireAuth
+        @PostMapping
+        public ResponseEntity<RoomResponse> createRoomWithDuration(
+                        @RequestBody RoomDurationRequest body,
+                        @AuthenticationPrincipal User user) {
+                Game game = gameService.findGameById(body.getGame());
+                accessControlService.checkGameOwnership(user, game);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
-    };
+                roomService.setEventStrategy(provaiStrategy);
 
-    @RequireAuth
-    @DeleteMapping
-    public ResponseEntity<Void> closeRoom(
-            @AuthenticationPrincipal User user) {
-        Room room = roomService.findRoomByUser(user);
-        participantService.removeAllByRoom(room);
-        roomService.closeRoom(room);
+                Duration duration = Duration.ofMinutes(body.getDuration()); // aqui usa o valor enviado
 
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    };
+                Room createdRoom = roomService.createRoom(game, duration);
+                roomService.startRoomTimer(createdRoom);
 
-    @RequireAuth
-    @DeleteMapping("/participants/{uuid}")
-    public ResponseEntity<Void> kickFromRoom(
-            @PathVariable UUID uuid,
-            @AuthenticationPrincipal User user) {
-        Participant participant = participantService.findParticipantByUuid(uuid);
-        accessControlService.checkRoomOwnership(user, participant.getRoom());
-        participantService.removeParticipant(participant);
+                RoomResponse response = new RoomResponse(createdRoom);
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
 
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    };
+        @RequireAuth
+        @DeleteMapping
+        public ResponseEntity<Void> closeRoom(
+                        @AuthenticationPrincipal User user) {
+                Room room = roomService.findRoomByUser(user);
 
-    @RequireAuth
-    @GetMapping
-    public ResponseEntity<RoomResponse> findRoomByUser(
-            @AuthenticationPrincipal User user) {
-        Room room = roomService.findRoomByUser(user);
-        RoomResponse response = new RoomResponse(room);
+                roomService.setEventStrategy(provaiStrategy);
 
-        return ResponseEntity.ok(response);
-    };
+                participantService.removeAllByRoom(room);
+                roomService.closeRoom(room);
 
-    @GetMapping("/{code}")
-    public ResponseEntity<RoomResponse> findRoomByCode(
-            @PathVariable String code) {
-        Room room = roomService.findRoomByCode(code);
-        RoomResponse response = new RoomResponse(room);
+                return ResponseEntity
+                                .status(HttpStatus.NO_CONTENT)
+                                .build();
+        };
 
-        return ResponseEntity.ok(response);
-    };
+        @RequireAuth
+        @DeleteMapping("/participants/{uuid}")
+        public ResponseEntity<Void> kickFromRoom(
+                        @PathVariable UUID uuid,
+                        @AuthenticationPrincipal User user) {
+                Participant participant = participantService.findParticipantByUuid(uuid);
+                accessControlService.checkRoomOwnership(user, participant.getRoom());
+                participantService.removeParticipant(participant);
 
-    @PostMapping("/{code}/join")
-    public ResponseEntity<ParticipantResponse> joinRoom(
-            @PathVariable String code,
-            @RequestBody JoinRoomRequest body,
-            @AuthenticationPrincipal User user) {
-        Room room = roomService.findRoomByCode(code);
-        Participant participant = participantService.createParticipant(
-                body,
-                room,
-                user);
+                return ResponseEntity
+                                .status(HttpStatus.NO_CONTENT)
+                                .build();
+        };
 
-        ParticipantResponse response = new ParticipantResponse(participant);
+        @RequireAuth
+        @GetMapping
+        public ResponseEntity<RoomResponse> findRoomByUser(
+                        @AuthenticationPrincipal User user) {
+                Room room = roomService.findRoomByUser(user);
+                RoomResponse response = new RoomResponse(room);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
-    };
+                return ResponseEntity.ok(response);
+        };
+
+        @GetMapping("/{code}")
+        public ResponseEntity<RoomResponse> findRoomByCode(
+                        @PathVariable String code) {
+                Room room = roomService.findRoomByCode(code);
+                RoomResponse response = new RoomResponse(room);
+
+                return ResponseEntity.ok(response);
+        };
+
+        @PostMapping("/{code}/join")
+        public ResponseEntity<ParticipantResponse> joinRoom(
+                        @PathVariable String code,
+                        @RequestBody JoinRoomRequest body,
+                        @AuthenticationPrincipal User user) {
+                Room room = roomService.findRoomByCode(code);
+                Participant participant = participantService.createParticipant(
+                                body,
+                                room,
+                                user);
+
+                ParticipantResponse response = new ParticipantResponse(participant);
+
+                return ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(response);
+        };
 };

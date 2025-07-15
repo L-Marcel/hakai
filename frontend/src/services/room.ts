@@ -26,8 +26,14 @@ export async function close(): Promise<void> {
   });
 }
 
-export async function create(game: UUID): Promise<string> {
-  return await api.post<Room>("rooms", { game }).then((response) => {
+export async function create(game: UUID, durationInMinutes: number): Promise<string> {
+  
+  const requestBody = { 
+    game: game, 
+    duration: durationInMinutes 
+  };
+
+  return await api.post<Room>("rooms", requestBody).then((response) => {
     return response.data.code;
   });
 }

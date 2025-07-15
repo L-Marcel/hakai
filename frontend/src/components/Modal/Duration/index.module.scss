@@ -1,0 +1,56 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+/* Adicione estas novas classes ao seu arquivo index.module.scss */
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+
+  .input {
+    width: 80px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  span {
+    font-size: 1rem;
+    color: #555;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}

@@ -51,21 +51,12 @@ public class MultipleChoiceQuestion extends BaseQuestion {
 
         return new Examples<>(
                 new MultipleChoiceQuestionVariant(
-                        new ConcreteQuestionVariant(
-                                "Marque todos os animais da lista que são mamíferos.",
-                                Difficulty.EASY,
-                                List.of("Cachorro", "Gato", "Pássaro"))),
+                        this.wrappee.getPromptExamples().getFirst()),
 
                 new MultipleChoiceQuestionVariant(
-                        new ConcreteQuestionVariant(
-                                "Selecione todos os países listados que são membros da União Europeia.",
-                                Difficulty.NORMAL,
-                                List.of("Alemanha", "França", "Brasil", "Japão", "Itália"))),
+                        this.wrappee.getPromptExamples().getSecond()),
 
                 new MultipleChoiceQuestionVariant(
-                        new ConcreteQuestionVariant(
-                                "Dentre os elementos a seguir, indique todos que pertencem ao grupo dos gases nobres.",
-                                Difficulty.HARD,
-                                List.of("Hélio", "Neônio", "Oxigênio", "Hidrogênio", "Carbono", "Argônio"))));
+                        this.wrappee.getPromptExamples().getThird()));
     }
 }

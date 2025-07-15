@@ -27,56 +27,47 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LanguageQuestion extends BaseQuestion {
-    private final String language;
+        private final String language;
 
-    @JsonCreator
-    public LanguageQuestion(
-            @JsonProperty("wrappee") Question wrappee,
-            @JsonProperty("language") String language) {
-        super(wrappee);
-        this.language = language;
-    }
+        @JsonCreator
+        public LanguageQuestion(
+                        @JsonProperty("wrappee") Question wrappee,
+                        @JsonProperty("language") String language) {
+                super(wrappee);
+                this.language = language;
+        }
 
-    @Override
-    public QuestionResponse toResponse() {
-        QuestionResponse originalResponse = this.wrappee.toResponse();
+        @Override
+        public QuestionResponse toResponse() {
+                QuestionResponse originalResponse = this.wrappee.toResponse();
 
-        return new LanguageQuestionResponse(originalResponse, this.language);
-    }
+                return new LanguageQuestionResponse(originalResponse, this.language);
+        }
 
-    @Override
-    public List<Boolean> validate(List<String> candidates) {
-        return this.wrappee.validate(candidates);
-    }
+        @Override
+        public List<Boolean> validate(List<String> candidates) {
+                return this.wrappee.validate(candidates);
+        }
 
-    @Override
-    public ConcreteQuestion getRoot() {
-        return this.wrappee.getRoot();
-    }
+        @Override
+        public ConcreteQuestion getRoot() {
+                return this.wrappee.getRoot();
+        }
 
-    @Override
-    public Examples<? extends QuestionVariant> getPromptExamples() {
-        return new Examples<>(
-                new LanguageQuestionVariant(
-                        new ConcreteQuestionVariant(
-                                "Qual é a capital do Brasil?",
-                                Difficulty.EASY,
-                                List.of("Brasília", "Rio de Janeiro", "São Paulo")),
-                        "Portugues"),
+        @Override
+        public Examples<? extends QuestionVariant> getPromptExamples() {
+                return new Examples<>(
+                                new LanguageQuestionVariant(
+                                                this.wrappee.getPromptExamples().getFirst(),
+                                                "Portugues"),
 
-                new LanguageQuestionVariant(
-                        new ConcreteQuestionVariant(
-                                "What is the main ingredient in guacamole?",
-                                Difficulty.NORMAL,
-                                List.of("Avocado", "Tomato", "Onion")),
-                        "Inglês"),
+                                new LanguageQuestionVariant(
+                                                this.wrappee.getPromptExamples().getSecond(),
+                                                "Inglês"),
 
-                new LanguageQuestionVariant(
+                                new LanguageQuestionVariant(
 
-                        new ConcreteQuestionVariant(
-                                "¿Cuáles de los siguientes son colores primarios?",
-                                Difficulty.HARD,
-                                List.of("Rojo", "Azul", "Verde", "Amarillo")),
-                        "Espanhol"));
-    }
+                                                this.wrappee.getPromptExamples().getThird(),
+                                                "Espanhol"));
+        }
 }

@@ -5,6 +5,8 @@ import Button from "@components/Button";
 import { create } from "../../services/room";
 import { Game } from "@stores/useGame";
 import { FaArrowUpRightDots } from "react-icons/fa6";
+import { useState } from "react";
+import DurationModal from "@components/Modal/Duration";
 interface CardProps {
   game: Game;
 }
@@ -12,17 +14,23 @@ interface CardProps {
 export default function Card({ game }: CardProps) {
   const navigate = useNavigate();
 
-  const onStart = () => {
-    create(game.uuid).then((code) => {
-      navigate("/room/panel/" + code);
-    });
-  };
+
 
   const seeResults = () => {
     navigate("/game-results/" + game.uuid);
   };
+  const [isModalOpen, setIsModalOpen] = useState(false); // 3. Estado para controlar o modal
 
-  return (
+  // 4. Esta função será chamada pelo modal com a duração escolhida
+  const handleCreateRoom = (durationInMinutes: number) => {
+    create(game.uuid, durationInMinutes).then((code) => {
+      setIsModalOpen(false);
+      navigate("/room/panel/" + code);
+
+    });
+  };
+
+  return (<>
     <li className={styles.card}>
       <div className={styles.content}>
         <h1>{game.title}</h1>
@@ -38,11 +46,16 @@ export default function Card({ game }: CardProps) {
         <Button rounded="full" onClick={seeResults}>
           <FaArrowUpRightDots />
         </Button>
-        <Button theme="light-red" onClick={onStart}>
+        <Button theme="light-red" onClick={() => setIsModalOpen(true)}>
           <FaPlay />
           Iniciar
         </Button>
       </div>
-    </li>
-  );
+    </li>{isModalOpen && (
+      <DurationModal
+        onClose={() => setIsModalOpen(false)}
+        onSelectDuration={handleCreateRoom}
+      />
+    )}
+  </>);
 }
