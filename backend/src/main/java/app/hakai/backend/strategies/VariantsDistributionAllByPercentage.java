@@ -2,10 +2,12 @@ package app.hakai.backend.strategies;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -15,8 +17,7 @@ import org.kahai.framework.services.strategies.VariantsDistributionStrategy;
 import org.kahai.framework.transients.Participant;
 
 public class VariantsDistributionAllByPercentage implements VariantsDistributionStrategy {
-    private static final double EASY_PERCENTAGE = 0.3;
-    private static final double MEDIUM_PERCENTAGE = 0.4;
+
     private final Random random = new Random();
 
     @Override
@@ -34,56 +35,60 @@ public class VariantsDistributionAllByPercentage implements VariantsDistribution
         Map<UUID, List<QuestionVariant>> variantsByQuestion = allAvailableVariants.stream()
                 .collect(Collectors.groupingBy(variant -> variant.getRoot().getUuid()));
 
-        List<List<QuestionVariant>> easyQuestionPool = new ArrayList<>();
-        List<List<QuestionVariant>> mediumQuestionPool = new ArrayList<>();
-        List<List<QuestionVariant>> hardQuestionPool = new ArrayList<>();
-        variantsByQuestion.values().forEach(variantList -> {
-            Difficulty difficulty = variantList.get(0).getRoot().getDifficulty();
-            switch (difficulty) {
-                case EASY:
-                    easyQuestionPool.add(variantList);
-                    break;
-                case NORMAL:
-                    mediumQuestionPool.add(variantList);
-                    break;
-                case HARD:
-                    hardQuestionPool.add(variantList);
-                    break;
-            }
-        });
-
         int baseNumber = variantsByQuestion.size();
         int actualTotalToSend = baseNumber / 3;
 
         if (actualTotalToSend == 0) {
             return new ArrayList<>();
         }
+        double easyPercentage = 0.3;
+        double mediumPercentage = 0.4;
 
-        int numEasyToSelect = (int) Math.round(actualTotalToSend * EASY_PERCENTAGE);
-        int numMediumToSelect = (int) Math.round(actualTotalToSend * MEDIUM_PERCENTAGE);
-        int numHardToSelect = actualTotalToSend - numEasyToSelect - numMediumToSelect;
+        int numHardToSelect = (int) Math.round(actualTotalToSend * (1.0 - easyPercentage - mediumPercentage));
+        int numMediumToSelect = (int) Math.round(actualTotalToSend * mediumPercentage);
+        int numEasyToSelect = actualTotalToSend - numHardToSelect - numMediumToSelect;
 
         List<QuestionVariant> finalSelectedVariants = new ArrayList<>();
+        Set<UUID> usedQuestionUuids = new HashSet();
 
-        addRandomVariants(hardQuestionPool, numHardToSelect, finalSelectedVariants);
-        addRandomVariants(mediumQuestionPool, numMediumToSelect, finalSelectedVariants);
-        addRandomVariants(easyQuestionPool, numEasyToSelect, finalSelectedVariants);
+        List<List<QuestionVariant>> shuffledQuestions = new ArrayList<>(variantsByQuestion.values());
+        Collections.shuffle(shuffledQuestions);
+        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.HARD, numHardToSelect, finalSelectedVariants,
+                usedQuestionUuids);
+        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.NORMAL, numMediumToSelect, finalSelectedVariants,
+                usedQuestionUuids);
+        findAndAddQuestionsByDifficulty(shuffledQuestions, Difficulty.EASY, numEasyToSelect, finalSelectedVariants,
+                usedQuestionUuids);
 
         Collections.shuffle(finalSelectedVariants);
         return finalSelectedVariants;
     }
 
-    private void addRandomVariants(List<List<QuestionVariant>> questionPool, int countToSelect,
-            List<QuestionVariant> finalSelectionList) {
+    private void findAndAddQuestionsByDifficulty(
+            List<List<QuestionVariant>> allQuestions,
+            Difficulty targetDifficulty,
+            int countToSelect,
+            List<QuestionVariant> finalSelectionList,
+            Set<UUID> usedQuestionUuids) {
 
-        Collections.shuffle(questionPool);
+        int foundCount = 0;
+        for (List<QuestionVariant> variantsForOneQuestion : allQuestions) {
+            if (foundCount >= countToSelect) {
+                break;
+            }
 
-        int limit = Math.min(countToSelect, questionPool.size());
+            QuestionVariant representativeVariant = variantsForOneQuestion.get(0);
+            UUID questionUuid = representativeVariant.getRoot().getUuid();
+            if (representativeVariant.getRoot().getDifficulty() == targetDifficulty
+                    && !usedQuestionUuids.contains(questionUuid)) {
+                QuestionVariant randomVariant = variantsForOneQuestion
+                        .get(random.nextInt(variantsForOneQuestion.size()));
 
-        for (int i = 0; i < limit; i++) {
-            List<QuestionVariant> variantsForOneQuestion = questionPool.get(i);
-            QuestionVariant randomVariant = variantsForOneQuestion.get(random.nextInt(variantsForOneQuestion.size()));
-            finalSelectionList.add(randomVariant);
+                finalSelectionList.add(randomVariant);
+                usedQuestionUuids.add(questionUuid);
+
+                foundCount++;
+            }
         }
     }
 }
