@@ -1,0 +1,21 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "d9165653-aa75-474c-92cf-6f4e0e7ecc29",
+  "question" : "Qual ferramenta usamos para testar programas em Java?",
+  "answers" : [ {
+    "uuid" : "84c4bfd7-cdb1-4694-b6e2-b12606c06ff0",
+    "answer" : "JUnit"
+  } ],
+  "contexts" : [ {
+    "id" : "909c19ae-93d0-4401-9acc-604510e34b4e",
+    "name" : "programação"
+  }, {
+    "id" : "b8ccc599-e288-4fe9-ba40-82576cf7d89a",
+    "name" : "testes"
+  }, {
+    "id" : "d922a694-0f52-48de-80d7-38bfb513b754",
+    "name" : "java"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

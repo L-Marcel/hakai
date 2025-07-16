@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "8617ad31-b288-441f-a2a9-1d2c628d7f65",
+  "question" : "Qual das opções abaixo possui 3 exemplos de estruturas de dados?",
+  "answers" : [ {
+    "uuid" : "94aab327-e2bd-461a-be6b-5aa1f36a6485",
+    "answer" : "Tabela hash, lista, stack"
+  } ],
+  "contexts" : [ {
+    "id" : "29028325-2700-4db6-9164-8588d07822be",
+    "name" : "estruturas de dados"
+  }, {
+    "id" : "7afe959e-71c4-44d6-90dd-7cb327c07c1f",
+    "name" : "programação"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

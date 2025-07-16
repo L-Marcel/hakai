@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "ee3ce9cd-6211-4cc4-8725-a042fbd20340",
+  "question" : "5+7?",
+  "answers" : [ {
+    "uuid" : "020a2cc0-8fa8-4adf-8d99-9b1984bb3f57",
+    "answer" : "12"
+  } ],
+  "contexts" : [ {
+    "id" : "ec1849b3-41a5-484c-822a-4ab29176b845",
+    "name" : "matemática"
+  }, {
+    "id" : "25d2ea8b-f3b4-4932-be84-24db32782c8c",
+    "name" : "soma"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

@@ -1,0 +1,22 @@
+{
+  "type" : "QuestionWithFeedback",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "eecec856-7bc5-4f1c-b0bd-bec5ca837692",
+    "question" : "5+7?",
+    "answers" : [ {
+      "uuid" : "2eb2227a-a8b8-437b-9bc8-5bbf60491587",
+      "answer" : "12"
+    } ],
+    "contexts" : [ {
+      "id" : "eb3cfda2-f53b-4ca6-a4dd-93119ccb49cd",
+      "name" : "matemática"
+    }, {
+      "id" : "8dc321b5-656a-4a64-808e-fdac635e3cb0",
+      "name" : "soma"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 0
+  },
+  "feedback" : null
+}

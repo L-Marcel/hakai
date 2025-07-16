@@ -17,10 +17,10 @@ export default function Tag({
 
   switch (theme) {
     case "light-purple":
-      classes.push(styles.lightOrange);
+      classes.push(styles.lightPurple);
       break;
     case "full-purple":
-      classes.push(styles.fullOrange);
+      classes.push(styles.fullPurple);
       break;
     default:
       break;

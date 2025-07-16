@@ -21,13 +21,13 @@ export default function Button({
 
   switch (theme) {
     case "light-purple":
-      classes.push(styles.lightOrange);
+      classes.push(styles.lightPurple);
       break;
     case "full-purple":
-      classes.push(styles.fullOrange);
+      classes.push(styles.fullPurple);
       break;
     case "partial-purple":
-      classes.push(styles.partialOrange);
+      classes.push(styles.partialPurple);
       break;
     default:
       break;

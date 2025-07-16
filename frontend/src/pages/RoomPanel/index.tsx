@@ -125,9 +125,9 @@ function Page() {
               items={variants}
               start={hardestVariant}
               identifier={(item) => getConcreteQuestionVariant(item).uuid}
-              render={(item) => {
+              render={(item, key) => {
                 return (
-                  <li>
+                  <li key={key}>
                     <QuestionView
                       highlight={question?.answers}
                       variant={item}
