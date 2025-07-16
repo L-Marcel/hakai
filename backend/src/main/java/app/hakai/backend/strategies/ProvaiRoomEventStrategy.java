@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.kahai.framework.errors.RoomNotFound;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.questions.variants.QuestionVariant;
+import org.kahai.framework.services.GameService;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.strategies.RoomEventStrategy;
 import org.kahai.framework.transients.Room;
@@ -32,50 +33,43 @@ public class ProvaiRoomEventStrategy implements RoomEventStrategy {
     private final QuestionService questionService;
     private final QuestionVariantStorage questionVariantStorage;
     private final PersistentRoomRepository persistentRoomRepository;
+    private final GameService gameService;
 
     public ProvaiRoomEventStrategy(
             QuestionService questionService,
             QuestionVariantStorage questionVariantStorage,
-            PersistentRoomRepository persistentRoomRepository) {
+            PersistentRoomRepository persistentRoomRepository, GameService gameService) {
         this.questionService = questionService;
         this.questionVariantStorage = questionVariantStorage;
         this.persistentRoomRepository = persistentRoomRepository;
+        this.gameService = gameService;
+
     }
 
     @Override
-    @Transactional // Essencial para evitar LazyInitializationException ao acessar
-                   // room.getGame().getQuestions()
+    @Transactional
     public void onStart(Room room) {
         log.info("Estratégia 'Provai' ativada para o evento onStart da sala {}", room.getCode());
 
-        // 1. Fecha a sala para que ninguém mais entre no meio do jogo.
         PersistentRoom persistentRoom = persistentRoomRepository.findById(room.getSession())
                 .orElseThrow(() -> new RoomNotFound());
         persistentRoom.setIsOpen(false);
         persistentRoomRepository.save(persistentRoom);
         log.info("Sala {} fechada para novos participantes.", room.getCode());
 
-        // 2. Monta o mapa de variantes, carregando do nosso storage.
         Map<UUID, List<QuestionVariant>> mappedVariants = new ConcurrentHashMap<>();
-        // O @Transactional garante que esta linha funcione sem erros de Lazy Loading.
-        for (Question question : room.getGame().getQuestions()) {
+        for (Question question : gameService.findGameById(room.getGame().getUuid()).getQuestions()) {
             List<QuestionVariant> variants = questionVariantStorage.load(question.getRoot().getUuid());
             mappedVariants.put(question.getRoot().getUuid(), variants);
         }
 
-        // 3. Verifica se alguma variante foi carregada.
         if (mappedVariants.isEmpty()) {
             log.error("Nenhuma variante encontrada no storage para a sala {}. O jogo não pode começar.",
                     room.getCode());
-            // Importante: Precisamos parar o timer se o jogo não puder começar.
-            // Como a estratégia não tem acesso ao RoomService, essa lógica fica no
-            // controller.
-            // Lançar uma exceção aqui seria uma boa prática.
+
             throw new IllegalStateException(
                     "Não foi possível iniciar a sala " + room.getCode() + " por falta de variantes.");
         }
-
-        // 4. Usa o método de distribuição do framework para enviar as questões.
         log.info("Estratégia 'Provai' iniciando a distribuição de variantes para {} questões...",
                 mappedVariants.size());
         questionService.sendAllVariant(mappedVariants, room);

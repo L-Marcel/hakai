@@ -13,6 +13,7 @@ import org.kahai.framework.models.User;
 import org.kahai.framework.services.AccessControlService;
 import org.kahai.framework.services.GameService;
 import org.kahai.framework.services.ParticipantService;
+import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.services.strategies.RoomEventStrategyNone;
 import org.kahai.framework.transients.Participant;
@@ -30,7 +31,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.RoomDurationRequest;
+import app.hakai.backend.repository.PersistentRoomRepository;
 import app.hakai.backend.service.GameFlowService;
+import app.hakai.backend.storage.QuestionVariantStorage;
 import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
 import jakarta.annotation.PostConstruct;
 
@@ -46,11 +49,14 @@ public class RoomController {
         private GameFlowService gameFlowService;
         @Autowired
         private ParticipantService participantService;
-
+        @Autowired
+        private QuestionService questionService;
+        @Autowired
+        private QuestionVariantStorage questionVariantStorage;
+        @Autowired
+        private PersistentRoomRepository persistentRoomRepository;
         @Autowired
         private AccessControlService accessControlService;
-        @Autowired
-        private ProvaiRoomEventStrategy provaiStrategy;
 
         @PostConstruct
         public void setUpStrategies() {
@@ -79,7 +85,8 @@ public class RoomController {
         public ResponseEntity<Void> closeRoom(
                         @AuthenticationPrincipal User user) {
                 Room room = roomService.findRoomByUser(user);
-
+                ProvaiRoomEventStrategy provaiStrategy = new ProvaiRoomEventStrategy(questionService,
+                                questionVariantStorage, persistentRoomRepository, gameService);
                 roomService.setEventStrategy(provaiStrategy);
 
                 participantService.removeAllByRoom(room);

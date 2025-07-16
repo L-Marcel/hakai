@@ -2,7 +2,7 @@
   "type" : "LanguageQuestionVariant",
   "wrappee" : {
     "type" : "ConcreteQuestionVariant",
-    "uuid" : "4fa5b036-6e20-4f18-bad5-3d6aa30da0e8",
+    "uuid" : "a0d459d7-56a8-41c2-91db-79e960814827",
     "question" : "Qual linguagem de programação é fortemente tipada?",
     "difficulty" : "EASY",
     "options" : [ "Python", "Java", "JavaScript" ],
@@ -32,7 +32,7 @@
   "type" : "LanguageQuestionVariant",
   "wrappee" : {
     "type" : "ConcreteQuestionVariant",
-    "uuid" : "04d58a10-9440-44fe-b09d-b3583c482eaa",
+    "uuid" : "6cc4af0a-dc52-479a-a8e6-5df332cfe1c8",
     "question" : "Qual linguagem de programação é conhecida por sua tipagem estática e forte?",
     "difficulty" : "NORMAL",
     "options" : [ "C++", "Java", "Ruby", "PHP" ],
@@ -62,10 +62,10 @@
   "type" : "LanguageQuestionVariant",
   "wrappee" : {
     "type" : "ConcreteQuestionVariant",
-    "uuid" : "d14641fa-ee24-4b52-8936-7006192733ab",
-    "question" : "Qual linguagem de programação orientada a objetos, desenvolvida pela Sun Microsystems, é conhecida por sua tipagem estática e forte, exigindo que os tipos de dados sejam explicitamente declarados?",
+    "uuid" : "7846d5f1-985c-4516-9490-a5c9da9a47a7",
+    "question" : "Qual linguagem de programação, amplamente utilizada em desenvolvimento de sistemas empresariais, é caracterizada por sua tipagem estática e forte, exigindo que todos os tipos de dados sejam explicitamente declarados?",
     "difficulty" : "HARD",
-    "options" : [ "C#", "Java", "Swift", "Kotlin", "Go", "Rust" ],
+    "options" : [ "Swift", "Java", "Kotlin", "TypeScript", "Go", "Rust" ],
     "original" : {
       "type" : "LanguageQuestion",
       "wrappee" : {

@@ -14,6 +14,7 @@ import org.kahai.framework.models.User;
 import org.kahai.framework.questions.ConcreteQuestion;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.questions.variants.QuestionVariant;
+import org.kahai.framework.services.GameService;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
 import org.kahai.framework.services.strategies.RoomEventStrategy;
@@ -46,6 +47,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class QuestionController {
         @Autowired
         private RoomService roomService;
+        @Autowired
+        private GameService gameService;
         @Autowired
         private GameFlowService gameFlowService;
         @Autowired
@@ -113,7 +116,7 @@ public class QuestionController {
                 RoomEventStrategy strategy = new ProvaiRoomEventStrategy(
                                 this.questionService,
                                 this.questionVariantStorage,
-                                this.persistentRoomRepository);
+                                this.persistentRoomRepository, gameService);
 
                 roomService.setEventStrategy(strategy);
 
