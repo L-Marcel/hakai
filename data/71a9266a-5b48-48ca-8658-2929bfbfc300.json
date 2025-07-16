@@ -1,0 +1,19 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "71a9266a-5b48-48ca-8658-2929bfbfc300",
+    "question" : "Quais destas palavras são da lingua inglesa?",
+    "answers" : [ {
+      "uuid" : "db03e276-01d4-4bf1-bbdb-7cf89811c466",
+      "answer" : "afternoon"
+    } ],
+    "contexts" : [ {
+      "id" : "f30f35a4-be8a-4bee-af9b-270f9f24155a",
+      "name" : "english"
+    } ],
+    "correctValue" : 8,
+    "wrongValue" : 0
+  },
+  "language" : "inglês"
+}

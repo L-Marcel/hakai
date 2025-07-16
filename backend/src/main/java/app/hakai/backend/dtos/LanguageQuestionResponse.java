@@ -3,6 +3,9 @@ package app.hakai.backend.dtos;
 import org.kahai.framework.questions.response.BaseQuestionResponse;
 import org.kahai.framework.questions.response.QuestionResponse;
 
+import lombok.Getter;
+
+@Getter
 public class LanguageQuestionResponse extends BaseQuestionResponse {
 
     private String language;

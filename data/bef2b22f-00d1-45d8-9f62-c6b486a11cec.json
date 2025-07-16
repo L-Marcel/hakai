@@ -1,0 +1,24 @@
+{
+  "type" : "MultipleChoiceQuestion",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "bef2b22f-00d1-45d8-9f62-c6b486a11cec",
+    "question" : "Qual destes não são blocos de condicionais?",
+    "answers" : [ {
+      "uuid" : "25313cfe-43db-4eae-9dc9-552e4c1e8dc4",
+      "answer" : "for"
+    }, {
+      "uuid" : "62a335aa-bc2f-4a6a-a1d7-cc96fc303eca",
+      "answer" : "while"
+    }, {
+      "uuid" : "cc0799a0-18dd-40f1-a874-0f6a35d74e87",
+      "answer" : "try_catch"
+    } ],
+    "contexts" : [ {
+      "id" : "56c6f230-4663-4666-baaf-2fad8bd11476",
+      "name" : "programação"
+    } ],
+    "correctValue" : 8,
+    "wrongValue" : 10
+  }
+}

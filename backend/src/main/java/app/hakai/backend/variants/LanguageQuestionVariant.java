@@ -1,7 +1,5 @@
 package app.hakai.backend.variants;
 
-import java.util.List;
-
 import org.kahai.framework.questions.variants.BaseQuestionVariant;
 import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
@@ -12,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.hakai.backend.dtos.LanguageQuestionVariantResponse;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class LanguageQuestionVariant extends BaseQuestionVariant {

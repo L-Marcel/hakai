@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "54d581e4-d1a0-4b82-a01d-1597bb95dc2a",
+  "question" : "Qual dos items abaixo é um bloco condicional?",
+  "answers" : [ {
+    "uuid" : "c74c7f1e-084b-4272-9a37-d5e8ede14cab",
+    "answer" : "if"
+  } ],
+  "contexts" : [ {
+    "id" : "6869cd19-3889-4724-a87c-e665cebdbcb6",
+    "name" : "programação"
+  } ],
+  "correctValue" : 8,
+  "wrongValue" : 20
+}

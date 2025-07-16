@@ -25,6 +25,7 @@ type AllAnswers = Record<string, string[]>;
 function Page() {
   const room = useRoom((state) => state.room);
   const questions = useGame((state) => state.questions);
+  const setQuestions = useGame((state) => state.setQuestions);
 
   const [allAnswers, setAllAnswers] = useState<AllAnswers>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,6 +60,7 @@ function Page() {
     );
     try {
       await Promise.all(submissionPromises);
+      setQuestions([]);
       alert("Respostas enviadas com sucesso!");
     } catch {
       alert("Ocorreu um erro ao enviar suas respostas. Tente novamente.");
@@ -79,7 +81,7 @@ function Page() {
           </h4>
         </div>
       </header>
-      {questions.length >= 0 ? (
+      {questions.length > 0 ? (
         <section>
           {questions.map((question) => {
             const concrete = getConcreteQuestionVariant(question);

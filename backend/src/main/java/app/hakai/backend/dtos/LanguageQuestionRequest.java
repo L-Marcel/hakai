@@ -1,7 +1,5 @@
 package app.hakai.backend.dtos;
 
-import java.util.List;
-
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.questions.request.BaseQuestionRequest;
 import org.kahai.framework.validation.ValidatorChain;

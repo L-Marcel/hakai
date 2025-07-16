@@ -1,6 +1,5 @@
 package app.hakai.backend.controllers;
 
-import java.time.Duration;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
@@ -14,7 +13,6 @@ import org.kahai.framework.services.AccessControlService;
 import org.kahai.framework.services.GameService;
 import org.kahai.framework.services.ParticipantService;
 import org.kahai.framework.services.RoomService;
-import org.kahai.framework.services.strategies.RoomEventStrategyNone;
 import org.kahai.framework.transients.Participant;
 import org.kahai.framework.transients.Room;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
-import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/rooms")
@@ -46,14 +41,6 @@ public class RoomController {
 
     @Autowired
     private AccessControlService accessControlService;
-    @Autowired
-    private ProvaiRoomEventStrategy provaiStrategy;
-
-    @PostConstruct
-    public void setUpStrategies() {
-        this.roomService.setEventStrategy(
-                new RoomEventStrategyNone());
-    };
 
     @RequireAuth
     @PostMapping
@@ -62,9 +49,7 @@ public class RoomController {
             @AuthenticationPrincipal User user) {
         Game game = gameService.findGameById(body.getGame());
         accessControlService.checkGameOwnership(user, game);
-        Duration duration = Duration.ofHours(1);
-        Room createdRoom = roomService.createRoom(game, duration);
-        provaiStrategy.onStart(createdRoom);
+        Room createdRoom = roomService.createRoom(game);
         RoomResponse response = new RoomResponse(createdRoom);
 
         return ResponseEntity

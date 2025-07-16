@@ -1,0 +1,28 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestion",
+    "wrappee" : {
+      "type" : "ConcreteQuestion",
+      "uuid" : "b2fd91f1-baee-404d-8ce5-5b530a639c3c",
+      "question" : "Quais destas palavras não são da lingua inglesa?",
+      "answers" : [ {
+        "uuid" : "eeadd88b-f717-4d03-8c2e-b3c2085da90b",
+        "answer" : "Ano"
+      }, {
+        "uuid" : "9d769856-b58d-4a2f-a26d-65db5aff8cd1",
+        "answer" : "Prova"
+      }, {
+        "uuid" : "c85ba81a-2521-4d3c-aabb-579a3ab87548",
+        "answer" : "Certidão"
+      } ],
+      "contexts" : [ {
+        "id" : "e6eda126-700b-4eee-8d18-3d39b5078237",
+        "name" : "inglês"
+      } ],
+      "correctValue" : 15,
+      "wrongValue" : 5
+    }
+  },
+  "language" : "inglês"
+}

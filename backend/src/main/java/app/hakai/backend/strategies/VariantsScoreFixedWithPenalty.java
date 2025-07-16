@@ -2,7 +2,6 @@ package app.hakai.backend.strategies;
 
 import java.util.List;
 
-import org.kahai.framework.models.Difficulty;
 import org.kahai.framework.questions.ConcreteQuestion;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.services.strategies.VariantsScoreStrategy;

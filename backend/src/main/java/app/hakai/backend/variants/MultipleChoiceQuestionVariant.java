@@ -1,7 +1,5 @@
 package app.hakai.backend.variants;
 
-import java.util.List;
-
 import org.kahai.framework.questions.variants.BaseQuestionVariant;
 import org.kahai.framework.questions.variants.ConcreteQuestionVariant;
 import org.kahai.framework.questions.variants.QuestionVariant;
