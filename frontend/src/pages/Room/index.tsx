@@ -8,6 +8,7 @@ import { close } from "../../services/room";
 import { useEffect, useMemo, useState } from "react";
 import QuestionView from "@components/Views/Question";
 import StatusToast from "@components/Toast";
+import { getGame } from "../../services/game";
 
 export default function RoomPage() {
   return (
@@ -18,24 +19,45 @@ export default function RoomPage() {
 }
 
 function Page() {
+  const room = useRoom((state) => state.room);
   const game = useGame((state) => state.game);
-  const currentQuestions = useGame((state) => state.currentQuestions);
+  const setGame = useGame((state) => state.setGame);
   
   const [index, setIndex] = useState(0);
+  const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
-    if (!currentQuestions || currentQuestions.length === 0) return undefined;
-    return currentQuestions[index];
-  }, [index, currentQuestions]);
+    if (questions.length === 0) return undefined;
+    const questionIndex = index % questions.length;
+    return questions[questionIndex];
+  }, [index, questions]);
+  const current = game?.questions[index].variants;
+  
+  
+  //if(game) sendQuestion(game?.questions);
 
   
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
 
+  useEffect(() => {
+    if (room?.game && !game) {
+      console.log("Detectado ID do jogo, buscando detalhes...");
+
+      const fetchGameData = async () => {
+        try {
+          getGame(room.game); 
+          console.log("Dados do jogo carregados!");
+
+        } catch (error) {
+          console.error("Falha ao buscar os detalhes do jogo:", error);
+        }
+      };
+
+      fetchGameData();
+    }
+  }, [room, game, setGame]); 
 
   return (
-    <>
-      <StatusToast />
-    
     <main className={styles.main}>
       <header className={styles.header}>
         <Button theme="full-purple" onClick={close}>
@@ -44,10 +66,9 @@ function Page() {
       </header>
       <section>
 
-        {question && (
-          <QuestionView variant={question} />
+        {game && game.questions.length > 0 && (
+          <QuestionView question={game.questions[index]} />
         )}
-
         <div className={styles.controllers}>
           <div className={styles.buttons}>
             <Button
@@ -64,9 +85,7 @@ function Page() {
             </span>
 
             <Button
-              disabled={
-                !currentQuestions || index >= currentQuestions.length - 1
-              }
+              disabled={index >= questions.length - 1}
               onClick={toNextQuestion}
               theme="light-purple"
             >
@@ -79,6 +98,5 @@ function Page() {
         
       </section>
     </main>
-    </>
   );
 }

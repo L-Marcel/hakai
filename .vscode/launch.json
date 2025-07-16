@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // BACKEND JAVA
+      "type": "java",
+      "name": "Debug Backend",
+      "request": "launch",
+      "mainClass": "app.hakai.backend.BackendApplication",
+      "projectName": "backend"
+    },
+    {
+      // FRONTEND REACT (VITE)
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend (React - Vite)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMaps": true,
+      "trace": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debugar Backend + Frontend juntos",
+      "configurations": [
+        "Debug Backend",
+        "Debug Frontend (React - Vite)"
+      ]
+    }
+  ]
+}
