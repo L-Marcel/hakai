@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "01e64ed1-ad39-411b-a43c-e9d02570ac72",
+  "question" : "Qual ferramenta usamos para testar Java?",
+  "answers" : [ {
+    "uuid" : "b5c9f6a0-52cd-4115-aae8-20e89898fd23",
+    "answer" : "JUnit"
+  } ],
+  "contexts" : [ {
+    "id" : "0313e94d-347c-4042-9e29-477987542a90",
+    "name" : "testes"
+  }, {
+    "id" : "8f176885-4220-437c-9ff0-a037cfd600b6",
+    "name" : "java"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

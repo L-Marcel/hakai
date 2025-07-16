@@ -44,3 +44,7 @@ export async function getAllGames(): Promise<Game[]> {
 export async function createGame(payload: GameRequest): Promise<Game> {
   return api.post<Game>("games", payload).then((response) => response.data);
 }
+
+export async function getGameForClone(uuid?: UUID): Promise<Game> {
+  return await api.get<Game>(`games/clone/${uuid}`).then((response) => response.data);
+}

@@ -43,6 +43,19 @@ public class GameController {
         return ResponseEntity.ok(response);
     };
 
+    @RequireAuth
+    @GetMapping("/clone/{uuid}")
+    public ResponseEntity<GameResponse> findGameForClone(
+        @PathVariable UUID uuid,
+        @AuthenticationPrincipal User user
+    ) {
+        Game game = gameService.findGameById(uuid);
+
+        GameResponse response = new GameResponse(game);
+
+        return ResponseEntity.ok(response);
+    };
+
     @GetMapping
     @RequireAuth
     public ResponseEntity<List<GameResponse>> findGamesByUser(

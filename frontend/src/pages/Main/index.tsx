@@ -21,8 +21,6 @@ function Page() {
           <h1>REVAI</h1>
           <p>Aprendendo de maneiras diferentes</p>
         </div>
-        <CheckRoomForm />
-        <hr />
         <LoginForm />
         <p>
           Não tem login? <a href="/register">Registre-se</a>.

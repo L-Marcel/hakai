@@ -1,0 +1,18 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "05e3ff9c-bd2e-46ac-9f39-ce23ed1c1276",
+  "question" : "Escolha a opção que apresenta 3 exemplos de estruturas de dados:",
+  "answers" : [ {
+    "uuid" : "b48255dc-4a64-4648-ba06-21d9e952fefa",
+    "answer" : "Pilha, fila, deck"
+  } ],
+  "contexts" : [ {
+    "id" : "c83e1f62-9bd9-438c-9edc-cb0ab5552e07",
+    "name" : "estruturas de dados"
+  }, {
+    "id" : "58cbb8a4-1301-457d-92be-3b576660131b",
+    "name" : "programação"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

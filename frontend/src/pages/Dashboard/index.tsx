@@ -10,6 +10,7 @@ import { Game } from "@stores/useGame";
 import { getAllGames } from "../../services/game";
 import DashboardGuard from "@components/Guards/DashboardGuard";
 import GameModal from "@components/Modal";
+import StatusToast from "@components/Toast";
 
 export default function DashboardPage() {
   return (
@@ -40,33 +41,36 @@ function Page() {
   }
 
   return (
-    <main className={styles.main}>
-      <header className={styles.header}>
-        <div>
-          <Button theme="full-purple" onClick={() => setShowModal(true)}>
-            <FaPlus />
+    <>
+      <StatusToast />
+      <main className={styles.main}>
+        <header className={styles.header}>
+          <div>
+            <Button theme="full-purple" onClick={() => setShowModal(true)}>
+              <FaPlus />
+            </Button>
+            <CheckRoomForm onGameCreated={handleGameCreated}/>
+          </div>
+          <Button theme="full-purple" onClick={() => logout()}>
+            <FaSignOutAlt />
           </Button>
-          <CheckRoomForm />
-        </div>
-        <Button theme="full-purple" onClick={() => logout()}>
-          <FaSignOutAlt />
-        </Button>
-      </header>
+        </header>
 
-      <GameModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onGameCreated={handleGameCreated}
-      />
+        <GameModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onGameCreated={handleGameCreated}
+        />
 
-      <section className={styles.dashboard}>
-        <ul>
-          {games.map((game) => (
-            <Card key={game.uuid} game={game} />
-          ))}
-        </ul>
-        {error && <p className={styles.error}>{error}</p>}
-      </section>
-    </main>
+        <section className={styles.dashboard}>
+          <ul>
+            {games.map((game) => (
+              <Card key={game.uuid} game={game} />
+            ))}
+          </ul>
+          {error && <p className={styles.error}>{error}</p>}
+        </section>
+      </main>
+    </>
   );
 }
