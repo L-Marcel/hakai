@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import app.hakai.backend.repository.PersistentRoomRepository;
-import app.hakai.backend.enums.RoomStatus;
 import app.hakai.backend.models.PersistentRoom;
 import app.hakai.backend.repository.PersistentRoomRepository;
 import org.kahai.framework.models.Game;
@@ -46,22 +45,26 @@ public class ProvaiSetupService {
     public Room setupRoom(Game game, Duration duration) {
         Optional<PersistentRoom> persistentRoomOpt = persistentRoomRepository.findById(game.getUuid());
 
-        if (persistentRoomOpt.isPresent() && persistentRoomOpt.get().getStatus() == RoomStatus.CLOSED) {
+        // Verifica se a sala persistente existe e está fechada (isOpen == false)
+        if (persistentRoomOpt.isPresent() && !persistentRoomOpt.get().getIsOpen()) {
             System.out.println("SETUP PROVAI: Reabrindo sala persistente para o jogo " + game.getUuid());
 
+            // Reabre a sala persistente
             PersistentRoom pRoom = persistentRoomOpt.get();
-            pRoom.setStatus(RoomStatus.OPEN);
-            pRoom.setClosingTime(LocalDateTime.now().plus(duration));
+            pRoom.setIsOpen(true);
             persistentRoomRepository.save(pRoom);
 
+            // Cria uma nova sala em memória (transiente)
             Room roomInMemory = new Room(generateNewCode(), game, duration);
             transientRoomRepository.add(roomInMemory);
 
             roomService.startRoomTimer(roomInMemory);
             return roomInMemory;
         }
+
+        // Se a sala não existe ou já está aberta, cria uma nova
         System.out.println("SETUP PROVAI: Criando uma nova sala para o jogo " + game.getUuid());
-        Room newRoom = roomService.createRoom(game, duration);
+        Room newRoom = roomService.createRoom(game, duration); // createRoom deve chamar activateRoom internamente
         provaiStrategy.onStart(newRoom);
         roomService.startRoomTimer(newRoom);
         return newRoom;

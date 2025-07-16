@@ -16,7 +16,7 @@ public class ProvaiRoomEventStrategy implements RoomEventStrategy {
     public void onStart(Room room) {
         System.out.println("ESTRATÉGIA PROVAI: onStart foi chamado para o jogo " + room.getGame().getUuid());
 
-        persistenceService.activateRoom(room.getGame().getUuid(), (int) room.getDuration().toMinutes());
+        persistenceService.activateRoom(room.getGame().getUuid());
     }
 
     @Override

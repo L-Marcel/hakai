@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.hakai.backend.dtos.RoomDurationRequest;
+import app.hakai.backend.service.GameFlowService;
 import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
 import jakarta.annotation.PostConstruct;
 
@@ -41,7 +42,8 @@ public class RoomController {
 
         @Autowired
         private GameService gameService;
-
+        @Autowired
+        private GameFlowService gameFlowService;
         @Autowired
         private ParticipantService participantService;
 
@@ -61,15 +63,12 @@ public class RoomController {
         public ResponseEntity<RoomResponse> createRoomWithDuration(
                         @RequestBody RoomDurationRequest body,
                         @AuthenticationPrincipal User user) {
+
                 Game game = gameService.findGameById(body.getGame());
                 accessControlService.checkGameOwnership(user, game);
+                Duration duration = Duration.ofMinutes(body.getDuration());
 
-                roomService.setEventStrategy(provaiStrategy);
-
-                Duration duration = Duration.ofMinutes(body.getDuration()); // aqui usa o valor enviado
-
-                Room createdRoom = roomService.createRoom(game, duration);
-                roomService.startRoomTimer(createdRoom);
+                Room createdRoom = gameFlowService.createAndPrepareRoom(game, duration);
 
                 RoomResponse response = new RoomResponse(createdRoom);
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);

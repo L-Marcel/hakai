@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import app.hakai.backend.dtos.QuestionPayload;
 import app.hakai.backend.dtos.ScoringResponse;
 import app.hakai.backend.dtos.SendAllQuestionsRequest;
+import app.hakai.backend.service.GameFlowService;
 import app.hakai.backend.strategies.VariantsDistributionAllByPercentage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class QuestionController {
         @Autowired
         private RoomService roomService;
-
+        @Autowired
+        private GameFlowService gameFlowService;
         @Autowired
         private QuestionService questionService;
 
@@ -81,15 +83,15 @@ public class QuestionController {
 
         @RequireAuth
         @PostMapping("/generate-all")
-        public ResponseEntity<Void> startAllVariantsGeneration(
-                        @AuthenticationPrincipal User user) {
+        public ResponseEntity<Void> startAllVariantsGeneration(@AuthenticationPrincipal User user) {
                 Room room = roomService.findRoomByUser(user);
-                questionService.startAllVariantsGeneration(room);
+
+                gameFlowService.generateAndSaveVariants(room);
 
                 return ResponseEntity
                                 .status(HttpStatus.ACCEPTED)
                                 .build();
-        };
+        }
 
         @PostMapping("/send-all")
         public ResponseEntity<Void> sendAllVariantsToParticipants(

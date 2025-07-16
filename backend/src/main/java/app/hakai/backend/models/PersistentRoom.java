@@ -3,7 +3,6 @@ package app.hakai.backend.models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import app.hakai.backend.enums.RoomStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,8 +23,5 @@ public class PersistentRoom {
     @Id
     private UUID gameId;
 
-    @Enumerated(EnumType.STRING)
-    private RoomStatus status;
-
-    private LocalDateTime closingTime;
+    private Boolean isOpen = false;
 }
