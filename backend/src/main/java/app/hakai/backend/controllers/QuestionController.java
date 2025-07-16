@@ -1,6 +1,7 @@
 package app.hakai.backend.controllers;
 
 import java.util.Map;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -8,12 +9,14 @@ import java.util.stream.Collectors;
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
 import org.kahai.framework.errors.QuestionNotFound;
+import org.kahai.framework.errors.RoomNotFound;
 import org.kahai.framework.models.User;
 import org.kahai.framework.questions.ConcreteQuestion;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.questions.variants.QuestionVariant;
 import org.kahai.framework.services.QuestionService;
 import org.kahai.framework.services.RoomService;
+import org.kahai.framework.services.strategies.RoomEventStrategy;
 import org.kahai.framework.transients.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 import app.hakai.backend.dtos.QuestionPayload;
 import app.hakai.backend.dtos.ScoringResponse;
 import app.hakai.backend.dtos.SendAllQuestionsRequest;
+import app.hakai.backend.models.PersistentRoom;
+import app.hakai.backend.repository.PersistentRoomRepository;
 import app.hakai.backend.service.GameFlowService;
+import app.hakai.backend.storage.QuestionVariantStorage;
+import app.hakai.backend.strategies.ProvaiRoomEventStrategy;
 import app.hakai.backend.strategies.VariantsDistributionAllByPercentage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +50,11 @@ public class QuestionController {
         private GameFlowService gameFlowService;
         @Autowired
         private QuestionService questionService;
+
+        @Autowired
+        private QuestionVariantStorage questionVariantStorage;
+        @Autowired
+        private PersistentRoomRepository persistentRoomRepository;
 
         @PostConstruct
         public void setUpStrategies() {
@@ -96,16 +108,24 @@ public class QuestionController {
         @PostMapping("/send-all")
         public ResponseEntity<Void> sendAllVariantsToParticipants(
                         @RequestBody SendAllQuestionsRequest body) {
-
                 Room room = roomService.findRoomByCode(body.getCode());
 
-                Map<UUID, List<QuestionVariant>> mappedVariants = body.getQuestions().stream()
-                                .collect(Collectors.toMap(
-                                                QuestionPayload::getOriginal,
-                                                QuestionPayload::getVariants));
+                RoomEventStrategy strategy = new ProvaiRoomEventStrategy(
+                                this.questionService,
+                                this.questionVariantStorage,
+                                this.persistentRoomRepository);
 
-                questionService.sendAllVariant(mappedVariants, room);
+                roomService.setEventStrategy(strategy);
+
+                PersistentRoom persistentRoom = persistentRoomRepository.findById(room.getSession())
+                                .orElseThrow(() -> new RoomNotFound());
+
+                room.setDuration(persistentRoom.getDuration());
+
+                roomService.startRoomTimer(room);
+
+                strategy.onStart(room);
 
                 return ResponseEntity.ok().build();
-        };
+        }
 };

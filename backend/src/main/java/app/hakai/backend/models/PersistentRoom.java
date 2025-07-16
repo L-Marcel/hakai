@@ -1,5 +1,6 @@
 package app.hakai.backend.models;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,4 +25,5 @@ public class PersistentRoom {
     private UUID gameId;
 
     private Boolean isOpen = false;
+    private Duration duration;
 }

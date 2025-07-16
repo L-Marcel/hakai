@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import com.fasterxml.jackson.databind.JavaType;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +23,6 @@ import java.util.UUID;
 public class QuestionVariantStorage extends Storage<List<QuestionVariant>> {
     private static final Logger log = LoggerFactory.getLogger(QuestionVariantStorage.class);
 
-    private static final String STORAGE_FOLDER = "variants";
     @Autowired
     private ObjectMapper mapper;
 
@@ -29,15 +30,16 @@ public class QuestionVariantStorage extends Storage<List<QuestionVariant>> {
         return uuid + ".json";
     }
 
-    protected Path getPath(UUID questionUuid) {
-        Path path = this.getStorageFolder(STORAGE_FOLDER);
-        return path.resolve(this.getFilename(questionUuid));
-    }
+    protected Path getPath(
+            UUID uuid) {
+        Path path = this.getStorageFolder("data/variants");
+        return path.resolve(this.getFilename(uuid));
+    };
 
     public void delete(UUID questionUuid) throws FileError {
         try {
             Path path = this.getPath(questionUuid);
-            this.delete(path); // Método herdado da classe Storage base
+            this.delete(path);
             log.info("Arquivo de variantes da questão ({}) deletado!", questionUuid);
         } catch (Exception e) {
             log.error(
@@ -48,23 +50,23 @@ public class QuestionVariantStorage extends Storage<List<QuestionVariant>> {
         }
     }
 
-    /**
-     * Salva uma lista de QuestionVariant em um arquivo JSON.
-     * 
-     * @param questionUuid O UUID da questão original, usado para nomear o arquivo.
-     * @param variants     A lista de variantes a ser salva.
-     * @throws FileError se ocorrer um erro ao escrever o arquivo.
-     */
     public void save(UUID questionUuid, List<QuestionVariant> variants) throws FileError {
         try {
             Path path = this.getPath(questionUuid);
-            this.write(path, variants); // Método herdado que serializa o objeto para JSON
-            log.info("Arquivo de variantes da questão ({}) escrito com sucesso!", questionUuid);
+
+            JavaType listType = this.mapper.getTypeFactory()
+                    .constructCollectionType(List.class, QuestionVariant.class);
+
+            String jsonContent = this.mapper
+                    .writerFor(listType)
+                    .withDefaultPrettyPrinter()
+                    .writeValueAsString(variants);
+
+            Files.writeString(path, jsonContent);
+
+            log.info("Arquivo de variantes da questão ({}) salvo com sucesso!", questionUuid);
         } catch (Exception e) {
-            log.error(
-                    "Erro ao escrever arquivo de variantes da questão ({}): {}",
-                    questionUuid,
-                    e.getMessage());
+            log.error("Erro ao escrever arquivo de variantes da questão ({}): {}", questionUuid, e.getMessage(), e);
             throw new FileError();
         }
     }
@@ -79,7 +81,6 @@ public class QuestionVariantStorage extends Storage<List<QuestionVariant>> {
         }
 
         try {
-            // 2. Use a instância do 'mapper' injetada, em vez de 'getMapper()'
             List<QuestionVariant> variants = this.mapper.readValue(file, new TypeReference<List<QuestionVariant>>() {
             });
             log.info("Variantes da questão ({}) carregadas com sucesso!", questionUuid);

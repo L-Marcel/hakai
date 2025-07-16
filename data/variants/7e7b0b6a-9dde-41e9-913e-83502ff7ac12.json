@@ -1,0 +1,118 @@
+[ {
+  "type" : "LanguageQuestionVariant",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestionVariant",
+    "wrappee" : {
+      "type" : "ConcreteQuestionVariant",
+      "uuid" : "b8950c89-31bb-46bc-a2a4-31905791bd62",
+      "question" : "Quais são linguagens de programação?",
+      "difficulty" : "EASY",
+      "options" : [ "Java", "Python", "C++", "JavaScript" ],
+      "original" : {
+        "type" : "LanguageQuestion",
+        "wrappee" : {
+          "type" : "MultipleChoiceQuestion",
+          "wrappee" : {
+            "type" : "ConcreteQuestion",
+            "uuid" : "7e7b0b6a-9dde-41e9-913e-83502ff7ac12",
+            "question" : "Quais são linguagens de programação?",
+            "answers" : [ {
+              "uuid" : "eb069990-5d88-4b91-a83a-0033932425a4",
+              "answer" : "Java"
+            }, {
+              "uuid" : "88ef3824-635e-48d2-b121-caa5df9f455d",
+              "answer" : "Python"
+            } ],
+            "contexts" : [ {
+              "id" : "ee76fddf-7e95-4175-8f5c-abdbef8a1e41",
+              "name" : "programação"
+            } ],
+            "correctValue" : 1,
+            "wrongValue" : 2
+          }
+        },
+        "language" : "Inglês"
+      },
+      "session" : null
+    }
+  },
+  "language" : "Inglês"
+}, {
+  "type" : "LanguageQuestionVariant",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestionVariant",
+    "wrappee" : {
+      "type" : "ConcreteQuestionVariant",
+      "uuid" : "6f79252e-ec45-42ff-a44f-223a26980ba0",
+      "question" : "Quais são linguagens de programação amplamente utilizadas?",
+      "difficulty" : "NORMAL",
+      "options" : [ "Java", "Python", "Ruby", "Swift", "Kotlin" ],
+      "original" : {
+        "type" : "LanguageQuestion",
+        "wrappee" : {
+          "type" : "MultipleChoiceQuestion",
+          "wrappee" : {
+            "type" : "ConcreteQuestion",
+            "uuid" : "7e7b0b6a-9dde-41e9-913e-83502ff7ac12",
+            "question" : "Quais são linguagens de programação?",
+            "answers" : [ {
+              "uuid" : "eb069990-5d88-4b91-a83a-0033932425a4",
+              "answer" : "Java"
+            }, {
+              "uuid" : "88ef3824-635e-48d2-b121-caa5df9f455d",
+              "answer" : "Python"
+            } ],
+            "contexts" : [ {
+              "id" : "ee76fddf-7e95-4175-8f5c-abdbef8a1e41",
+              "name" : "programação"
+            } ],
+            "correctValue" : 1,
+            "wrongValue" : 2
+          }
+        },
+        "language" : "Inglês"
+      },
+      "session" : null
+    }
+  },
+  "language" : "Inglês"
+}, {
+  "type" : "LanguageQuestionVariant",
+  "wrappee" : {
+    "type" : "MultipleChoiceQuestionVariant",
+    "wrappee" : {
+      "type" : "ConcreteQuestionVariant",
+      "uuid" : "2d9a1407-cc02-419c-8849-684334015bee",
+      "question" : "Quais são linguagens de programação de alto nível frequentemente empregadas no desenvolvimento de software?",
+      "difficulty" : "HARD",
+      "options" : [ "Java", "Python", "C", "Rust", "Go", "TypeScript" ],
+      "original" : {
+        "type" : "LanguageQuestion",
+        "wrappee" : {
+          "type" : "MultipleChoiceQuestion",
+          "wrappee" : {
+            "type" : "ConcreteQuestion",
+            "uuid" : "7e7b0b6a-9dde-41e9-913e-83502ff7ac12",
+            "question" : "Quais são linguagens de programação?",
+            "answers" : [ {
+              "uuid" : "eb069990-5d88-4b91-a83a-0033932425a4",
+              "answer" : "Java"
+            }, {
+              "uuid" : "88ef3824-635e-48d2-b121-caa5df9f455d",
+              "answer" : "Python"
+            } ],
+            "contexts" : [ {
+              "id" : "ee76fddf-7e95-4175-8f5c-abdbef8a1e41",
+              "name" : "programação"
+            } ],
+            "correctValue" : 1,
+            "wrongValue" : 2
+          }
+        },
+        "language" : "Inglês"
+      },
+      "session" : null
+    }
+  },
+  "language" : "Inglês"
+} ]

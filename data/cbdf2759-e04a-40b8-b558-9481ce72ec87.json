@@ -1,0 +1,19 @@
+{
+  "type" : "LanguageQuestion",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "cbdf2759-e04a-40b8-b558-9481ce72ec87",
+    "question" : "Qual linguagem é fortemente tipada?",
+    "answers" : [ {
+      "uuid" : "df834402-994c-457d-b65e-f29dbdc1b739",
+      "answer" : "Java"
+    } ],
+    "contexts" : [ {
+      "id" : "e66a05ce-7a68-461c-bee8-203ec071aec4",
+      "name" : "programação"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 3
+  },
+  "language" : "Alemão"
+}
