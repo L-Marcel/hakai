@@ -1,54 +1,84 @@
 import RoomGuard from "@components/Guards/RoomGuard";
 import styles from "./index.module.scss";
-import ParticipantGuard from "@components/Guards/ParticipantGuard";
 import useGame from "@stores/useGame";
-import QuestionView from "@components/Views/Question";
-import { FaUserGroup } from "react-icons/fa6";
 import useRoom from "@stores/useRoom";
-import ParticipantsMansoryGrid from "@components/Grid/ParticipantsGrid";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Button from "@components/Button";
-import { exit } from "../../services/participant";
+import { close } from "../../services/room";
+import { useEffect, useMemo, useState } from "react";
+import QuestionView from "@components/Views/Question";
+import StatusToast from "@components/Toast";
 
 export default function RoomPage() {
   return (
     <RoomGuard>
-      <ParticipantGuard>
         <Page />
-      </ParticipantGuard>
     </RoomGuard>
   );
 }
 
 function Page() {
-  const room = useRoom((state) => state.room);
-  const question = useGame((state) => state.question);
+  const game = useGame((state) => state.game);
+  const currentQuestions = useGame((state) => state.currentQuestions);
+  
+  const [index, setIndex] = useState(0);
+  const question = useMemo(() => {
+    if (!currentQuestions || currentQuestions.length === 0) return undefined;
+    return currentQuestions[index];
+  }, [index, currentQuestions]);
+
+  
+  const toNextQuestion = () => setIndex((index) => ++index);
+  const toPreviousQuestion = () => setIndex((index) => --index);
+
 
   return (
+    <>
+      <StatusToast />
+    
     <main className={styles.main}>
       <header className={styles.header}>
-        <Button theme="full-purple" onClick={() => exit()}>
+        <Button theme="full-purple" onClick={close}>
           <FaArrowLeft /> Sair
         </Button>
-        <div className={styles.participants}>
-          <h3>Aguardando dono da sala...</h3>
-          <h4>
-            <FaUserGroup /> Participantes: {room?.participants.length ?? 0}
-          </h4>
-        </div>
       </header>
-      {question ? (
-        <section>
+      <section>
+
+        {question && (
           <QuestionView variant={question} />
-        </section>
-      ) : (
-        <section>
-          <ParticipantsMansoryGrid
-            ranked
-            participants={room?.participants ?? []}
-          />
-        </section>
-      )}
+        )}
+
+        <div className={styles.controllers}>
+          <div className={styles.buttons}>
+            <Button
+              disabled={index <= 0}
+              onClick={toPreviousQuestion}
+              theme="light-purple"
+            >
+              <FaArrowLeft />
+              Anterior
+            </Button>
+            
+            <span>
+              Questão {index+1}/{game?.questions.length}
+            </span>
+
+            <Button
+              disabled={
+                !currentQuestions || index >= currentQuestions.length - 1
+              }
+              onClick={toNextQuestion}
+              theme="light-purple"
+            >
+              <FaArrowRight />
+              Próxima
+            </Button>
+          </div>
+        </div>
+        
+        
+      </section>
     </main>
+    </>
   );
 }

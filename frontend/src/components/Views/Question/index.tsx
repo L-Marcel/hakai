@@ -1,8 +1,8 @@
-import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
-import { difficultyToString, Question, getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
+import { difficultyToString, getConcreteQuestionVariant, Question, QuestionVariant } from "@stores/useGame";
 import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
@@ -20,26 +20,12 @@ export default function QuestionView({
   className,
   ...props
 }: Props) {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]); console.log("Opções selecionadas:", selectedOptions);
   if (variant) {
     const concreteVariant = getConcreteQuestionVariant(variant);
     const { difficulty, contexts, options, question, uuid } = concreteVariant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
-    const handleOptionToggle = (option: string) => {
-      setSelectedOptions((currentSelected) => {
-        if (currentSelected.includes(option)) {
-          return currentSelected.filter((item) => item !== option);
-        }
-        return [...currentSelected, option];
-      });
-    }; const handleSubmit = () => {
-      if (selectedOptions.length === 0) {
-        alert("Por favor, selecione ao menos uma resposta.");
-        return;
-      }
-      sendParticipantAnswer(selectedOptions);
-    };
+
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -57,8 +43,8 @@ export default function QuestionView({
         </header>
         <ol className={styles.options}>
           {options.map((option) => {
-            const isSelected = selectedOptions.includes(option);
-            const isHighlighted = highlight && highlight.includes(option);
+            const id =
+              highlight && highlight.includes(option) ? "highlight" : "option";
 
             return (
               <Button
@@ -72,14 +58,13 @@ export default function QuestionView({
               </Button>
             );
           })}
-        </ol>  {!highlight && (
-          <Button
-            onClick={handleSubmit}
-            theme="full-red"
-            style={{ marginTop: '20px', width: '100%' }}
-          >
-            Enviar Resposta
-          </Button>
+        </ol>
+
+        {"feedback" in variant && (
+          <footer className={styles.feedback}>
+            <h4>Feedback:</h4>
+            <p>{variant.feedback}</p>
+          </footer>
         )}
       </article>
     );

@@ -1,5 +1,5 @@
 import { Client } from "@stomp/stompjs";
-import useGame, { QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
+import useGame, { QuestionVariant, QuestionWithFeedbackVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
@@ -7,14 +7,14 @@ import useGenerationStatus from "@stores/useStatus";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
-  const { setGame, setQuestion } = useGame.getState();
+  const { setGame, setQuestions } = useGame.getState();
 
   setClient(undefined);
   setRoom(undefined);
   setClient(undefined);
   setParticipant(undefined);
   setGame(undefined);
-  setQuestion(undefined);
+  setQuestions(undefined);
 }
 
 export function connect(
@@ -23,7 +23,7 @@ export function connect(
   isOwner?: boolean
 ): void {
   const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
-  const { setVariants, setQuestion } = useGame.getState();
+  const { setVariants, setQuestions } = useGame.getState();
 
   if (oldClient && oldClient.connected) return;
 
@@ -49,14 +49,15 @@ export function connect(
 
       if (participant && room) {
         client.subscribe(
-          "/channel/events/rooms/" +
-            code +
-            "/participants/" +
-            participant +
-            "/question",
+          `/channel/events/rooms/${code}/participants/${participant}/question`,
           (message) => {
-            const variant: QuestionVariant = JSON.parse(message.body);
-            setQuestion(transformQuestionVariantFromResponse(variant));
+            const playload: QuestionVariant[] = JSON.parse(message.body);
+            const formattedVariantsList: QuestionVariant[] = [];
+            playload.forEach(variant => {
+              const formattedVariant = transformQuestionVariantFromResponse(variant)
+              formattedVariantsList.push(formattedVariant);
+            });
+            setQuestions(formattedVariantsList);
           }
         );
       }

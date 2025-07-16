@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.kahai.framework.annotations.RequireAuth;
 import org.kahai.framework.dtos.request.SendQuestionVariantsRequest;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.hakai.backend.question.dtos.QuestionPayload;
+import app.hakai.backend.question.dtos.SendAllQuestionsRequest;
 import app.hakai.backend.strategies.VariantsDistributionAllByRandomly;
 import jakarta.annotation.PostConstruct;
 
@@ -45,8 +48,9 @@ public class QuestionController {
     @RequireAuth
     @PostMapping("/{uuid}/generate")
     public ResponseEntity<Void> startVariantsGeneration(
-            @PathVariable UUID uuid,
-            @AuthenticationPrincipal User user) {
+        @PathVariable UUID uuid,
+        @AuthenticationPrincipal User user
+    ) {
         Room room = roomService.findRoomByUser(user);
         Question question = questionService.findQuestionById(uuid);
         questionService.startVariantsGeneration(question, room);
@@ -58,12 +62,33 @@ public class QuestionController {
 
     @PostMapping("/send")
     public ResponseEntity<Void> sendVariantToParticipant(
-            @RequestBody SendQuestionVariantsRequest body) {
+        @RequestBody List<SendQuestionVariantsRequest> body
+    ) {
+        Room room = roomService.findRoomByCode(body.getFirst().getCode());
+
+        for (SendQuestionVariantsRequest question : body) {
+            questionService.sendVariant(
+                    question.getVariants(),
+                    question.getOriginal(),
+                    room);
+        }
+
+        return ResponseEntity.ok().build();
+    };
+
+    @PostMapping("/send-all")
+    public ResponseEntity<Void> sendAllVariantsToParticipants(
+        @RequestBody SendAllQuestionsRequest body
+    ) {
         Room room = roomService.findRoomByCode(body.getCode());
-        questionService.sendVariant(
-                body.getVariants(),
-                body.getOriginal(),
-                room);
+
+        Map<UUID, List<QuestionVariant>> mappedVariants = body.getQuestions().stream()
+                .collect(Collectors.toMap(
+                    QuestionPayload::getOriginal,
+                    QuestionPayload::getVariants
+                    ));
+
+        questionService.sendAllVariant(mappedVariants, room);
 
         return ResponseEntity.ok().build();
     };

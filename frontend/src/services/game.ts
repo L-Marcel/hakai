@@ -17,6 +17,7 @@ export type BaseQuestionRequest = {
 export type QuestionWithFeedbackRequest = {
   type: "QuestionWithFeedbackRequest",
   wrappee: ConcreteQuestionRequest;
+  feedback: string;
 };
 
 

@@ -20,8 +20,7 @@ import useRoom from "@stores/useRoom";
 import useGame, { getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import OwnerGuard from "@components/Guards/OwnerGuard";
 import { useMemo, useState } from "react";
-import { UUID } from "crypto";
-import { generateVariants,  sendQuestion } from "../../services/question";
+import { generateAllVariants,  sendAllQuestions } from "../../services/question";
 import StatusToast from "@components/Toast";
 
 export default function RoomPanelPage() {
@@ -82,7 +81,7 @@ function Page() {
             <div className={styles.buttons}>
               <Button
                 disabled={variants.length === 0}
-                onClick={() => sendQuestion(variants as QuestionVariant[])}
+                onClick={() => sendAllQuestions()}
                 theme="full-purple"
               >
                 <FaPlay />
@@ -90,7 +89,7 @@ function Page() {
               </Button>
               <Button
                 disabled={!question}
-                onClick={() => generateVariants(question?.uuid as UUID)}
+                onClick={() => generateAllVariants(questions)}
                 theme="light-purple"
               >
                 <FaSync />

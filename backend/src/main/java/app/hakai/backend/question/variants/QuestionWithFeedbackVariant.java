@@ -24,7 +24,7 @@ public class QuestionWithFeedbackVariant extends BaseQuestionVariant {
 
     @Override
     public ConcreteQuestionVariant getRoot() {
-        return this.getRoot();
+        return wrappee.getRoot();
     }
 
     @Override

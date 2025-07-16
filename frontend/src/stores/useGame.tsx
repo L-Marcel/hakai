@@ -30,6 +30,18 @@ export type Question = {
   contexts: string[];
 };
 
+export type QuestionWithFeedbackVariant = {
+  type: string;
+  uuid: UUID;
+  question: string;
+  difficulty: Difficulty;
+  options: string[];
+  contexts?: string[];
+  answers?: string[];
+  original?: UUID;
+  feedback: string;
+};
+
 export type ConcreteQuestionVariant = {
   type: string;
   uuid: UUID;
@@ -46,7 +58,7 @@ export type BaseQuestionVariant = {
   wrappee: QuestionVariant;
 };
 
-export type QuestionVariant = BaseQuestionVariant | ConcreteQuestionVariant;
+export type QuestionVariant = BaseQuestionVariant | ConcreteQuestionVariant | QuestionWithFeedbackVariant;
 
 export function getConcreteQuestionVariant(variant: QuestionVariant): ConcreteQuestionVariant {
   if ('wrappee' in variant && variant.wrappee) {
@@ -90,17 +102,17 @@ export type AnswersHistory = {
 };
 
 type GameStore = {
-  question?: QuestionVariant;
+  currentQuestions?: QuestionVariant[];
   game?: Game;
   history?: AnswersHistory[];
-  setQuestion: (current?: QuestionVariant) => void;
+  setQuestions: (currentQuestions?: QuestionVariant[]) => void;
   setGame: (game?: Game) => void;
   setVariants: (variants: QuestionVariant[]) => void;
   setHistory: (answers: AnswersHistory[]) => void; updateQuestion: (questionId: UUID, field: 'correctValue' | 'wrongValue', value: number) => void;
 };
 
 const useGame = create<GameStore>((set) => ({
-  setQuestion: (question?: QuestionVariant) => set({ question }),
+  setQuestions: (currentQuestions?: QuestionVariant[]) => set({ currentQuestions }),
   setGame: (game?: Game) => set({ game }),
   setVariants: (variants: QuestionVariant[]) =>
     set((state) => {
@@ -130,13 +142,11 @@ const useGame = create<GameStore>((set) => ({
   updateQuestion: (questionId, field, value) =>
     set((state) => {
       if (!state.game) {
-        return state; // Retorna o estado atual se não houver jogo
+        return state;
       }
 
       const updatedQuestions = state.game.questions.map((q) => {
-        // Se encontramos a questão correta...
         if (q.uuid === questionId) {
-          // ...retornamos uma CÓPIA dela com o valor atualizado.
           return {
             ...q,
             [field]: value, // Atualiza 'correctValue' ou 'wrongValue'
