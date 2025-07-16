@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class VariantsScoreByDifficulty implements VariantsScoreStrategy {
     @Override
     public Integer calculate(Participant participant, Question question, List<Boolean> corrects) {
-        Integer score = participant.getScore();
+        Integer score = 0;
         ConcreteQuestion rootQuestion = question.getRoot();
         Integer correctValue = rootQuestion.getCorrectValue();
         Boolean allIsCorrect = !corrects.contains(false);

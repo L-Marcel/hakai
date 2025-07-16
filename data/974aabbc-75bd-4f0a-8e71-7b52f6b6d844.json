@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "974aabbc-75bd-4f0a-8e71-7b52f6b6d844",
+  "question" : "Quais destes não é um bloco condicional?",
+  "answers" : [ {
+    "uuid" : "a8a3b958-1e11-41d1-8136-d5d62b33f222",
+    "answer" : "while"
+  } ],
+  "contexts" : [ {
+    "id" : "398926af-a354-45c7-85ad-933e4dc40485",
+    "name" : "programação"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

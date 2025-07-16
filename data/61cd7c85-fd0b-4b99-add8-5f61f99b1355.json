@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "61cd7c85-fd0b-4b99-add8-5f61f99b1355",
+  "question" : "Quais destes não é um padrão de projeto?",
+  "answers" : [ {
+    "uuid" : "2716160d-b594-42ce-b679-ce97b0abaf43",
+    "answer" : "Adjust-To-Fit"
+  } ],
+  "contexts" : [ {
+    "id" : "4120bc77-e173-4c21-bef8-396cfd5415a1",
+    "name" : "design-patterns"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

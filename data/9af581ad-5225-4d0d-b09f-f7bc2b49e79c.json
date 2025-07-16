@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "9af581ad-5225-4d0d-b09f-f7bc2b49e79c",
+  "question" : "Qual destes é um padrão de projeto?",
+  "answers" : [ {
+    "uuid" : "29761dae-9885-4df8-a576-d21d2d1408bf",
+    "answer" : "Decorator"
+  } ],
+  "contexts" : [ {
+    "id" : "10912d61-6a88-445a-9199-7e7fe1f7079d",
+    "name" : "design-patterns"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}

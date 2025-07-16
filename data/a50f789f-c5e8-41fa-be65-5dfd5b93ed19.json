@@ -1,0 +1,15 @@
+{
+  "type" : "ConcreteQuestion",
+  "uuid" : "a50f789f-c5e8-41fa-be65-5dfd5b93ed19",
+  "question" : "Qual o tipo primitivo na programação é amplamente utilizado para armazenar verdadeiro ou falso?",
+  "answers" : [ {
+    "uuid" : "44050095-ff29-4c4e-ab93-4f13887bcf2c",
+    "answer" : "boolean"
+  } ],
+  "contexts" : [ {
+    "id" : "daf00910-eba5-4053-a3d0-9c214083aa0b",
+    "name" : "programação"
+  } ],
+  "correctValue" : 1,
+  "wrongValue" : 0
+}
