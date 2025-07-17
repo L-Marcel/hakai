@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 import styles from "./index.module.scss";
 import Button from "@components/Button";
 import Tag from "@components/Tag";
-import { difficultyToString, getConcreteQuestionVariant, Question, QuestionVariant } from "@stores/useGame";
+import {
+  difficultyToString,
+  getConcreteQuestionVariant,
+  Question,
+  QuestionVariant,
+} from "@stores/useGame";
 import { sendParticipantAnswer } from "../../../services/participant";
 
 interface Props
@@ -17,14 +23,43 @@ export default function QuestionView({
   highlight,
   question,
   variant,
+  editable,
   className,
   ...props
 }: Props) {
+  // Estados controlados por pergunta (uuid)
+  const [answeredMap, setAnsweredMap] = useState<Record<string, boolean>>({});
+  const [selectedMap, setSelectedMap] = useState<Record<string, string | null>>({});
+
   if (variant) {
     const concreteVariant = getConcreteQuestionVariant(variant);
     const { difficulty, contexts, options, question, uuid } = concreteVariant;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
+
+    const selected = selectedMap[uuid] || null;
+    const answered = answeredMap[uuid] || false;
+
+    let points = 0;
+    switch (difficulty) {
+      case "EASY":
+        points = 100;
+        break;
+      case "NORMAL":
+        points = 200;
+        break;
+      case "HARD":
+        points = 300;
+        break;
+    }
+
+    const handleSelect = (option: string) => {
+      if (answered) return;
+
+      setSelectedMap((prev) => ({ ...prev, [uuid]: option }));
+      setAnsweredMap((prev) => ({ ...prev, [uuid]: true }));
+      sendParticipantAnswer([option], variant);
+    };
 
     return (
       <article className={finalClassName} {...props}>
@@ -40,18 +75,32 @@ export default function QuestionView({
             ))}
           </p>
           <h1>{question}</h1>
+          <p id="values">{points} pontos</p>
         </header>
+
         <ol className={styles.options}>
           {options.map((option) => {
-            const id =
-              highlight && highlight.includes(option) ? "highlight" : "option";
+            const isCorrect = highlight?.includes(option);
+            const isSelected = selected === option;
+
+            let theme: "partial-purple" | "light-purple" | "partial-red" | "partial-green" = "partial-purple";
+
+            if (answered) {
+              if (isCorrect) {
+                theme = "partial-green";
+              } else if (!isCorrect) {
+                theme = "partial-red";
+              } else {
+                theme = "partial-purple";
+              }
+            }
 
             return (
               <Button
-                disabled={!!highlight}
-                onClick={() => sendParticipantAnswer([option])}
-                id={id}
-                theme="partial-purple"
+                disabled={answered || editable}
+                onClick={() => handleSelect(option)}
+                id={isCorrect || (isSelected && answered) ? "highlight" : "option"}
+                theme={theme}
                 key={uuid + "-" + option}
               >
                 {option}
@@ -60,7 +109,7 @@ export default function QuestionView({
           })}
         </ol>
 
-        {"feedback" in variant && (
+        {"feedback" in variant && answered && (
           <footer className={styles.feedback}>
             <h4>Feedback:</h4>
             <p>{variant.feedback}</p>
@@ -68,11 +117,13 @@ export default function QuestionView({
         )}
       </article>
     );
-  } else if (question) {
-    const { answers, question: content, uuid } = question;
+  }
 
+  else if (question) {
+    const { answers, question: content, uuid } = question;
     const classes = [styles.question, className];
     const finalClassName = classes.join(" ");
+
     return (
       <article className={finalClassName} {...props}>
         <header className={styles.header}>
@@ -88,21 +139,22 @@ export default function QuestionView({
           </p>
           <h1>{content}</h1>
         </header>
+
         <ol className={styles.options}>
-          {answers.map((option) => {
-            return (
-              <Button
-                disabled
-                id="highlight"
-                theme="partial-purple"
-                key={uuid + "-" + option + "-answer"}
-              >
-                {option}
-              </Button>
-            );
-          })}
+          {answers.map((option) => (
+            <Button
+              disabled
+              id="highlight"
+              theme="partial-purple"
+              key={uuid + "-" + option + "-answer"}
+            >
+              {option}
+            </Button>
+          ))}
         </ol>
       </article>
     );
-  } else return null;
+  }
+
+  return null;
 }

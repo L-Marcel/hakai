@@ -80,7 +80,6 @@ function Page() {
           <div className={styles.controllers}>
             <div className={styles.buttons}>
               <Button
-                disabled={variants.length === 0}
                 onClick={() => sendAllQuestions()}
                 theme="full-purple"
               >
@@ -131,6 +130,7 @@ function Page() {
                     <QuestionView
                       highlight={question?.answers}
                       variant={item}
+                      editable={false}
                     />
                   </li>
                 );

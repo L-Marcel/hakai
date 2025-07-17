@@ -1,0 +1,19 @@
+{
+  "type" : "QuestionWithFeedback",
+  "wrappee" : {
+    "type" : "ConcreteQuestion",
+    "uuid" : "e296ea5e-a8df-47b9-a9bc-bf9e9eda41b2",
+    "question" : "10²",
+    "answers" : [ {
+      "uuid" : "87b0a717-0a03-4e15-95f2-c80745bee3fa",
+      "answer" : "100"
+    } ],
+    "contexts" : [ {
+      "id" : "f2417f0d-af0a-468c-8446-e523d17ce334",
+      "name" : "exponenciação"
+    } ],
+    "correctValue" : 1,
+    "wrongValue" : 0
+  },
+  "feedback" : null
+}

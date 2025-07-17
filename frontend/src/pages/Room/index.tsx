@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import QuestionView from "@components/Views/Question";
 import StatusToast from "@components/Toast";
 import { getGame } from "../../services/game";
+import Loader from "@components/Loader";
 
 export default function RoomPage() {
   return (
@@ -22,18 +23,16 @@ function Page() {
   const room = useRoom((state) => state.room);
   const game = useGame((state) => state.game);
   const setGame = useGame((state) => state.setGame);
+  const currentQuestions = useGame((state) => state.currentQuestions);
+  const score = useRoom((state) => state.participant?.score ?? 0);
   
   const [index, setIndex] = useState(0);
   const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
-    if (questions.length === 0) return undefined;
-    const questionIndex = index % questions.length;
-    return questions[questionIndex];
-  }, [index, questions]);
-  const current = game?.questions[index].variants;
-  
-  
-  //if(game) sendQuestion(game?.questions);
+    if (!currentQuestions || currentQuestions.length === 0 || questions.length === 0) return undefined;
+    const questionIndex = index % currentQuestions.length;
+    return currentQuestions[questionIndex];
+  }, [index, currentQuestions]);
 
   
   const toNextQuestion = () => setIndex((index) => ++index);
@@ -58,45 +57,47 @@ function Page() {
   }, [room, game, setGame]); 
 
   return (
-    <main className={styles.main}>
-      <header className={styles.header}>
-        <Button theme="full-purple" onClick={close}>
-          <FaArrowLeft /> Sair
-        </Button>
-      </header>
-      <section>
-
-        {game && game.questions.length > 0 && (
-          <QuestionView question={game.questions[index]} />
-        )}
-        <div className={styles.controllers}>
-          <div className={styles.buttons}>
-            <Button
-              disabled={index <= 0}
-              onClick={toPreviousQuestion}
-              theme="light-purple"
-            >
-              <FaArrowLeft />
-              Anterior
-            </Button>
-            
-            <span>
-              Questão {index+1}/{game?.questions.length}
-            </span>
-
-            <Button
-              disabled={index >= questions.length - 1}
-              onClick={toNextQuestion}
-              theme="light-purple"
-            >
-              <FaArrowRight />
-              Próxima
-            </Button>
+    <>
+      <StatusToast />
+      <main className={styles.main}>
+        <header className={styles.header}>
+          <Button theme="full-purple" onClick={close}>
+            <FaArrowLeft /> Sair
+          </Button>
+          <div className={styles.final_points}>
+            <h3>Pontos totais: {score}</h3>
           </div>
-        </div>
-        
-        
-      </section>
-    </main>
+        </header>
+        <section>
+              <QuestionView variant={question} />
+              <div className={styles.controllers}>
+                <div className={styles.buttons}>
+                  <Button
+                    disabled={index <= 0}
+                    onClick={toPreviousQuestion}
+                    theme="light-purple"
+                  >
+                    <FaArrowLeft />
+                    Anterior
+                  </Button>
+                  
+                  <span>
+                    Questão {index+1}/{game?.questions.length}
+                  </span>
+
+                  <Button
+                    disabled={index >= questions.length - 1}
+                    onClick={toNextQuestion}
+                    theme="light-purple"
+                  >
+                    <FaArrowRight />
+                    Próxima
+                  </Button>
+                </div>
+              </div>
+          
+        </section>
+      </main>
+    </>
   );
 }

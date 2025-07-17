@@ -30,16 +30,17 @@ export default function Carousel<T>({
       <div className={styles.switcher}>
         <ul>
           {items.map((item, index) => {
-            if (selected === identifier(item, index))
+            const key = identifier(item, index);
+            if (selected === key)
               return (
-                <li id="selected">
+                <li key={key} id="selected">
                   <button onClick={() => onSelect(item, index)}>
                     <GoDotFill />
                   </button>
                 </li>
               );
             return (
-              <li>
+              <li key={key}>
                 <button onClick={() => onSelect(item, index)}>
                   <GoDot />
                 </button>
