@@ -68,7 +68,7 @@ export function connect(
       }
       
       if (participant) getRoom(code);
-      if(participant && game) generateAllVariants(game.questions);
+      if(participant && game) generateAllVariants();
 
       client.subscribe(
         "/channel/events/rooms/" + code + "/" + user?.uuid + "/variants",
@@ -77,7 +77,9 @@ export function connect(
           const formattedVariants = variants.map(transformQuestionVariantFromResponse);
           setVariants(formattedVariants);
           console.log("Questões recebidas:", formattedVariants);
-          sendAllQuestions();
+          setTimeout(() => {
+            sendAllQuestions();
+          }, 100);
         }
       );
     },

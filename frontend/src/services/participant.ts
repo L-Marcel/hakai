@@ -1,6 +1,6 @@
 import useRoom, { Participant } from "@stores/useRoom";
 import api from "./axios";
-import {getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
+import {Difficulty, difficultyToString, getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import { connect } from "./socket";
 
 export async function exit(): Promise<void> {
@@ -11,7 +11,7 @@ export async function exit(): Promise<void> {
   });
 }
 
-export async function sendParticipantAnswer(answers: string[], current: QuestionVariant): Promise<void> {
+export async function sendParticipantAnswer(answers: string[], current: QuestionVariant, currentDifficulty: Difficulty): Promise<void> {
   const { participant } = useRoom.getState();
 
   if (!current) {
@@ -23,14 +23,11 @@ export async function sendParticipantAnswer(answers: string[], current: Question
 
   return api
     .post("participants/answer", {
-      answers,
       question: concreteQuestion.original,
-           participant: participant!.uuid,
-    })
-    // .then(() => {
-    //  saveParticipantAnswer(answers, concreteQuestion.original!);
-    // })
-    ;
+      difficulty: currentDifficulty,
+      participant: participant!.uuid,
+      answers,
+    });
 }
 
 export async function getParticipant(): Promise<void> {

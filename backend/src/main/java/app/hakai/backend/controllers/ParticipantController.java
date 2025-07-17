@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.kahai.framework.annotations.RequireAuth;
-import org.kahai.framework.dtos.request.AnswerQuestionRequest;
 import org.kahai.framework.dtos.response.ParticipantResponse;
 import org.kahai.framework.models.Answer;
 import org.kahai.framework.models.Game;
@@ -24,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import app.hakai.backend.dtos.AnswerWithDifficultyQuestionRequest;
 
 @RestController
 @RequestMapping("/participants")
@@ -50,12 +51,14 @@ public class ParticipantController {
     @PostMapping("/answer")
     public ResponseEntity<Void> answerQuestion(
             @AuthenticationPrincipal User user,
-            @RequestBody AnswerQuestionRequest body) {
+            @RequestBody AnswerWithDifficultyQuestionRequest body) {
         Question question = questionService.findQuestionById(
                 body.getQuestion());
 
         Participant participant = participantService.findParticipantByUuid(
                 body.getParticipant());
+
+        participant.setCurrentDifficulty(body.getDifficulty());
 
         participantService.answerQuestion(
                 question,

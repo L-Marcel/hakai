@@ -3,7 +3,6 @@ package app.hakai.backend.strategies;
 import java.util.List;
 
 import org.kahai.framework.models.Difficulty;
-import org.kahai.framework.questions.ConcreteQuestion;
 import org.kahai.framework.questions.Question;
 import org.kahai.framework.services.strategies.VariantsScoreStrategy;
 import org.kahai.framework.transients.Participant;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class VariantsScoreByDifficultyWithPenality implements VariantsScoreStrategy {
     @Override
     public Integer calculate(Participant participant, Question question, List<Boolean> corrects) {
-        Integer score = participant.getScore();
         boolean isCorrect = corrects.get(0);
         
         Integer scoreChange = 0;
@@ -32,11 +30,9 @@ public class VariantsScoreByDifficultyWithPenality implements VariantsScoreStrat
         }
         
         if (isCorrect) {
-            score += scoreChange;
+            return scoreChange;
         } else {
-            score -= scoreChange;
+            return -scoreChange;
         }
-
-        return score;
     };
 };
