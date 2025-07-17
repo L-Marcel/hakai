@@ -36,7 +36,6 @@ public class MultipleChoiceQuestionRequest extends BaseQuestionRequest {
     @Override
     public Question toQuestion() {
         Question concreteQuestion = this.wrappee.toQuestion();
-
         return new MultipleChoiceQuestion(concreteQuestion);
     }
 }

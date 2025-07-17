@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class LanguageQuestionVariantResponse extends BaseQuestionVariantResponse {
+
     private String language;
 
     public LanguageQuestionVariantResponse(QuestionVariantResponse wrappee, String language) {
