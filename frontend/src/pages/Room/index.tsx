@@ -2,7 +2,7 @@ import RoomGuard from "@components/Guards/RoomGuard";
 import styles from "./index.module.scss";
 import useGame from "@stores/useGame";
 import useRoom from "@stores/useRoom";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaPlay, FaSync } from "react-icons/fa";
 import Button from "@components/Button";
 import { close } from "../../services/room";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,7 @@ import QuestionView from "@components/Views/Question";
 import StatusToast from "@components/Toast";
 import { getGame } from "../../services/game";
 import Loader from "@components/Loader";
+import { generateAllVariants, sendAllQuestions } from "../../services/question";
 
 export default function RoomPage() {
   return (
@@ -65,6 +66,17 @@ function Page() {
           <Button theme="full-purple" onClick={close}>
             <FaArrowLeft /> Sair
           </Button>
+
+          <div className="flex flex-row gap-2 items-center">
+            <Button
+              onClick={() => sendAllQuestions()}
+              theme="full-purple"
+            >
+              <FaPlay />
+              Lançar
+            </Button>
+          </div>
+
           <div className={styles.final_points}>
             <h3>Pontos totais: {score}</h3>
           </div>

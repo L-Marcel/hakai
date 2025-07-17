@@ -75,6 +75,7 @@ export function connect(
             const variants: QuestionVariant[] = JSON.parse(message.body);
             const formattedVariants = variants.map(transformQuestionVariantFromResponse);
             setVariants(formattedVariants);
+            console.log("Questões recebidas:", formattedVariants);
             setTimeout(() => {
               if(alredyRecivedAllVariants()) sendAllQuestions();
             }, 100);

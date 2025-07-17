@@ -88,7 +88,7 @@ export default function QuestionView({
             if (answered) {
               if (isCorrect) {
                 theme = "partial-green";
-              } else if (!isCorrect) {
+              } else if (isSelected) {
                 theme = "partial-red";
               } else {
                 theme = "partial-purple";
