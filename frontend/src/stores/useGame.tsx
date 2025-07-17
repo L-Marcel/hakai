@@ -128,19 +128,42 @@ type GameStore = {
 const useGame = create<GameStore>((set) => ({
   setQuestions: (currentQuestions?: QuestionVariant[]) => set({ currentQuestions }),
   setGame: (game?: Game) => set({ game }),
-  setVariants: (variants: QuestionVariant[]) =>
+  setVariants: (newVariants: QuestionVariant[]) =>
     set((state) => {
-      if (variants.length === 0 || !state.game) return state;
-      const firstVariantData = getConcreteQuestionVariant(variants[0]);
+      if (newVariants.length === 0 || !state.game) return state;
+
+      const groupedByOriginal: Record<string, QuestionVariant[]> = {};
+
+      newVariants.forEach((variant) => {
+        const originalId = getConcreteQuestionVariant(variant).original;
+        if (!originalId) return;
+        if (!groupedByOriginal[originalId]) {
+          groupedByOriginal[originalId] = [];
+        }
+        groupedByOriginal[originalId].push(variant);
+      });
 
       const questions = state.game.questions.map((question) => {
-        if (question.uuid === firstVariantData.original) {
-          return {
-            ...question,
-            variants,
-          };
-        }
-        return question;
+        const additionalVariants = groupedByOriginal[question.uuid];
+        if (!additionalVariants) return question;
+
+        const existingVariants = question.variants || [];
+
+        // Evitar duplicatas comparando UUIDs
+        const allVariants = [
+          ...existingVariants,
+          ...additionalVariants.filter(
+            (v) =>
+              !existingVariants.some(
+                (existing) => getConcreteQuestionVariant(existing).uuid === getConcreteQuestionVariant(v).uuid
+              )
+          ),
+        ];
+
+        return {
+          ...question,
+          variants: allVariants,
+        };
       });
 
       return {
@@ -149,7 +172,7 @@ const useGame = create<GameStore>((set) => ({
           questions,
         },
       };
-    }),
+  }),
 
   setHistory: (history: AnswersHistory[]) => set({ history }),
 

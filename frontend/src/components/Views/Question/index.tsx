@@ -58,7 +58,7 @@ export default function QuestionView({
 
       setSelectedMap((prev) => ({ ...prev, [uuid]: option }));
       setAnsweredMap((prev) => ({ ...prev, [uuid]: true }));
-      sendParticipantAnswer([option], variant);
+      sendParticipantAnswer([option], variant, difficulty);
     };
 
     return (
@@ -80,27 +80,14 @@ export default function QuestionView({
 
         <ol className={styles.options}>
           {options.map((option) => {
-            const isCorrect = highlight?.includes(option);
             const isSelected = selected === option;
-
-            let theme: "partial-purple" | "light-purple" | "partial-red" | "partial-green" = "partial-purple";
-
-            if (answered) {
-              if (isCorrect) {
-                theme = "partial-green";
-              } else if (isSelected) {
-                theme = "partial-red";
-              } else {
-                theme = "partial-purple";
-              }
-            }
 
             return (
               <Button
                 disabled={answered || editable}
                 onClick={() => handleSelect(option)}
-                id={isCorrect || (isSelected && answered) ? "highlight" : "option"}
-                theme={theme}
+                id={isSelected && answered ? "highlight" : "option"}
+                theme="partial-purple"
                 key={uuid + "-" + option}
               >
                 {option}
