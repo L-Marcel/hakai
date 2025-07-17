@@ -8,12 +8,8 @@ export async function generateVariants(question: UUID): Promise<void> {
   return await api.post(`questions/${question}/generate`);
 }
 
-export async function generateAllVariants(questions: Question[]): Promise<void[]> {
-  const variantPromises: Promise<void>[] = [];
-  for(const q of questions){
-    variantPromises.push(generateVariants(q.uuid));
-  }
-  return await Promise.all(variantPromises);
+export async function generateAllVariants(): Promise<void[]> {
+  return await api.post(`questions/generate-all`);
 }
 
 export async function sendQuestion(variants: QuestionVariant[] | undefined): Promise<void> {

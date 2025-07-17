@@ -88,7 +88,7 @@ function Page() {
               </Button>
               <Button
                 disabled={!question}
-                onClick={() => generateAllVariants(questions)}
+                onClick={() => generateAllVariants()}
                 theme="light-purple"
               >
                 <FaSync />

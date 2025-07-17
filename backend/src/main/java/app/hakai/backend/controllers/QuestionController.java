@@ -58,6 +58,19 @@ public class QuestionController {
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .build();
+    };    
+
+    @RequireAuth
+    @PostMapping("/generate-all")
+    public ResponseEntity<Void> startAllVariantsGeneration(
+        @AuthenticationPrincipal User user
+    ) {
+        Room room = roomService.findRoomByUser(user);
+        questionService.startAllVariantsGeneration(room);
+
+        return ResponseEntity
+            .status(HttpStatus.ACCEPTED)
+            .build();
     };
 
     @PostMapping("/send")

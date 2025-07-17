@@ -15,7 +15,7 @@ export default function Card({ game }: CardProps) {
 
   const onStart = () => {
     create(game.uuid).then((code) => {
-      generateAllVariants(game.questions);
+      generateAllVariants();
       navigate("/room/" + code);
     });
   };
