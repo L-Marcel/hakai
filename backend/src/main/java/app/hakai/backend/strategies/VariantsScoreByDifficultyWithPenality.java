@@ -14,26 +14,24 @@ public class VariantsScoreByDifficultyWithPenality implements VariantsScoreStrat
     @Override
     public Integer calculate(Participant participant, Question question, List<Boolean> corrects) {
         Integer score = participant.getScore();
-        ConcreteQuestion rootQuestion = question.getRoot();
-        Integer correctValue = rootQuestion.getCorrectValue();
-        Boolean allIsCorrect = !corrects.contains(false);
+        boolean isCorrect = corrects.get(0);
         
         Integer scoreChange = 0;
         switch (participant.getCurrentDifficulty()) {
             case Difficulty.EASY:
-                scoreChange = correctValue * 100;
+                scoreChange = 100;
                 break;
             case Difficulty.NORMAL:
-                scoreChange = correctValue * 200;
+                scoreChange = 200;
                 break;
             case Difficulty.HARD:
-                scoreChange = correctValue * 300;
+                scoreChange = 300;
                 break;
             default:
                 break;
         }
         
-        if (allIsCorrect) {
+        if (isCorrect) {
             score += scoreChange;
         } else {
             score -= scoreChange;

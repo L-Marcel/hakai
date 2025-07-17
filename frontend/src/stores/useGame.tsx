@@ -94,6 +94,20 @@ export function transformQuestionVariantToRequest(variant: QuestionVariant): Que
   };
 };
 
+export function alredyRecivedAllVariants(): boolean {
+  const questions = useGame.getState().game?.questions;
+
+  if (!questions || questions.length === 0) return false;
+
+  const expectedTotalVariants = questions.length * 3;
+  const actualTotalVariants = questions.reduce((count, question) => {
+    return count + (question.variants?.length || 0);
+  }, 0);
+
+  return actualTotalVariants === expectedTotalVariants;
+}
+
+
 export type AnswersHistory = {
   uuid: UUID;
   question: UUID;

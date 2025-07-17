@@ -29,10 +29,11 @@ function Page() {
   const [index, setIndex] = useState(0);
   const questions = useMemo(() => game?.questions ?? [], [game]);
   const question = useMemo(() => {
-    if (!currentQuestions || currentQuestions.length === 0 || questions.length === 0) return undefined;
+    if (!currentQuestions || currentQuestions.length === 0) return undefined;
     const questionIndex = index % currentQuestions.length;
     return currentQuestions[questionIndex];
   }, [index, currentQuestions]);
+
 
   
   const toNextQuestion = () => setIndex((index) => ++index);

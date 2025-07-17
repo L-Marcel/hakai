@@ -1,9 +1,10 @@
 import { Client } from "@stomp/stompjs";
-import useGame, { QuestionVariant, QuestionWithFeedbackVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
+import useGame, { alredyRecivedAllVariants, QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
 import useGenerationStatus from "@stores/useStatus";
+import { sendAllQuestions } from "./question";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
@@ -26,6 +27,8 @@ export function connect(
   const { setVariants, setQuestions } = useGame.getState();
 
   if (oldClient && oldClient.connected) return;
+
+  console.log("Usuário conectado ao socket!");
 
   const client: Client = new Client({
     brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/websocket`,
@@ -58,6 +61,7 @@ export function connect(
               formattedVariantsList.push(formattedVariant);
             });
             setQuestions(formattedVariantsList);
+            console.log("CURRENT QUESTIONS POPULADAS", formattedVariantsList);
           }
         );
       }
@@ -71,6 +75,9 @@ export function connect(
             const variants: QuestionVariant[] = JSON.parse(message.body);
             const formattedVariants = variants.map(transformQuestionVariantFromResponse);
             setVariants(formattedVariants);
+            setTimeout(() => {
+              if(alredyRecivedAllVariants()) sendAllQuestions();
+            }, 100);
           }
         );
       }
