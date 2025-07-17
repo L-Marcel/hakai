@@ -2,15 +2,14 @@ import RoomGuard from "@components/Guards/RoomGuard";
 import styles from "./index.module.scss";
 import useGame from "@stores/useGame";
 import useRoom from "@stores/useRoom";
-import { FaArrowLeft, FaArrowRight, FaPlay, FaSync } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaPlay } from "react-icons/fa";
 import Button from "@components/Button";
 import { close, join } from "../../services/room";
 import { useEffect, useMemo, useState } from "react";
 import QuestionView from "@components/Views/Question";
 import StatusToast from "@components/Toast";
 import { getGame } from "../../services/game";
-import Loader from "@components/Loader";
-import { generateAllVariants, sendAllQuestions } from "../../services/question";
+import { sendAllQuestions } from "../../services/question";
 import useAuth from "@stores/useAuth";
 import { connect } from "../../services/socket";
 
@@ -74,34 +73,37 @@ function Page() {
           </div>
         </header>
         <section>
-              <QuestionView variant={question} />
-              <div className={styles.controllers}>
-                <div className={styles.buttons}>
-                  <Button
-                    disabled={index <= 0}
-                    onClick={toPreviousQuestion}
-                    theme="light-purple"
-                  >
-                    <FaArrowLeft />
-                    Anterior
-                  </Button>
-                  
-                  <span>
-                    Questão {index+1}/{game?.questions.length}
-                  </span>
-
-                  <Button
-                    disabled={index >= questions.length - 1}
-                    onClick={toNextQuestion}
-                    theme="light-purple"
-                  >
-                    <FaArrowRight />
-                    Próxima
-                  </Button>
-                </div>
-              </div>
-          
+          <QuestionView variant={question} />
         </section>
+        <footer>
+          <div className={styles.footer_content}>
+            <div className={styles.controllers}>
+              <div className={styles.buttons}>
+                <Button
+                  disabled={index <= 0}
+                  onClick={toPreviousQuestion}
+                  theme="light-purple"
+                >
+                  <FaArrowLeft />
+                  Anterior
+                </Button>
+                
+                <span>
+                  Questão {index+1}/{game?.questions.length}
+                </span>
+
+                <Button
+                  disabled={index >= questions.length - 1}
+                  onClick={toNextQuestion}
+                  theme="light-purple"
+                >
+                  <FaArrowRight />
+                  Próxima
+                </Button>
+              </div>
+            </div>
+          </div>
+        </footer>
       </main>
     </>
   );
