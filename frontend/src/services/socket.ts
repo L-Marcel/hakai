@@ -1,10 +1,11 @@
 import { Client } from "@stomp/stompjs";
-import useGame, { alredyRecivedAllVariants, QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
+import useGame, {QuestionVariant, transformQuestionVariantFromResponse } from "@stores/useGame";
 import useRoom, { Room } from "@stores/useRoom";
 import { UUID } from "crypto";
 import { getRoom } from "./room";
 import useGenerationStatus from "@stores/useStatus";
-import { sendAllQuestions } from "./question";
+import { generateAllVariants, sendAllQuestions } from "./question";
+import useAuth from "@stores/useAuth";
 
 export function disconnect(): void {
   const { setRoom, setParticipant, setClient } = useRoom.getState();
@@ -20,11 +21,11 @@ export function disconnect(): void {
 
 export function connect(
   code?: string,
-  participant?: UUID,
-  isOwner?: boolean
+  participant?: UUID
 ): void {
+  const { user } = useAuth.getState();
   const { room, setRoom, setClient, client: oldClient } = useRoom.getState();
-  const { setVariants, setQuestions } = useGame.getState();
+  const { game, setVariants, setQuestions } = useGame.getState();
 
   if (oldClient && oldClient.connected) return;
 
@@ -67,21 +68,18 @@ export function connect(
       }
       
       if (participant) getRoom(code);
+      if(participant && game) generateAllVariants(game.questions);
 
-      if (isOwner) {
-        client.subscribe(
-          "/channel/events/rooms/" + code + "/" + room?.owner + "/variants",
-          (message) => {
-            const variants: QuestionVariant[] = JSON.parse(message.body);
-            const formattedVariants = variants.map(transformQuestionVariantFromResponse);
-            setVariants(formattedVariants);
-            console.log("Questões recebidas:", formattedVariants);
-            setTimeout(() => {
-              if(alredyRecivedAllVariants()) sendAllQuestions();
-            }, 100);
-          }
-        );
-      }
+      client.subscribe(
+        "/channel/events/rooms/" + code + "/" + user?.uuid + "/variants",
+        (message) => {
+          const variants: QuestionVariant[] = JSON.parse(message.body);
+          const formattedVariants = variants.map(transformQuestionVariantFromResponse);
+          setVariants(formattedVariants);
+          console.log("Questões recebidas:", formattedVariants);
+          sendAllQuestions();
+        }
+      );
     },
   });
 

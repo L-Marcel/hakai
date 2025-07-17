@@ -28,11 +28,12 @@ export interface GameRequest {
   questions: QuestionRequest[];
 }
 
-export async function getGame(uuid?: UUID): Promise<void> {
+export async function getGame(uuid?: UUID): Promise<Game> {
   const { setGame } = useGame.getState();
 
   return await api.get<Game>(`games/${uuid}`).then((response) => {
     setGame(response.data);
+    return response.data;
   });
 }
 

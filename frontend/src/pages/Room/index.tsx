@@ -4,13 +4,15 @@ import useGame from "@stores/useGame";
 import useRoom from "@stores/useRoom";
 import { FaArrowLeft, FaArrowRight, FaPlay, FaSync } from "react-icons/fa";
 import Button from "@components/Button";
-import { close } from "../../services/room";
+import { close, join } from "../../services/room";
 import { useEffect, useMemo, useState } from "react";
 import QuestionView from "@components/Views/Question";
 import StatusToast from "@components/Toast";
 import { getGame } from "../../services/game";
 import Loader from "@components/Loader";
 import { generateAllVariants, sendAllQuestions } from "../../services/question";
+import useAuth from "@stores/useAuth";
+import { connect } from "../../services/socket";
 
 export default function RoomPage() {
   return (
@@ -23,7 +25,7 @@ export default function RoomPage() {
 function Page() {
   const room = useRoom((state) => state.room);
   const game = useGame((state) => state.game);
-  const setGame = useGame((state) => state.setGame);
+  const user = useAuth((state) => state.user);
   const currentQuestions = useGame((state) => state.currentQuestions);
   const score = useRoom((state) => state.participant?.score ?? 0);
   
@@ -35,28 +37,18 @@ function Page() {
     return currentQuestions[questionIndex];
   }, [index, currentQuestions]);
 
-
-  
   const toNextQuestion = () => setIndex((index) => ++index);
   const toPreviousQuestion = () => setIndex((index) => --index);
 
   useEffect(() => {
     if (room?.game && !game) {
-      console.log("Detectado ID do jogo, buscando detalhes...");
-
-      const fetchGameData = async () => {
-        try {
-          getGame(room.game); 
-          console.log("Dados do jogo carregados!");
-
-        } catch (error) {
-          console.error("Falha ao buscar os detalhes do jogo:", error);
-        }
-      };
-
-      fetchGameData();
+      getGame(room.game).then(() => {
+        if(room.participants.length <= 0)
+          join(user!.name, room.code);
+        else connect(room?.code, room.participants[0].uuid);
+      })
     }
-  }, [room, game, setGame]); 
+  }, [room, game, user]); 
 
   return (
     <>

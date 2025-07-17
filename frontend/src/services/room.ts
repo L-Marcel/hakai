@@ -12,7 +12,7 @@ export async function join(nickname: string, code?: string): Promise<void> {
       nickname,
     })
     .then((response) => {
-      connect(response.data.room, response.data.uuid, true);
+      connect(response.data.room, response.data.uuid);
       setParticipant(response.data);
     });
 }
@@ -28,9 +28,7 @@ export async function close(): Promise<void> {
 }
 
 export async function create(game: UUID): Promise<string> {
-  const {user} = useAuth.getState();
   return await api.post<Room>("rooms", { game }).then((response) => {
-    join(user!.name, response.data.code);
     return response.data.code;
   });
 } 

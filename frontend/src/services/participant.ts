@@ -2,7 +2,6 @@ import useRoom, { Participant } from "@stores/useRoom";
 import api from "./axios";
 import {getConcreteQuestionVariant, QuestionVariant } from "@stores/useGame";
 import { connect } from "./socket";
-import { saveParticipantAnswer } from "./answers";
 
 export async function exit(): Promise<void> {
   const { setParticipant } = useRoom.getState();
@@ -38,7 +37,7 @@ export async function getParticipant(): Promise<void> {
   const { setParticipant } = useRoom.getState();
 
   return await api.get<Participant>("participants/me").then((response) => {
-    connect(response.data.room, response.data.uuid,true);
+    connect(response.data.room, response.data.uuid);
     setParticipant(response.data);
   });
 }

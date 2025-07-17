@@ -20,7 +20,7 @@ export default function OwnerGuard({ children }: Props) {
 
   useEffect(() => {
     if (!game?.owner && !isOwner && room) getGame(room?.game);
-    else if (isOwner) connect(code, undefined, true);
+    else if (isOwner) connect(code, undefined);
     else if (room) navigate("/home");
   }, [isOwner, code, room, game, navigate, user]);
 

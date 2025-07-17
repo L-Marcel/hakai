@@ -5,7 +5,7 @@ import Button from "@components/Button";
 import { create } from "../../services/room";
 import { Game } from "@stores/useGame";
 import { FaArrowUpRightDots } from "react-icons/fa6";
-import { generateAllVariants } from "../../services/question";
+
 interface CardProps {
   game: Game;
 }
@@ -15,7 +15,6 @@ export default function Card({ game }: CardProps) {
 
   const onStart = () => {
     create(game.uuid).then((code) => {
-      generateAllVariants();
       navigate("/room/" + code);
     });
   };
